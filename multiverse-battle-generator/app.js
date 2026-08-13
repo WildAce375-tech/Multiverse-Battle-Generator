@@ -209,13 +209,11 @@ async function judge(a, b, {forceFallback=false}={}) {
       currentResult = await r.json();
     }
     renderVerdict(currentResult);
-    await freezeIntoUrl();
   } catch (err) {
     console.error(err);
     currentResult = localJudge(a,b);
     currentResult.fallbackReason = err.message;
     renderVerdict(currentResult);
-    await freezeIntoUrl();
   } finally {
     setLoading(false);
   }
@@ -323,13 +321,41 @@ async function decodePayload(s) {
   }
   return JSON.parse(new TextDecoder().decode(bytes));
 }
-async function freezeIntoUrl() {
-  if (!currentResult) return;
+async function buildFrozenUrl() {
+  if (!currentResult) return location.href;
   const encoded = await encodePayload(battlePayload());
-  const u = new URL(location.href);
-  u.search = "";
+  const u = new URL(location.origin + location.pathname);
   u.searchParams.set("battle", encoded);
-  history.replaceState(null, "", u);
+  return u.toString();
+}
+
+let lastLongShareUrl = "";
+let lastShortShareUrl = "";
+
+async function getShortBattleUrl() {
+  const longUrl = await buildFrozenUrl();
+
+  if (longUrl === lastLongShareUrl && lastShortShareUrl) {
+    return lastShortShareUrl;
+  }
+
+  const r = await fetch("/api/shorten", {
+    method: "POST",
+    headers: {"content-type": "application/json"},
+    body: JSON.stringify({url: longUrl})
+  });
+
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    throw new Error(e.error || `Short-link service failed (${r.status})`);
+  }
+
+  const data = await r.json();
+  if (!data.shortUrl) throw new Error("Short-link service returned no URL.");
+
+  lastLongShareUrl = longUrl;
+  lastShortShareUrl = data.shortUrl;
+  return data.shortUrl;
 }
 async function loadFrozenBattle() {
   const encoded = new URLSearchParams(location.search).get("battle");
@@ -394,13 +420,35 @@ $("newBattleBtn").onclick=async()=>{
   await judge(currentA,currentB);
 };
 $("shareBtn").onclick=async()=>{
-  await freezeIntoUrl();
+  const btn = $("shareBtn");
+  const old = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "CREATING SHORT LINK…";
+
   try {
-    await navigator.clipboard.writeText(location.href);
-    const old=$("shareBtn").textContent;$("shareBtn").textContent="✓ LINK COPIED";
-    setTimeout(()=>$("shareBtn").textContent=old,1400);
-  } catch {
-    prompt("Copy this battle link:",location.href);
+    const shareUrl = await getShortBattleUrl();
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      btn.textContent = "✓ SHORT LINK COPIED";
+    } catch {
+      prompt("Copy this battle link:", shareUrl);
+      btn.textContent = "✓ SHORT LINK READY";
+    }
+  } catch (err) {
+    console.error("Short-link error:", err);
+    const longUrl = await buildFrozenUrl();
+    try {
+      await navigator.clipboard.writeText(longUrl);
+      btn.textContent = "✓ LINK COPIED";
+    } catch {
+      prompt("Shortener was unavailable. Copy this battle link:", longUrl);
+      btn.textContent = "LINK READY";
+    }
+  } finally {
+    setTimeout(() => {
+      btn.textContent = old;
+      btn.disabled = false;
+    }, 1800);
   }
 };
 

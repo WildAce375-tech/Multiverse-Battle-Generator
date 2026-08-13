@@ -18,3 +18,13 @@ The research model defaults to `gpt-5.4-mini`.
 
 ## GitHub
 Upload/replace these top-level files. There is no `public` folder.
+
+
+## Short share links
+
+Version 1.4 changes the Share button so it no longer copies the huge frozen battle URL.
+The server sends the frozen URL to the is.gd shortening API only when the user clicks Share.
+The returned short URL is permanent according to is.gd's API documentation.
+
+No new Render environment variables or accounts are required.
+If the shortening service is temporarily unavailable, the app falls back to copying the original frozen URL.

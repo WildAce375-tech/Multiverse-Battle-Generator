@@ -810,6 +810,69 @@ function serveFile(res, filePath) {
   }
 }
 
+
+const shortUrlCache = new Map();
+
+async function shortenBattleUrl(longUrl, req) {
+  const cached = shortUrlCache.get(longUrl);
+  if (cached) return cached;
+
+  let parsed;
+  try {
+    parsed = new URL(longUrl);
+  } catch {
+    throw new Error("Invalid battle URL.");
+  }
+
+  // Prevent this endpoint from becoming a public generic URL-shortening proxy.
+  const requestHost = String(req.headers.host || "").split(":")[0].toLowerCase();
+  const urlHost = parsed.hostname.toLowerCase();
+  const localDev = ["localhost", "127.0.0.1"].includes(requestHost);
+
+  if (!localDev && urlHost !== requestHost) {
+    throw new Error("Only this site's battle links can be shortened.");
+  }
+
+  if (!parsed.searchParams.has("battle")) {
+    throw new Error("No frozen battle payload was found.");
+  }
+
+  const form = new URLSearchParams({
+    format: "json",
+    url: longUrl
+  });
+
+  const response = await fetch("https://is.gd/create.php", {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "user-agent": "MultiverseBattleGenerator/1.4 (noncommercial fan project; share-link creation)"
+    },
+    body: form.toString(),
+    signal: AbortSignal.timeout(10000)
+  });
+
+  const text = await response.text();
+  let data = {};
+  try { data = JSON.parse(text); } catch {}
+
+  if (!response.ok || data.errorcode || !data.shorturl) {
+    const message = data.errormessage || text || `Shortener returned ${response.status}`;
+    throw new Error(message.slice(0, 300));
+  }
+
+  const shortUrl = String(data.shorturl);
+  shortUrlCache.set(longUrl, shortUrl);
+
+  // Keep the in-memory cache bounded.
+  if (shortUrlCache.size > 500) {
+    const first = shortUrlCache.keys().next().value;
+    shortUrlCache.delete(first);
+  }
+
+  return shortUrl;
+}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || "localhost"}`);
 
@@ -834,6 +897,25 @@ const server = http.createServer(async (req, res) => {
       "cache-control": "public, max-age=604800"
     });
     return res.end();
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/shorten") {
+    try {
+      const body = await readBody(req, 80_000);
+      const longUrl = typeof body?.url === "string" ? body.url : "";
+
+      if (!longUrl || longUrl.length > 60_000) {
+        return json(res, 400, { error: "Invalid or oversized battle link." });
+      }
+
+      const shortUrl = await shortenBattleUrl(longUrl, req);
+      return json(res, 200, { shortUrl });
+    } catch (err) {
+      console.error("Short-link error:", err);
+      return json(res, 502, {
+        error: "Could not create a short battle link right now."
+      });
+    }
   }
 
   if (req.method === "POST" && url.pathname === "/api/judge") {
