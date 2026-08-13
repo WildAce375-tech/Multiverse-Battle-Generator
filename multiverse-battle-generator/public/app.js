@@ -11,18 +11,72 @@ function esc(s="") {
   return String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 }
 
+
+function fighterImagePath(c) {
+  return c.image || `/images/characters/${c.id}.webp`;
+}
+
+function fighterInitials(c) {
+  const words = String(c.name || '').split(/[^A-Za-z0-9]+/).filter(Boolean).filter(w => !['of','the','and'].includes(w.toLowerCase()));
+  return (words.slice(0,2).map(w => w[0]).join('') || '?').toUpperCase();
+}
+
+function fighterAvatarTone(c) {
+  const f = (c.franchise || '').toLowerCase();
+  if (f.includes('marvel')) return 'marvel';
+  if (f.includes('dc')) return 'dc';
+  return 'other';
+}
+
+function ensureAvatarStyles() {
+  if (document.getElementById('fighter-avatar-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'fighter-avatar-styles';
+  style.textContent = `
+    .fighterHeader{display:flex;gap:16px;align-items:flex-start;margin-top:8px}
+    .fighterHeaderText{min-width:0;flex:1}
+    .fighterAvatar{position:relative;width:84px;height:84px;flex:0 0 84px;border-radius:18px;overflow:hidden;border:1px solid #2d3750;background:linear-gradient(135deg,#161d2a,#0a0e15);box-shadow:0 10px 24px rgba(0,0,0,.25)}
+    .fighterAvatar.marvel{background:linear-gradient(135deg,rgba(255,56,95,.32),rgba(125,92,255,.22)),#0b0f16}
+    .fighterAvatar.dc{background:linear-gradient(135deg,rgba(66,230,213,.26),rgba(125,92,255,.22)),#0b0f16}
+    .fighterAvatar.other{background:linear-gradient(135deg,rgba(255,200,87,.26),rgba(125,92,255,.18)),#0b0f16}
+    .fighterAvatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+    .fighterAvatarFallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:1000;font-size:1.55rem;letter-spacing:-.05em;color:#eef3fb}
+    .fighterAvatar.hasImage .fighterAvatarFallback{display:none}
+    @media(max-width:760px){.fighterAvatar{width:72px;height:72px;flex-basis:72px}}
+  `;
+  document.head.appendChild(style);
+}
+
 function renderFighter(cardId, c, side) {
   const el = $(cardId);
   el.className = `fighterCard ${side === "B" ? "b" : ""}`;
+  const initials = fighterInitials(c);
+  const tone = fighterAvatarTone(c);
+  const imagePath = fighterImagePath(c);
   el.innerHTML = `
     <div class="fighterSide">FIGHTER ${side}</div>
-    <div class="fighterName">${esc(c.name)}</div>
-    <div class="fighterVersion">${esc(c.version)}</div>
-    <div class="tags">
-      <span class="tag">${esc(c.franchise)}</span>
-      <span class="tag">${esc(c.medium)}</span>
-      <span class="tag">Tier ${c.tier}: ${esc(c.tierName)}</span>
+    <div class="fighterHeader">
+      <div class="fighterAvatar ${tone}" aria-hidden="true">
+        <img src="${esc(imagePath)}" alt="${esc(c.name)} portrait" loading="lazy" />
+        <div class="fighterAvatarFallback">${esc(initials)}</div>
+      </div>
+      <div class="fighterHeaderText">
+        <div class="fighterName">${esc(c.name)}</div>
+        <div class="fighterVersion">${esc(c.version)}</div>
+        <div class="tags">
+          <span class="tag">${esc(c.franchise)}</span>
+          <span class="tag">${esc(c.medium)}</span>
+          <span class="tag">Tier ${c.tier}: ${esc(c.tierName)}</span>
+        </div>
+      </div>
     </div>`;
+  const avatar = el.querySelector('.fighterAvatar');
+  const img = el.querySelector('img');
+  if (img) {
+    img.addEventListener('load', () => avatar?.classList.add('hasImage'), { once: true });
+    img.addEventListener('error', () => avatar?.classList.remove('hasImage'), { once: true });
+    if (img.complete && img.naturalWidth > 0) avatar?.classList.add('hasImage');
+  }
 }
 
 function renderArena() {
@@ -349,6 +403,7 @@ $("shareBtn").onclick=async()=>{
   }
 };
 
+ensureAvatarStyles();
 $("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters`;
 renderArena();
 populateManual();
