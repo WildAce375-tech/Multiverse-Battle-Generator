@@ -128,37 +128,47 @@
       </div>
       <div class="oddsTrack"><div id="oddsFill"></div></div>
       <p id="headline" class="headline"></p>
-      <p id="analysis" class="analysis"></p>
 
-      <div class="debateGrid">
-        <div class="debateBox">
-          <h3 id="caseATitle">Case for Fighter A</h3>
-          <ul id="caseA"></ul>
+      <details id="fullAnalysis" class="analysisDetails">
+        <summary>
+          <span>Full Battle Analysis</span>
+          <span class="analysisChevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="analysisBody">
+          <p id="analysis" class="analysis"></p>
+
+          <div class="debateGrid">
+            <div class="debateBox">
+              <h3 id="caseATitle">Case for Fighter A</h3>
+              <ul id="caseA"></ul>
+            </div>
+            <div class="debateBox">
+              <h3 id="caseBTitle">Case for Fighter B</h3>
+              <ul id="caseB"></ul>
+            </div>
+          </div>
+
+          <div class="factorBox">
+            <h3>Deciding factors</h3>
+            <ul id="factors"></ul>
+            <p><strong>Swing factor:</strong> <span id="swing"></span></p>
+            <p class="small"><strong>Assumptions:</strong> <span id="assumptions"></span></p>
+          </div>
+
+          <div id="sourcesWrap" class="sourcesWrap hidden">
+            <h3>Research sources</h3>
+            <div id="sources" class="sources"></div>
+          </div>
+
+          <p id="judgeMeta" class="metaNote"></p>
         </div>
-        <div class="debateBox">
-          <h3 id="caseBTitle">Case for Fighter B</h3>
-          <ul id="caseB"></ul>
-        </div>
-      </div>
-
-      <div class="factorBox">
-        <h3>Deciding factors</h3>
-        <ul id="factors"></ul>
-        <p><strong>Swing factor:</strong> <span id="swing"></span></p>
-        <p class="small"><strong>Assumptions:</strong> <span id="assumptions"></span></p>
-      </div>
-
-      <div id="sourcesWrap" class="sourcesWrap hidden">
-        <h3>Research sources</h3>
-        <div id="sources" class="sources"></div>
-      </div>
+      </details>
 
       <div class="actions">
         <button id="shareBtn" class="primary">🔗 Copy Short Battle Link</button>
         <button id="rematchBtn" class="secondary">↻ Rematch</button>
         <button id="newBattleBtn" class="secondary">🎲 New Battle</button>
       </div>
-      <p id="judgeMeta" class="metaNote"></p>
     </section>
 
     <footer>
@@ -166,6 +176,6 @@
       Fictional-versus outcomes are subjective estimates, not canon.
     </footer>
   </main>
-  <script type="module" src="/app.js?v=short-id-1.5"></script>
+  <script type="module" src="/app.js?v=compact-results-1.7"></script>
 </body>
 </html>

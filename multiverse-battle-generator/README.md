@@ -42,3 +42,14 @@ Get them from the REST API section of your Upstash Redis database.
 - Random/manual battles
 - Battle settings
 - Fan-made/noncommercial disclaimer
+
+
+## v1.6 battle-view cleanup
+
+Finished fights no longer jump straight to the verdict and hide the fighters.
+New fights and shared `/b/XXXXXXXX` links land on Fighter A vs Fighter B, with the verdict directly below.
+
+
+## v1.7 compact results
+
+The page no longer auto-scrolls after a fight. The result always shows the winner, percentage, difficulty, and one-sentence headline. Full reasoning, fighter cases, deciding factors, assumptions, sources, and judge metadata are collapsed under **Full Battle Analysis** until the user opens it.

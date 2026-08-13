@@ -276,8 +276,10 @@ function renderVerdict(result) {
     ? `Web-researched AI verdict • ${result.model} • frozen ${when}`
     : `Local fallback verdict • ${result.fallbackReason ? "AI error: " + result.fallbackReason + " • " : ""}frozen ${when}`;
 
+  const fullAnalysis = $("fullAnalysis");
+  if (fullAnalysis) fullAnalysis.open = false;
+
   $("verdictPanel").classList.remove("hidden");
-  $("verdictPanel").scrollIntoView({behavior:"smooth", block:"start"});
 }
 
 function battlePayload() {
