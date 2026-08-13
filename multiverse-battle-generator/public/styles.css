@@ -1,0 +1,99 @@
+*{box-sizing:border-box}
+:root{
+  --bg:#07090d;--panel:#10141d;--panel2:#171d29;--line:#293244;--text:#f5f7fb;--muted:#95a0b3;
+  --red:#ff385f;--purple:#7d5cff;--cyan:#42e6d5;--gold:#ffc857;--green:#39e58c;
+}
+html{color-scheme:dark}
+body{margin:0;background:
+ radial-gradient(circle at 18% 0%,rgba(125,92,255,.16),transparent 35%),
+ radial-gradient(circle at 85% 15%,rgba(255,56,95,.12),transparent 35%),var(--bg);
+ color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+.noise{position:fixed;inset:0;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+.shell{width:min(1120px,calc(100% - 28px));margin:0 auto;padding:38px 0 60px}
+.hero{padding:28px 0 22px}
+.eyebrow{font-size:.72rem;letter-spacing:.18em;font-weight:900;color:var(--cyan)}
+h1{font-size:clamp(2.6rem,8vw,6.5rem);line-height:.82;letter-spacing:-.065em;margin:12px 0 18px;font-weight:1000}
+h1 span{color:transparent;-webkit-text-stroke:1px #8790a1}
+.hero p{max-width:760px;color:#c8ced9;font-size:clamp(1rem,2vw,1.22rem);line-height:1.55;margin:0}
+.statusRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.status{border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:.76rem;background:#0c1017}
+.status.online{border-color:rgba(57,229,140,.45);color:var(--green)}
+.status.offline{border-color:rgba(255,200,87,.45);color:var(--gold)}
+.muted{color:var(--muted)}
+.controlPanel,.verdictPanel,.loading{background:rgba(16,20,29,.92);border:1px solid var(--line);border-radius:18px;box-shadow:0 22px 70px rgba(0,0,0,.3)}
+.controlPanel{overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tab{flex:1;padding:15px;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:850;cursor:pointer}
+.tab.active{background:var(--panel2);color:white;box-shadow:inset 0 -2px var(--purple)}
+.tabBody{padding:18px}
+.row,.manualGrid,.rulesGrid{display:grid;gap:14px}
+.row{grid-template-columns:1fr 1.3fr;align-items:end}
+.manualGrid{grid-template-columns:1fr 1fr}
+.rulesGrid{grid-template-columns:repeat(4,1fr)}
+label{display:grid;gap:7px;color:var(--muted);font-size:.78rem;font-weight:750}
+select{width:100%;background:#0b0f16;color:white;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit}
+.checkLabel{display:flex;align-items:center;gap:10px;padding:8px 0}
+.checkLabel input{width:18px;height:18px}
+.checkLabel span{display:grid;gap:2px;color:white}
+.checkLabel small{color:var(--muted);font-weight:500}
+button{font:inherit;border:0;cursor:pointer;border-radius:11px;padding:11px 14px;font-weight:900;transition:.15s transform,.15s filter}
+button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.primary{color:#fff;background:linear-gradient(135deg,var(--purple),#a34cff)}
+.secondary{color:white;background:#171d29;border:1px solid var(--line)}
+.big{width:100%;margin-top:15px;padding:14px;font-size:1rem}
+.rules{border-top:1px solid var(--line);padding:0 18px}
+.rules summary{cursor:pointer;padding:15px 0;color:#d8deea;font-weight:800}
+.rulesGrid{padding:2px 0 14px}
+.ruleText{font-size:.8rem;color:var(--muted);line-height:1.55;margin:0 0 16px}
+.arena{display:grid;grid-template-columns:1fr 86px 1fr;gap:14px;margin:18px 0;align-items:stretch}
+.fighterCard{min-height:215px;background:linear-gradient(145deg,#181e2b,#0e121a);border:1px solid var(--line);border-radius:18px;padding:22px;position:relative;overflow:hidden}
+.fighterCard:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-75px;top:-75px;background:radial-gradient(circle,rgba(125,92,255,.18),transparent 68%)}
+.fighterCard.b:before{background:radial-gradient(circle,rgba(255,56,95,.18),transparent 68%)}
+.fighterSide{font-size:.67rem;letter-spacing:.15em;color:var(--muted);font-weight:900}
+.fighterName{font-size:clamp(1.7rem,4vw,2.6rem);letter-spacing:-.04em;font-weight:950;margin:9px 0 5px}
+.fighterVersion{color:#c2c9d5;line-height:1.35}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:17px}
+.tag{font-size:.68rem;padding:6px 8px;border-radius:999px;background:#0a0e15;border:1px solid #283145;color:#9fabbd}
+.vsMark{align-self:center;text-align:center;font-size:2rem;font-weight:1000;color:var(--gold);font-style:italic}
+.loading{padding:22px;display:flex;align-items:center;gap:16px;margin:18px 0}
+.loading p{margin:4px 0 0;color:var(--muted)}
+.spinner{width:34px;height:34px;border:4px solid #2c3443;border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.verdictPanel{padding:22px;margin-top:18px}
+.verdictTop{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.verdictTop h2{font-size:clamp(2rem,5vw,4rem);margin:7px 0 8px;letter-spacing:-.05em}
+.pill{display:inline-block;border:1px solid #554a28;background:#201c12;color:var(--gold);padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:900}
+.oddsBox{text-align:right;min-width:155px}
+.pct{font-size:3.1rem;line-height:1;font-weight:1000;color:var(--cyan)}
+.oddsLabel{color:var(--muted);font-size:.72rem;margin-top:5px}
+.oddsTrack{height:10px;background:#262d3b;border-radius:999px;overflow:hidden;margin:20px 0}
+.oddsTrack>div{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));width:50%;transition:width .4s ease}
+.headline{font-size:1.22rem;font-weight:850;line-height:1.45}
+.analysis{line-height:1.72;color:#d2d8e2;white-space:pre-line}
+.cite{color:var(--cyan);text-decoration:none;font-size:.8em;vertical-align:super;margin-left:2px}
+.debateGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.debateBox,.factorBox{background:#0c1017;border:1px solid var(--line);border-radius:13px;padding:16px}
+.debateBox h3,.factorBox h3,.sourcesWrap h3{margin:0 0 10px;font-size:.92rem}
+ul{padding-left:19px;margin:0}
+li{margin:7px 0;color:#c6ceda;line-height:1.45}
+.factorBox p{line-height:1.55;color:#c6ceda}
+.small{font-size:.82rem}
+.sourcesWrap{margin-top:20px}
+.sources{display:flex;gap:8px;flex-wrap:wrap}
+.source{max-width:100%;text-decoration:none;color:#dce4ef;border:1px solid var(--line);background:#0b0f16;padding:8px 10px;border-radius:9px;font-size:.76rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.source:hover{border-color:#55627a}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.metaNote{color:var(--muted);font-size:.72rem;margin:12px 0 0}
+footer{color:#687487;font-size:.72rem;line-height:1.5;padding:28px 4px}
+.hidden{display:none!important}
+@media(max-width:760px){
+  .shell{width:min(100% - 20px,1120px);padding-top:18px}
+  .row,.manualGrid,.rulesGrid,.debateGrid{grid-template-columns:1fr}
+  .arena{grid-template-columns:1fr}
+  .vsMark{font-size:1.35rem}
+  .verdictTop{display:block}
+  .oddsBox{text-align:left;margin-top:15px}
+  .pct{font-size:2.4rem}
+  h1{font-size:3.25rem}
+}
