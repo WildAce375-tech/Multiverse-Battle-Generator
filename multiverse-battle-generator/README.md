@@ -53,3 +53,9 @@ New fights and shared `/b/XXXXXXXX` links land on Fighter A vs Fighter B, with t
 ## v1.7 compact results
 
 The page no longer auto-scrolls after a fight. The result always shows the winner, percentage, difficulty, and one-sentence headline. Full reasoning, fighter cases, deciding factors, assumptions, sources, and judge metadata are collapsed under **Full Battle Analysis** until the user opens it.
+
+
+## v1.8 compact header
+
+The MULTIVERSE BATTLE GENERATOR masthead is substantially smaller and uses less vertical spacing.
+The battle controls now appear much higher on desktop and mobile screens.
