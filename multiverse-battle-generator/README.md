@@ -72,3 +72,48 @@ Added six top-level modes:
 - Can They Survive? (five presets plus custom survival scenarios with dedicated AI judge)
 
 This is intentionally the baseline functionality. Short-link sharing for non-classic modes, endurance damage in gauntlets, automatic full-bracket resolution, and deeper draft rules can be added after the core flow is tested.
+
+
+## v2.1 — Live PvP Draft
+
+Draft Mode now has two choices:
+
+- **Local / Hot-Seat** — the existing one-screen draft.
+- **Live PvP** — Player 1 creates a room, sends a short `/draft/ABC123` invite, and Player 2 joins from another phone/computer.
+
+Live PvP features:
+- 2v2 or 3v3
+- configurable point budget
+- alternating or snake draft order
+- synced picks
+- duplicate fighters blocked
+- budget validation on the server
+- reconnect tokens stored only in each player's browser
+- spectators after both seats are claimed
+- one shared AI team-battle result for both players
+- completed live rooms remain viewable for 7 days
+
+No new service is required. It reuses:
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+
+already configured for short battle links.
+
+
+## v2.2 — 2 to 4 Player Live Battles
+
+Live Draft now supports:
+- 2, 3, or 4 human players
+- 1, 2, or 3 fighters per player
+- independent point budgets
+- round-robin or generalized snake drafting
+- Teams A, B, C, and D
+- live synced picks and reconnect support
+- spectators once all seats are filled
+- a true multi-team AI free-for-all judge
+- probability estimates for every participating team
+
+Example 4-player snake order with two picks each:
+`A → B → C → D → D → C → B → A`
+
+No new Render settings are required. It reuses the existing Upstash storage and OpenAI setup.

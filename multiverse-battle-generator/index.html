@@ -96,9 +96,36 @@
       </div>
 
       <div id="draftMode" class="modePane hidden">
-        <div class="modeIntro"><strong>Draft Mode</strong><span>Hot-seat draft. Each side gets 12 points and up to 3 fighters. A fighter costs points equal to their power tier.</span></div>
-        <label>Available fighter<select id="draftPick"></select></label>
-        <div class="draftButtons"><button id="draftToA" class="secondary">+ Draft to Team A</button><button id="draftToB" class="secondary">+ Draft to Team B</button><button id="draftReset" class="secondary">↻ Reset Draft</button></div>
+        <div class="modeIntro"><strong>Draft Mode</strong><span>Draft locally on one screen or create a live room and draft against a friend on another device.</span></div>
+
+        <div class="draftSubTabs" role="tablist" aria-label="Draft type">
+          <button id="draftLocalTab" class="draftSubTab active" type="button">LOCAL / HOT-SEAT</button>
+          <button id="draftLiveTab" class="draftSubTab" type="button">LIVE PVP</button>
+        </div>
+
+        <div id="localDraftControls">
+          <label>Available fighter<select id="draftPick"></select></label>
+          <div class="draftButtons"><button id="draftToA" class="secondary">+ Draft to Team A</button><button id="draftToB" class="secondary">+ Draft to Team B</button><button id="draftReset" class="secondary">↻ Reset Draft</button></div>
+        </div>
+
+        <div id="liveDraftControls" class="hidden">
+          <div id="liveDraftSetup">
+            <div class="modeForm fourCol">
+              <label>Players<select id="liveDraftPlayers"><option value="2">2 players</option><option value="3">3 players</option><option value="4" selected>4 players</option></select></label>
+              <label>Fighters each<select id="liveDraftTeamSize"><option value="1">1 fighter</option><option value="2" selected>2 fighters</option><option value="3">3 fighters</option></select></label>
+              <label>Budget per player<select id="liveDraftBudget"><option value="8">8 points</option><option value="10">10 points</option><option value="12" selected>12 points</option><option value="15">15 points</option><option value="18">18 points</option></select></label>
+              <label>Draft order<select id="liveDraftOrder"><option value="alternating">Round-robin</option><option value="snake" selected>Snake draft</option></select></label>
+            </div>
+            <button id="createLiveDraftBtn" class="primary big">⚡ CREATE LIVE DRAFT</button>
+            <div class="liveJoinDivider"><span>OR JOIN A ROOM</span></div>
+            <div class="joinDraftRow">
+              <input id="liveDraftCode" maxlength="6" autocomplete="off" spellcheck="false" placeholder="ROOM CODE">
+              <button id="joinLiveDraftBtn" class="secondary">JOIN DRAFT</button>
+            </div>
+            <p class="modeNote">Live rooms use the same Upstash storage already configured for short battle links. No extra service is required.</p>
+          </div>
+          <div id="liveDraftActive" class="hidden"></div>
+        </div>
       </div>
 
       <div id="survivalMode" class="modePane hidden">
@@ -158,6 +185,6 @@
 
     <footer>Fan-made, noncommercial discussion tool. Not affiliated with Marvel, DC, Disney, Warner Bros., or other rights holders. Character names, images and trademarks remain the property of their respective owners. Fictional-versus outcomes are subjective estimates, not canon.</footer>
   </main>
-  <script type="module" src="/app.js?v=game-modes-2.0"></script>
+  <script type="module" src="/app.js?v=multiplayer-2.2"></script>
 </body>
 </html>

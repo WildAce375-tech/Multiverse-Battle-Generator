@@ -158,3 +158,71 @@ textarea{width:100%;min-height:110px;resize:vertical;background:#0b0f16;color:wh
 .winningTeam{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px;background:#0b0f16;border:1px solid var(--line);border-radius:12px;padding:12px;margin:14px 0}.modeAnalysis{margin-top:16px}.modeAnalysis .factorBox{margin:10px 0}.scenarioQuote{color:#aeb8c8;background:#0b0f16;border-left:3px solid var(--purple);padding:10px 12px;border-radius:0 9px 9px 0;line-height:1.5;font-size:.84rem}
 .draftBoard{display:grid;grid-template-columns:1fr 1fr;gap:14px}.draftTeam{background:#0b0f16;border:1px solid var(--line);border-radius:13px;padding:13px}.draftTeam h3{display:flex;justify-content:space-between;margin:0 0 10px}.draftTeam h3 span{font-size:.75rem;color:var(--cyan)}.draftTeam .miniFighter+.miniFighter{margin-top:8px}.draftEmpty{padding:20px;text-align:center;color:var(--muted);border:1px dashed #2b3548;border-radius:10px}
 @media(max-width:760px){.modeNav{margin:0 -1px}.modeTab{min-width:105px;font-size:.78rem}.modeIntro{display:block}.modeIntro span{display:block;text-align:left;margin-top:6px}.twoCol,.threeCol,.teamBuilder,.draftBoard{grid-template-columns:1fr}.modeResultHeader{display:block}.modeScore{font-size:2.2rem;margin-top:8px}.ladderRow{grid-template-columns:28px 1fr}.ladderOutcome{grid-column:2}.miniFighter small{max-width:220px}}
+
+
+/* v2.1 — live PvP drafting */
+input[type="text"],#liveDraftCode,#liveRosterSearch{
+  width:100%;background:#0b0f16;color:white;border:1px solid var(--line);border-radius:10px;
+  padding:11px 12px;font:inherit;outline:none
+}
+input[type="text"]:focus,#liveDraftCode:focus,#liveRosterSearch:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(125,92,255,.12)}
+.draftSubTabs{display:flex;gap:8px;margin:0 0 16px}
+.draftSubTab{flex:1;background:#0b0f16;color:var(--muted);border:1px solid var(--line);padding:10px}
+.draftSubTab.active{color:white;border-color:var(--purple);background:linear-gradient(135deg,rgba(125,92,255,.24),rgba(66,230,213,.07))}
+.liveJoinDivider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.68rem;font-weight:900;letter-spacing:.13em;margin:16px 0}
+.liveJoinDivider:before,.liveJoinDivider:after{content:"";height:1px;flex:1;background:var(--line)}
+.joinDraftRow{display:grid;grid-template-columns:1fr auto;gap:10px}
+#liveDraftCode{text-transform:uppercase;font-weight:1000;letter-spacing:.16em}
+.liveRoomShell{display:grid;gap:14px}
+.liveRoomTop{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;background:#0b0f16;border:1px solid var(--line);border-radius:14px;padding:14px}
+.liveRoomCode{font-size:clamp(1.7rem,5vw,2.8rem);line-height:1;font-weight:1000;letter-spacing:.1em;color:var(--cyan);margin-top:4px}
+.liveRoomMeta{color:var(--muted);font-size:.74rem;margin-top:7px;line-height:1.5}
+.liveRoomActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.liveStatusBanner{border:1px solid var(--line);border-radius:13px;padding:13px 15px;font-weight:1000;text-align:center;background:#0b0f16}
+.liveStatusBanner.yourTurn{border-color:rgba(66,230,213,.55);color:var(--cyan);box-shadow:0 0 30px rgba(66,230,213,.07)}
+.liveStatusBanner.opponentTurn{border-color:rgba(255,200,87,.4);color:var(--gold)}
+.liveStatusBanner.waiting{color:var(--muted)}
+.liveStatusBanner.complete{border-color:rgba(57,229,140,.45);color:var(--green)}
+.liveDraftBoard{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.liveDraftTeam{background:#0b0f16;border:1px solid var(--line);border-radius:13px;padding:13px}
+.liveDraftTeam.you{border-color:rgba(125,92,255,.65);box-shadow:inset 0 0 0 1px rgba(125,92,255,.1)}
+.liveDraftTeam.turn{box-shadow:0 0 0 1px rgba(66,230,213,.22),0 0 28px rgba(66,230,213,.05)}
+.liveDraftTeam h3{display:flex;align-items:center;gap:8px;margin:0 0 10px}
+.liveDraftTeam h3 .budgetLeft{margin-left:auto;color:var(--cyan);font-size:.72rem}
+.youBadge,.spectatorBadge,.turnBadge{font-size:.6rem;letter-spacing:.08em;border-radius:999px;padding:4px 6px;border:1px solid var(--line)}
+.youBadge{color:#fff;border-color:var(--purple);background:rgba(125,92,255,.18)}
+.turnBadge{color:var(--cyan);border-color:rgba(66,230,213,.35)}
+.spectatorBadge{color:var(--muted)}
+.liveRosterPanel{background:#0b0f16;border:1px solid var(--line);border-radius:14px;padding:13px}
+.liveRosterPanel h3{margin:0 0 10px}
+.liveRoster{display:grid;gap:7px;margin-top:10px;max-height:470px;overflow:auto;padding-right:3px}
+.liveRosterRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:#0d121b;border:1px solid #222b3a;border-radius:11px;padding:8px}
+.liveRosterRow.drafted{opacity:.55}
+.liveRosterRow .miniFighter img{width:36px;height:36px}
+.liveRosterRow .miniFighter small{max-width:390px}
+.livePickBtn{padding:8px 10px;min-width:82px;font-size:.72rem}
+.livePickBtn:disabled{filter:none}
+.liveDraftResult{margin-top:4px}
+.liveSyncLine{font-size:.68rem;color:var(--muted);text-align:right}
+.liveSpectatorNote{color:var(--muted);font-size:.76rem;line-height:1.5;margin:0}
+@media(max-width:760px){
+  .joinDraftRow{grid-template-columns:1fr}
+  .liveRoomTop{display:block}.liveRoomActions{justify-content:flex-start;margin-top:12px}
+  .liveDraftBoard{grid-template-columns:1fr}
+  .liveRosterRow .miniFighter small{max-width:180px}
+}
+
+
+/* v2.2 — 2–4 player live drafts */
+.modeForm.fourCol{grid-template-columns:repeat(4,minmax(0,1fr))}
+.liveDraftBoard.players3,.liveDraftBoard.players4{grid-template-columns:repeat(2,minmax(0,1fr))}
+.playerWaiting{color:var(--muted);font-size:.73rem;padding:9px 0}
+.multiOdds{display:grid;gap:7px;margin:13px 0 4px}
+.multiOddsRow{display:grid;grid-template-columns:78px 1fr 50px;gap:9px;align-items:center;font-size:.75rem;font-weight:900}
+.multiOddsTrack{height:7px;border-radius:999px;background:#151c27;overflow:hidden}
+.multiOddsTrack>div{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:inherit}
+.multiTeamCases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(max-width:900px){.modeForm.fourCol{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+  .modeForm.fourCol,.liveDraftBoard.players3,.liveDraftBoard.players4,.multiTeamCases{grid-template-columns:1fr}
+}

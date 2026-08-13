@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { randomBytes } from "crypto";
+import { CHARACTERS } from "./characters.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -815,6 +816,165 @@ async function runTeamJudge(body) {
   return {status:200,body:{verdict,sources,model:MODEL,researchModel:RESEARCH_MODEL,researched:true,generatedAt:new Date().toISOString()}};
 }
 
+
+const MULTI_TEAM_JUDGE_SYSTEM = `You are an impartial fictional free-for-all battle judge.
+Judge a battle among 2 to 4 separate teams. Pick exactly one most likely winning team.
+Evaluate exact character versions only and use representative standard portrayals rather than absurd one-off outliers.
+Treat every listed team as hostile to every other team. Consider temporary tactical cooperation only when it is realistically useful; no team begins with a secret alliance.
+Consider team synergy, coordination, battlefield roles, focus fire, area control, mobility, speed, hax, counters, survivability, threat prioritization, and the danger of third-party interference.
+Do not simply choose the team with the strongest single character if the broader matchup does not support it.
+teamProbabilities must contain every participating team exactly once and sum to 100.
+winnerProbability must exactly match the winning team's probability.
+Difficulty describes how secure the winning team's edge is:
+- Dominant: winner probability 65%+
+- Favored: 45-64%
+- Competitive: 30-44%
+- Razor Thin: below 30%
+Use supplied research citations as [1], [2], etc. and never invent source numbers.`;
+
+function multiTeamSchema(sides) {
+  return {
+    type:"object",
+    additionalProperties:false,
+    properties:{
+      winnerTeam:{type:"string",enum:sides},
+      winnerProbability:{type:"integer",minimum:0,maximum:100},
+      teamProbabilities:{
+        type:"array",minItems:sides.length,maxItems:sides.length,
+        items:{
+          type:"object",additionalProperties:false,
+          properties:{
+            team:{type:"string",enum:sides},
+            probability:{type:"integer",minimum:0,maximum:100}
+          },
+          required:["team","probability"]
+        }
+      },
+      difficulty:{type:"string",enum:["Dominant","Favored","Competitive","Razor Thin"]},
+      headline:{type:"string"},
+      analysis:{type:"string"},
+      decidingFactors:{type:"array",minItems:2,maxItems:6,items:{type:"string"}},
+      teamCases:{
+        type:"array",minItems:sides.length,maxItems:sides.length,
+        items:{
+          type:"object",additionalProperties:false,
+          properties:{
+            team:{type:"string",enum:sides},
+            points:{type:"array",minItems:1,maxItems:4,items:{type:"string"}}
+          },
+          required:["team","points"]
+        }
+      },
+      swingFactor:{type:"string"},
+      assumptions:{type:"string"}
+    },
+    required:["winnerTeam","winnerProbability","teamProbabilities","difficulty","headline","analysis","decidingFactors","teamCases","swingFactor","assumptions"]
+  };
+}
+
+async function runMultiTeamJudge(body) {
+  const rawTeams = body?.teams && typeof body.teams === "object" ? body.teams : {};
+  const sides = ["A","B","C","D"].filter(side => Array.isArray(rawTeams[side]) && rawTeams[side].length);
+  if (sides.length < 2 || sides.length > 4) {
+    return {status:400,body:{error:"A multiplayer battle needs 2 to 4 teams."}};
+  }
+
+  const teams = {};
+  for (const side of sides) {
+    teams[side] = rawTeams[side].map(cleanFighter).filter(Boolean).slice(0,3);
+    if (!teams[side].length) return {status:400,body:{error:`Team ${side} needs at least one valid fighter.`}};
+  }
+
+  const all = sides.flatMap(side => teams[side]);
+  const ids = all.map(x => x.id);
+  if (new Set(ids).size !== ids.length) {
+    return {status:400,body:{error:"A fighter can only appear once in a multiplayer battle."}};
+  }
+  if (!process.env.OPENAI_API_KEY) {
+    return {status:503,body:{error:"OPENAI_API_KEY is not configured on the server.",code:"NO_API_KEY"}};
+  }
+
+  const settings = cleanSettings(body?.settings);
+  const teamText = sides.map(side => `TEAM ${side}\n${JSON.stringify(teams[side],null,2)}`).join("\n\n");
+
+  const researchPrompt = `Research this ${sides.length}-team fictional free-for-all.
+Build one concise version-specific dossier focused on matchup-relevant abilities, counters, team interactions, and third-party dynamics.
+Do not decide the winner yet.
+
+${teamText}
+
+SETTINGS
+${JSON.stringify(settings,null,2)}`;
+
+  const research = await openAIRequest({
+    model:RESEARCH_MODEL,
+    reasoning:{effort:"low"},
+    tools:[{type:"web_search",search_context_size:"low"}],
+    input:[
+      {role:"system",content:RESEARCH_SYSTEM},
+      {role:"user",content:researchPrompt}
+    ],
+    max_output_tokens:1100
+  });
+
+  const researchText = outputText(research);
+  const sources = extractSources(research);
+  const sourceList = sources.length
+    ? sources.map((s,i)=>`[${i+1}] ${s.title} — ${s.url}`).join("\n")
+    : "(No web citation annotations were returned.)";
+
+  const judgePrompt = `Decide this ${sides.length}-team free-for-all.
+
+${teamText}
+
+SETTINGS
+${JSON.stringify(settings,null,2)}
+
+RESEARCH DOSSIER
+${researchText}
+
+AVAILABLE SOURCES
+${sourceList}
+
+Return all participating teams in teamProbabilities and teamCases. Probabilities must sum to 100. Use only source numbers that exist above.`;
+
+  const judged = await openAIRequest({
+    model:MODEL,
+    reasoning:{effort:"low"},
+    input:[
+      {role:"system",content:MULTI_TEAM_JUDGE_SYSTEM},
+      {role:"user",content:judgePrompt}
+    ],
+    text:{
+      format:{
+        type:"json_schema",
+        name:"multiplayer_battle_verdict",
+        strict:true,
+        schema:multiTeamSchema(sides)
+      }
+    },
+    max_output_tokens:1700
+  });
+
+  const verdict = JSON.parse(outputText(judged));
+  const probabilityMap = new Map((verdict.teamProbabilities||[]).map(x=>[x.team,x.probability]));
+  const sum = [...probabilityMap.values()].reduce((a,b)=>a+b,0);
+  if (probabilityMap.size !== sides.length || sides.some(s=>!probabilityMap.has(s)) || sum !== 100) {
+    throw new Error("Multiplayer judge returned invalid team probabilities.");
+  }
+  if (probabilityMap.get(verdict.winnerTeam) !== verdict.winnerProbability) {
+    throw new Error("Multiplayer judge winner probability did not match.");
+  }
+
+  return {
+    status:200,
+    body:{
+      verdict,sources,model:MODEL,researchModel:RESEARCH_MODEL,researched:true,
+      generatedAt:new Date().toISOString()
+    }
+  };
+}
+
 const SCENARIO_JUDGE_SYSTEM = `You are an impartial fictional survival-scenario judge.
 Evaluate only the exact character version supplied. Judge whether that character can accomplish the stated objective and survive under the supplied assumptions.
 Use representative feats, not absurd one-off outliers. Consider knowledge, temperament, equipment, mobility, endurance, vulnerabilities, environmental constraints, and whether the threats have realistic ways to stop them.
@@ -973,6 +1133,187 @@ async function loadBattle(id) {
   return validStoredBattle(payload) ? payload : null;
 }
 
+
+const DRAFT_ROSTER = new Map(CHARACTERS.map(c => [c.id, c]));
+const LIVE_DRAFT_CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+const LIVE_DRAFT_ROOM_RE = /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}$/;
+
+function makeLiveDraftCode(length = 6) {
+  const bytes = randomBytes(length);
+  let code = "";
+  for (let i = 0; i < length; i++) {
+    code += LIVE_DRAFT_CODE_ALPHABET[bytes[i] % LIVE_DRAFT_CODE_ALPHABET.length];
+  }
+  return code;
+}
+
+function makeLiveDraftToken() {
+  return randomBytes(24).toString("base64url");
+}
+
+const LIVE_DRAFT_SIDES = ["A","B","C","D"];
+
+function cleanLiveDraftConfig(config = {}) {
+  const rawPlayers = Number(config.playerCount);
+  const playerCount = Number.isInteger(rawPlayers) && rawPlayers >= 2 && rawPlayers <= 4 ? rawPlayers : 2;
+  const rawTeamSize = Number(config.teamSize);
+  const teamSize = Number.isInteger(rawTeamSize) && rawTeamSize >= 1 && rawTeamSize <= 3 ? rawTeamSize : 2;
+  const rawBudget = Number(config.budget);
+  const budget = Number.isInteger(rawBudget) && rawBudget >= teamSize && rawBudget <= 30 ? rawBudget : 12;
+  const order = ["alternating","snake"].includes(config.order) ? config.order : "snake";
+  return { playerCount, teamSize, budget, order };
+}
+
+function liveDraftSides(roomOrConfig) {
+  const config = roomOrConfig?.config || roomOrConfig || {};
+  return LIVE_DRAFT_SIDES.slice(0, Math.max(2, Math.min(4, Number(config.playerCount) || 2)));
+}
+
+function liveDraftSideForPick(pickNumber, order, playerCount) {
+  const count = Math.max(2, Math.min(4, Number(playerCount) || 2));
+  const sides = LIVE_DRAFT_SIDES.slice(0, count);
+  const round = Math.floor(pickNumber / count);
+  const position = pickNumber % count;
+  if (order === "snake" && round % 2 === 1) return sides[count - 1 - position];
+  return sides[position];
+}
+
+function liveDraftSpent(room, side) {
+  return (room.teams?.[side] || []).reduce((sum, id) => {
+    const fighter = DRAFT_ROSTER.get(id);
+    return sum + Math.max(1, Number(fighter?.tier) || 1);
+  }, 0);
+}
+
+function liveDraftComplete(room) {
+  return liveDraftSides(room).every(side => (room.teams?.[side] || []).length >= room.config.teamSize);
+}
+
+function liveDraftJoinedCount(room) {
+  return liveDraftSides(room).filter(side => Boolean(room.players?.[side])).length;
+}
+
+function publicLiveDraftRoom(room, token = "") {
+  const sides = liveDraftSides(room);
+  const yourSide = token ? (sides.find(side => room.players?.[side] === token) || null) : null;
+  const joinedSides = sides.filter(side => Boolean(room.players?.[side]));
+
+  return {
+    code: room.code,
+    status: room.status,
+    config: room.config,
+    settings: room.settings,
+    teams: room.teams,
+    turn: room.turn || null,
+    pickNumber: room.pickNumber || 0,
+    result: room.result || null,
+    createdAt: room.createdAt,
+    updatedAt: room.updatedAt,
+    joinedCount: joinedSides.length,
+    joinedSides,
+    yourSide,
+    spectator: !yourSide && joinedSides.length >= room.config.playerCount
+  };
+}
+
+async function loadLiveDraftRoom(code) {
+  const normalized = String(code || "").toUpperCase();
+  if (!LIVE_DRAFT_ROOM_RE.test(normalized)) return null;
+  const raw = await upstashCommand(["GET", `livedraft:${normalized}`]);
+  if (!raw || typeof raw !== "string") return null;
+  try {
+    const room = JSON.parse(raw);
+    return room?.code === normalized ? room : null;
+  } catch {
+    return null;
+  }
+}
+
+async function saveLiveDraftRoom(room) {
+  room.updatedAt = new Date().toISOString();
+  const ttl = room.status === "complete" ? 604800 : 86400;
+  await upstashCommand(["SET", `livedraft:${room.code}`, JSON.stringify(room), "EX", ttl]);
+  return room;
+}
+
+async function createLiveDraftRoom(config, settings) {
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const code = makeLiveDraftCode();
+    const token = makeLiveDraftToken();
+    const now = new Date().toISOString();
+    const cleanConfig = cleanLiveDraftConfig(config);
+    const sides = liveDraftSides(cleanConfig);
+    const teams = Object.fromEntries(sides.map(side => [side, []]));
+    const players = Object.fromEntries(sides.map(side => [side, null]));
+    players.A = token;
+
+    const room = {
+      version: 2,
+      code,
+      status: cleanConfig.playerCount === 1 ? "drafting" : "waiting",
+      config: cleanConfig,
+      settings: cleanSettings(settings),
+      teams,
+      players,
+      turn: null,
+      pickNumber: 0,
+      result: null,
+      createdAt: now,
+      updatedAt: now
+    };
+
+    const created = await upstashCommand([
+      "SET", `livedraft:${code}`, JSON.stringify(room), "NX", "EX", 86400
+    ]);
+    if (created === "OK") return { room, token };
+  }
+  throw new Error("Could not allocate a live draft room.");
+}
+
+async function acquireLiveDraftLock(code) {
+  const lockToken = makeLiveDraftToken();
+  const result = await upstashCommand([
+    "SET", `livedraftlock:${code}`, lockToken, "NX", "PX", 8000
+  ]);
+  return result === "OK" ? lockToken : null;
+}
+
+async function releaseLiveDraftLock(code, lockToken) {
+  if (!lockToken) return;
+  try {
+    const current = await upstashCommand(["GET", `livedraftlock:${code}`]);
+    if (current === lockToken) await upstashCommand(["DEL", `livedraftlock:${code}`]);
+  } catch {}
+}
+
+function liveDraftSideForToken(room, token) {
+  if (!token) return null;
+  return liveDraftSides(room).find(side => room.players?.[side] === token) || null;
+}
+
+function validateLiveDraftPick(room, side, fighterId) {
+  if (room.status !== "drafting") return "The draft is not accepting picks right now.";
+  if (!side) return "You are not a player in this draft.";
+  if (room.turn !== side) return "It is not your turn.";
+  const fighter = DRAFT_ROSTER.get(fighterId);
+  if (!fighter) return "That fighter is not in the roster.";
+
+  const allDrafted = liveDraftSides(room).flatMap(s => room.teams?.[s] || []);
+  if (allDrafted.includes(fighterId)) return "That fighter has already been drafted.";
+  if ((room.teams?.[side] || []).length >= room.config.teamSize) return "Your team is already full.";
+
+  const cost = Math.max(1, Number(fighter.tier) || 1);
+  const spentAfter = liveDraftSpent(room, side) + cost;
+  if (spentAfter > room.config.budget) return "That pick would put your team over budget.";
+
+  const slotsAfter = room.config.teamSize - ((room.teams?.[side] || []).length + 1);
+  if (room.config.budget - spentAfter < slotsAfter) {
+    return "That pick would leave too few points to finish your team.";
+  }
+
+  return "";
+}
+
 function publicOrigin(req) {
   const forwarded = String(req.headers["x-forwarded-proto"] || "").split(",")[0].trim();
   const protocol = forwarded || "https";
@@ -1058,6 +1399,208 @@ const server = http.createServer(async (req, res) => {
       return json(res, 502, {
         error: "Could not load this battle right now."
       });
+    }
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/live-drafts") {
+    try {
+      if (!battleStorageConfigured()) {
+        return json(res, 503, {
+          error: "Live drafts require the Upstash storage already used by short battle links.",
+          code: "BATTLE_STORAGE_NOT_CONFIGURED"
+        });
+      }
+      const body = await readBody(req, 40_000);
+      const created = await createLiveDraftRoom(body?.config, body?.settings);
+      return json(res, 200, {
+        token: created.token,
+        room: publicLiveDraftRoom(created.room, created.token),
+        url: `${publicOrigin(req)}/draft/${created.room.code}`
+      });
+    } catch (err) {
+      console.error("Live draft create error:", err);
+      return json(res, 502, { error: "Could not create a live draft room." });
+    }
+  }
+
+  const liveDraftRoute = url.pathname.match(/^\/api\/live-drafts\/([23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6})(?:\/(join|pick|fight))?$/);
+  if (liveDraftRoute) {
+    const code = liveDraftRoute[1];
+    const action = liveDraftRoute[2] || "";
+
+    if (req.method === "GET" && !action) {
+      try {
+        const room = await loadLiveDraftRoom(code);
+        if (!room) return json(res, 404, { error: "Live draft room not found." });
+        const token = url.searchParams.get("token") || "";
+        return json(res, 200, { room: publicLiveDraftRoom(room, token) });
+      } catch (err) {
+        console.error("Live draft read error:", err);
+        return json(res, 502, { error: "Could not load the live draft." });
+      }
+    }
+
+    if (req.method === "POST" && action === "join") {
+      let lockToken = null;
+      try {
+        const body = await readBody(req, 20_000);
+        const suppliedToken = String(body?.token || "");
+        let room = await loadLiveDraftRoom(code);
+        if (!room) return json(res, 404, { error: "Live draft room not found." });
+
+        const existingSide = liveDraftSideForToken(room, suppliedToken);
+        if (existingSide) {
+          return json(res, 200, {
+            token: suppliedToken,
+            room: publicLiveDraftRoom(room, suppliedToken)
+          });
+        }
+
+        const openSide = liveDraftSides(room).find(side => !room.players?.[side]);
+        if (!openSide) {
+          return json(res, 200, { token: "", room: publicLiveDraftRoom(room, "") });
+        }
+
+        lockToken = await acquireLiveDraftLock(code);
+        if (!lockToken) return json(res, 409, { error: "Another player is joining. Try again." });
+
+        room = await loadLiveDraftRoom(code);
+        if (!room) return json(res, 404, { error: "Live draft room not found." });
+
+        const availableSide = liveDraftSides(room).find(side => !room.players?.[side]);
+        if (!availableSide) {
+          return json(res, 200, { token: "", room: publicLiveDraftRoom(room, "") });
+        }
+
+        const playerToken = makeLiveDraftToken();
+        room.players[availableSide] = playerToken;
+
+        if (liveDraftJoinedCount(room) >= room.config.playerCount && room.status === "waiting") {
+          room.status = "drafting";
+          room.turn = liveDraftSideForPick(room.pickNumber || 0, room.config.order, room.config.playerCount);
+        }
+
+        await saveLiveDraftRoom(room);
+        return json(res, 200, {
+          token: playerToken,
+          room: publicLiveDraftRoom(room, playerToken)
+        });
+      } catch (err) {
+        console.error("Live draft join error:", err);
+        return json(res, 502, { error: "Could not join the live draft." });
+      } finally {
+        await releaseLiveDraftLock(code, lockToken);
+      }
+    }
+
+    if (req.method === "POST" && action === "pick") {
+      let lockToken = null;
+      try {
+        const body = await readBody(req, 20_000);
+        lockToken = await acquireLiveDraftLock(code);
+        if (!lockToken) return json(res, 409, { error: "Another pick is being processed. Try again." });
+
+        const room = await loadLiveDraftRoom(code);
+        if (!room) return json(res, 404, { error: "Live draft room not found." });
+
+        const token = String(body?.token || "");
+        const side = liveDraftSideForToken(room, token);
+        const fighterId = String(body?.fighterId || "");
+        const pickError = validateLiveDraftPick(room, side, fighterId);
+        if (pickError) return json(res, 400, { error: pickError });
+
+        room.teams[side].push(fighterId);
+        room.pickNumber = (room.pickNumber || 0) + 1;
+
+        if (liveDraftComplete(room)) {
+          room.status = "ready";
+          room.turn = null;
+        } else {
+          room.turn = liveDraftSideForPick(room.pickNumber, room.config.order, room.config.playerCount);
+        }
+
+        await saveLiveDraftRoom(room);
+        return json(res, 200, { room: publicLiveDraftRoom(room, token) });
+      } catch (err) {
+        console.error("Live draft pick error:", err);
+        return json(res, 502, { error: "Could not record that draft pick." });
+      } finally {
+        await releaseLiveDraftLock(code, lockToken);
+      }
+    }
+
+    if (req.method === "POST" && action === "fight") {
+      let lockToken = null;
+      let room = null;
+      let token = "";
+      try {
+        const body = await readBody(req, 20_000);
+        token = String(body?.token || "");
+
+        lockToken = await acquireLiveDraftLock(code);
+        if (!lockToken) return json(res, 409, { error: "The room is busy. Try again." });
+
+        room = await loadLiveDraftRoom(code);
+        if (!room) return json(res, 404, { error: "Live draft room not found." });
+        const side = liveDraftSideForToken(room, token);
+        if (!side) return json(res, 403, { error: "Only a player in this draft can start the battle." });
+
+        if (room.status === "complete" && room.result) {
+          return json(res, 200, { room: publicLiveDraftRoom(room, token) });
+        }
+        if (room.status === "judging") {
+          return json(res, 202, { room: publicLiveDraftRoom(room, token) });
+        }
+        if (room.status !== "ready" || !liveDraftComplete(room)) {
+          return json(res, 400, { error: "Finish the draft before starting the battle." });
+        }
+
+        const rate = consumeRateLimit(req);
+        if (!rate.ok) return json(res, 429, { error: rate.message, code: "RATE_LIMITED" });
+
+        room.status = "judging";
+        room.turn = null;
+        await saveLiveDraftRoom(room);
+      } catch (err) {
+        console.error("Live draft fight setup error:", err);
+        return json(res, 502, { error: "Could not start the drafted-team battle." });
+      } finally {
+        await releaseLiveDraftLock(code, lockToken);
+      }
+
+      try {
+        const sides = liveDraftSides(room);
+        const teams = Object.fromEntries(
+          sides.map(side => [side, room.teams[side].map(id => DRAFT_ROSTER.get(id)).filter(Boolean)])
+        );
+        const judged = await runMultiTeamJudge({ teams, settings: room.settings });
+
+        if (judged.status !== 200) {
+          const rollback = await loadLiveDraftRoom(code);
+          if (rollback && rollback.status === "judging") {
+            rollback.status = "ready";
+            await saveLiveDraftRoom(rollback);
+          }
+          return json(res, judged.status, judged.body);
+        }
+
+        const finished = await loadLiveDraftRoom(code);
+        if (!finished) return json(res, 404, { error: "Live draft room disappeared." });
+        finished.status = "complete";
+        finished.result = judged.body;
+        await saveLiveDraftRoom(finished);
+        return json(res, 200, { room: publicLiveDraftRoom(finished, token) });
+      } catch (err) {
+        console.error("Live draft judge error:", err);
+        try {
+          const rollback = await loadLiveDraftRoom(code);
+          if (rollback && rollback.status === "judging") {
+            rollback.status = "ready";
+            await saveLiveDraftRoom(rollback);
+          }
+        } catch {}
+        return json(res, 500, { error: "The AI judge could not finish the drafted-team battle." });
+      }
     }
   }
 

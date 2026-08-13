@@ -10,6 +10,8 @@ let gameMode = "classic";
 let gauntletState = null;
 let tournamentState = null;
 let draftState = { A: [], B: [], budget: 12 };
+let draftFlavor = "local";
+let liveDraftSession = { code:null, token:"", side:null, room:null, pollTimer:null, lastRenderedAt:"" };
 
 function esc(s="") {
   return String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -484,7 +486,10 @@ function setGameMode(mode) {
   $("verdictPanel").classList.toggle("hidden", !classic || !currentResult);
   $("modeWorkspace").classList.toggle("hidden", classic);
   if (!classic) {
-    if (mode === "draft") renderDraft();
+    if (mode === "draft") {
+      renderDraft();
+      if (draftFlavor === "live" && liveDraftSession.code) startLiveDraftPolling();
+    }
     else if (mode === "gauntlet" && gauntletState) renderGauntlet();
     else if (mode === "tournament" && tournamentState) renderTournament();
     else if (!["team","survival"].includes(mode)) $("modeWorkspace").innerHTML = "";
@@ -621,10 +626,13 @@ async function callTeamJudge(teamA,teamB) {
   const data=await r.json().catch(()=>({})); if(!r.ok) throw new Error(data.error||`Team judge failed (${r.status})`); return data;
 }
 
-function renderTeamResult(result,teamA,teamB,title="TEAM BATTLE") {
+function teamResultCardHtml(result,teamA,teamB,title="TEAM BATTLE") {
   const v=result.verdict; const win=v.winnerTeam==="A"?teamA:teamB;
-  const teamNames=win.map(c=>c.name).join(" + ");
-  $("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="verdictTop"><div><div class="eyebrow">${esc(title)}</div><h2>TEAM ${v.winnerTeam} WINS</h2><div class="pill">${esc(v.difficulty)}</div></div><div class="oddsBox"><div class="pct">${v.winnerProbability}%</div><div class="oddsLabel">estimated win rate</div></div></div><div class="oddsTrack"><div style="width:${v.winnerProbability}%"></div></div><p class="headline">${esc(v.headline)}</p><div class="winningTeam">${win.map(c=>miniFighter(c)).join("")}</div>${genericDetails("Full Team Analysis",v.analysis,[{title:"Case for Team A",items:v.caseForA},{title:"Case for Team B",items:v.caseForB},{title:"Deciding factors",items:v.decidingFactors}],`<div class="factorBox"><p><strong>Swing factor:</strong> ${esc(v.swingFactor)}</p><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}</div>`;
+  return `<div class="modeResultCard"><div class="verdictTop"><div><div class="eyebrow">${esc(title)}</div><h2>TEAM ${v.winnerTeam} WINS</h2><div class="pill">${esc(v.difficulty)}</div></div><div class="oddsBox"><div class="pct">${v.winnerProbability}%</div><div class="oddsLabel">estimated win rate</div></div></div><div class="oddsTrack"><div style="width:${v.winnerProbability}%"></div></div><p class="headline">${esc(v.headline)}</p><div class="winningTeam">${win.map(c=>miniFighter(c)).join("")}</div>${genericDetails("Full Team Analysis",v.analysis,[{title:"Case for Team A",items:v.caseForA},{title:"Case for Team B",items:v.caseForB},{title:"Deciding factors",items:v.decidingFactors}],`<div class="factorBox"><p><strong>Swing factor:</strong> ${esc(v.swingFactor)}</p><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}</div>`;
+}
+
+function renderTeamResult(result,teamA,teamB,title="TEAM BATTLE") {
+  $("modeWorkspace").innerHTML=teamResultCardHtml(result,teamA,teamB,title);
 }
 
 async function runTeamBattle(teamA=null,teamB=null,title="TEAM BATTLE") {
@@ -645,6 +653,358 @@ function renderDraft(){
   const block=side=>`<div class="draftTeam"><h3>Team ${side} <span>${draftState.budget-draftSpent(side)} pts left</span></h3>${draftState[side].length?draftState[side].map(c=>miniFighter(c,{cost:true})).join(""):`<div class="draftEmpty">No picks yet</div>`}</div>`;
   const canFight=draftState.A.length&&draftState.B.length;
   $("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="draftBoard">${block('A')}${block('B')}</div>${canFight?`<button class="primary big" data-action="draft-fight">👥 FIGHT DRAFTED TEAMS</button>`:""}<p class="modeNote">Cost = power tier. Budget 12 each. Maximum 3 fighters per side. One character cannot be drafted twice.</p></div>`;
+}
+
+function liveDraftTokenKey(code){ return `mbg-live-draft:${code}`; }
+
+function storedLiveDraftToken(code){
+  try { return localStorage.getItem(liveDraftTokenKey(code)) || ""; } catch { return ""; }
+}
+
+function saveLiveDraftToken(code,token){
+  if(!token) return;
+  try { localStorage.setItem(liveDraftTokenKey(code),token); } catch {}
+}
+
+function liveSides(room){
+  return ["A","B","C","D"].slice(0,Number(room?.config?.playerCount)||2);
+}
+
+function stopLiveDraftPolling(){
+  if(liveDraftSession.pollTimer){
+    clearInterval(liveDraftSession.pollTimer);
+    liveDraftSession.pollTimer=null;
+  }
+}
+
+function startLiveDraftPolling(){
+  if(!liveDraftSession.code || liveDraftSession.pollTimer) return;
+  liveDraftSession.pollTimer=setInterval(()=>{
+    if(document.hidden || gameMode!=="draft" || draftFlavor!=="live") return;
+    refreshLiveDraft().catch(err=>console.warn("Live draft sync failed:",err));
+  },1500);
+}
+
+function setDraftFlavor(flavor){
+  draftFlavor=flavor==="live"?"live":"local";
+  $("draftLocalTab").classList.toggle("active",draftFlavor==="local");
+  $("draftLiveTab").classList.toggle("active",draftFlavor==="live");
+  $("localDraftControls").classList.toggle("hidden",draftFlavor!=="local");
+  $("liveDraftControls").classList.toggle("hidden",draftFlavor!=="live");
+
+  if(draftFlavor==="local"){
+    stopLiveDraftPolling();
+    renderDraft();
+  }else if(liveDraftSession.code && liveDraftSession.room){
+    $("liveDraftSetup").classList.add("hidden");
+    $("liveDraftActive").classList.remove("hidden");
+    renderLiveDraftRoom(liveDraftSession.room);
+    startLiveDraftPolling();
+  }else{
+    $("liveDraftSetup").classList.remove("hidden");
+    $("liveDraftActive").classList.add("hidden");
+    $("modeWorkspace").innerHTML=`<div class="emptyState">Create a 2–4 player room or enter a 6-character room code to join one.</div>`;
+  }
+}
+
+function liveDraftTeam(room,side){
+  return (room.teams?.[side]||[]).map(fighterById).filter(Boolean);
+}
+
+function liveDraftSpentRoom(room,side){
+  return liveDraftTeam(room,side).reduce((sum,c)=>sum+draftCost(c),0);
+}
+
+function liveDraftPickAllowed(room,c){
+  const side=liveDraftSession.side;
+  if(!side || room.status!=="drafting" || room.turn!==side) return false;
+  const drafted=new Set(liveSides(room).flatMap(s=>room.teams?.[s]||[]));
+  if(drafted.has(c.id)) return false;
+  const mine=liveDraftTeam(room,side);
+  if(mine.length>=room.config.teamSize) return false;
+  const spentAfter=liveDraftSpentRoom(room,side)+draftCost(c);
+  if(spentAfter>room.config.budget) return false;
+  const slotsAfter=room.config.teamSize-(mine.length+1);
+  return room.config.budget-spentAfter>=slotsAfter;
+}
+
+function liveDraftStatusText(room){
+  if(room.status==="waiting"){
+    return {cls:"waiting",text:`WAITING FOR PLAYERS — ${room.joinedCount}/${room.config.playerCount} JOINED`};
+  }
+  if(room.status==="drafting"){
+    if(!liveDraftSession.side) return {cls:"opponentTurn",text:`TEAM ${room.turn}'S PICK`};
+    return room.turn===liveDraftSession.side
+      ? {cls:"yourTurn",text:"YOUR PICK"}
+      : {cls:"opponentTurn",text:`TEAM ${room.turn}'S PICK`};
+  }
+  if(room.status==="ready") return {cls:"complete",text:"DRAFT COMPLETE — READY FOR THE FREE-FOR-ALL"};
+  if(room.status==="judging") return {cls:"waiting",text:"AI JUDGE IS RESEARCHING THE MULTIPLAYER BATTLE…"};
+  if(room.status==="complete") return {cls:"complete",text:"BATTLE COMPLETE"};
+  return {cls:"waiting",text:String(room.status||"").toUpperCase()};
+}
+
+function liveDraftOrderLabel(order){
+  return order==="snake" ? "Snake draft" : "Round-robin";
+}
+
+function liveDraftTeamHtml(room,side){
+  const team=liveDraftTeam(room,side);
+  const left=room.config.budget-liveDraftSpentRoom(room,side);
+  const isYou=liveDraftSession.side===side;
+  const turn=room.status==="drafting" && room.turn===side;
+  const joined=(room.joinedSides||[]).includes(side);
+
+  return `<div class="liveDraftTeam ${isYou?"you":""} ${turn?"turn":""}">
+    <h3>TEAM ${side}
+      ${isYou?`<span class="youBadge">YOU</span>`:""}
+      ${turn?`<span class="turnBadge">PICKING</span>`:""}
+      <span class="budgetLeft">${left} pts left</span>
+    </h3>
+    ${!joined?`<div class="playerWaiting">Waiting for Player ${liveSides(room).indexOf(side)+1}…</div>`:
+      team.length?team.map(c=>miniFighter(c,{cost:true})).join(""):`<div class="draftEmpty">No picks yet</div>`}
+  </div>`;
+}
+
+function liveDraftRosterHtml(room){
+  if(room.status!=="drafting") return "";
+  const drafted=new Set(liveSides(room).flatMap(s=>room.teams?.[s]||[]));
+  const rows=sortedCharacters().map(c=>{
+    const picked=drafted.has(c.id);
+    const allowed=liveDraftPickAllowed(room,c);
+    let label="PICK";
+    if(picked) label="DRAFTED";
+    else if(!liveDraftSession.side) label="WATCH";
+    else if(room.turn!==liveDraftSession.side) label="WAIT";
+    else if(!allowed) label="UNAVAILABLE";
+    const search=`${c.name} ${c.version} ${c.franchise}`.toLowerCase();
+    return `<div class="liveRosterRow ${picked?"drafted":""}" data-search="${esc(search)}">
+      ${miniFighter(c,{cost:true})}
+      <button class="${allowed?"primary":"secondary"} livePickBtn" data-action="live-draft-pick" data-fighter-id="${esc(c.id)}" ${allowed?"":"disabled"}>${label}</button>
+    </div>`;
+  }).join("");
+
+  return `<div class="liveRosterPanel">
+    <h3>Available roster</h3>
+    <input id="liveRosterSearch" type="text" placeholder="Search fighters…">
+    <div class="liveRoster">${rows}</div>
+  </div>`;
+}
+
+function multiplayerResultCardHtml(result,room,title="MULTIPLAYER SHOWDOWN"){
+  const v=result.verdict;
+  const sides=liveSides(room);
+  const teams=Object.fromEntries(sides.map(side=>[side,liveDraftTeam(room,side)]));
+  const winningTeam=teams[v.winnerTeam]||[];
+  const probs=(v.teamProbabilities||[]).slice().sort((a,b)=>b.probability-a.probability);
+  const probHtml=probs.map(p=>`<div class="multiOddsRow"><span>TEAM ${esc(p.team)}</span><div class="multiOddsTrack"><div style="width:${Math.max(0,Math.min(100,p.probability))}%"></div></div><strong>${p.probability}%</strong></div>`).join("");
+  const cases=(v.teamCases||[]).map(c=>({title:`Case for Team ${c.team}`,items:c.points||[]}));
+
+  return `<div class="modeResultCard">
+    <div class="verdictTop">
+      <div><div class="eyebrow">${esc(title)}</div><h2>TEAM ${esc(v.winnerTeam)} WINS</h2><div class="pill">${esc(v.difficulty)}</div></div>
+      <div class="oddsBox"><div class="pct">${v.winnerProbability}%</div><div class="oddsLabel">winner chance</div></div>
+    </div>
+    <p class="headline">${esc(v.headline)}</p>
+    <div class="winningTeam">${winningTeam.map(c=>miniFighter(c)).join("")}</div>
+    <div class="multiOdds">${probHtml}</div>
+    ${genericDetails("Full Multiplayer Analysis",v.analysis,[...cases,{title:"Deciding factors",items:v.decidingFactors||[]}],`<div class="factorBox"><p><strong>Swing factor:</strong> ${esc(v.swingFactor)}</p><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}
+  </div>`;
+}
+
+function renderLiveDraftRoom(room){
+  liveDraftSession.room=room;
+  liveDraftSession.side=room.yourSide||null;
+
+  const status=liveDraftStatusText(room);
+  const invite=`${location.origin}/draft/${room.code}`;
+  const sides=liveSides(room);
+  const canFight=room.status==="ready" && Boolean(liveDraftSession.side);
+  const spectator=Boolean(room.spectator);
+
+  const shell=`<div class="liveRoomShell">
+    <div class="liveRoomTop">
+      <div>
+        <div class="eyebrow">LIVE MULTIPLAYER DRAFT</div>
+        <div class="liveRoomCode">${esc(room.code)}</div>
+        <div class="liveRoomMeta">${room.config.playerCount} players • ${room.config.teamSize} fighter${room.config.teamSize===1?"":"s"} each • ${room.config.budget} points each • ${esc(liveDraftOrderLabel(room.config.order))}</div>
+      </div>
+      <div class="liveRoomActions">
+        <button class="secondary" data-action="live-copy-invite">🔗 COPY INVITE</button>
+        <button class="secondary" data-action="live-new-room">＋ NEW ROOM</button>
+      </div>
+    </div>
+    <div class="liveStatusBanner ${status.cls}">${esc(status.text)}</div>
+    ${spectator?`<p class="liveSpectatorNote">All ${room.config.playerCount} player seats are claimed. You are viewing this room as a spectator.</p>`:""}
+    <div class="liveDraftBoard players${room.config.playerCount}">${sides.map(side=>liveDraftTeamHtml(room,side)).join("")}</div>
+    ${canFight?`<button class="primary big" data-action="live-draft-fight">⚔ START ${room.config.playerCount}-PLAYER BATTLE</button>`:""}
+    ${room.status==="judging"?`<div class="loading"><div class="spinner"></div><div><strong>Judging multiplayer battle…</strong><p>Every player will receive the same result when it finishes.</p></div></div>`:""}
+    ${liveDraftRosterHtml(room)}
+    <div class="liveSyncLine">Live sync • ${room.joinedCount}/${room.config.playerCount} players • room code ${esc(room.code)}</div>
+  </div>`;
+
+  $("liveDraftSetup").classList.add("hidden");
+  $("liveDraftActive").classList.remove("hidden");
+  $("liveDraftActive").innerHTML=shell;
+
+  if(room.status==="complete" && room.result){
+    $("modeWorkspace").innerHTML=multiplayerResultCardHtml(room.result,room,`${room.config.playerCount}-PLAYER DRAFT SHOWDOWN`);
+  }else{
+    $("modeWorkspace").innerHTML="";
+  }
+}
+
+async function createLiveDraft(){
+  const btn=$("createLiveDraftBtn");
+  const old=btn.textContent;
+  btn.disabled=true;btn.textContent="CREATING ROOM…";
+  try{
+    const r=await fetch("/api/live-drafts",{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify({
+        config:{
+          playerCount:Number($("liveDraftPlayers").value),
+          teamSize:Number($("liveDraftTeamSize").value),
+          budget:Number($("liveDraftBudget").value),
+          order:$("liveDraftOrder").value
+        },
+        settings:settings()
+      })
+    });
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(data.error||`Could not create room (${r.status})`);
+    liveDraftSession={code:data.room.code,token:data.token||"",side:data.room.yourSide||"A",room:data.room,pollTimer:null,lastRenderedAt:data.room.updatedAt||""};
+    saveLiveDraftToken(data.room.code,data.token);
+    history.replaceState(null,"",`/draft/${data.room.code}`);
+    renderLiveDraftRoom(data.room);
+    startLiveDraftPolling();
+  }catch(err){
+    console.error(err);alert(`Live draft could not be created: ${err.message}`);
+  }finally{
+    btn.disabled=false;btn.textContent=old;
+  }
+}
+
+async function joinLiveDraft(code,{fromUrl=false}={}){
+  code=String(code||"").trim().toUpperCase();
+  if(!/^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6}$/.test(code)){
+    if(!fromUrl) alert("Enter the 6-character room code.");
+    return false;
+  }
+
+  const existingToken=storedLiveDraftToken(code);
+  let r,data;
+  for(let attempt=0;attempt<4;attempt++){
+    r=await fetch(`/api/live-drafts/${code}/join`,{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify({token:existingToken})
+    });
+    data=await r.json().catch(()=>({}));
+    if(r.status!==409)break;
+    await new Promise(resolve=>setTimeout(resolve,180));
+  }
+  if(!r.ok){
+    if(!fromUrl) alert(data.error||"Could not join that live draft.");
+    return false;
+  }
+
+  const token=data.token||existingToken||"";
+  liveDraftSession={code,token,side:data.room.yourSide||null,room:data.room,pollTimer:null,lastRenderedAt:data.room.updatedAt||""};
+  if(token) saveLiveDraftToken(code,token);
+  history.replaceState(null,"",`/draft/${code}`);
+  setGameMode("draft");
+  setDraftFlavor("live");
+  renderLiveDraftRoom(data.room);
+  startLiveDraftPolling();
+  return true;
+}
+
+async function refreshLiveDraft({force=false}={}){
+  const s=liveDraftSession;
+  if(!s.code) return;
+  const token=s.token||storedLiveDraftToken(s.code);
+  const r=await fetch(`/api/live-drafts/${s.code}?token=${encodeURIComponent(token)}`,{cache:"no-store"});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(data.error||"Live draft sync failed.");
+  const room=data.room;
+  if(force || room.updatedAt!==s.lastRenderedAt){
+    s.lastRenderedAt=room.updatedAt||"";
+    s.room=room;s.side=room.yourSide||null;
+    renderLiveDraftRoom(room);
+  }
+}
+
+async function makeLiveDraftPick(fighterId){
+  const s=liveDraftSession;
+  if(!s.code||!s.token) return;
+  try{
+    let r,data;
+    for(let attempt=0;attempt<5;attempt++){
+      r=await fetch(`/api/live-drafts/${s.code}/pick`,{
+        method:"POST",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify({token:s.token,fighterId})
+      });
+      data=await r.json().catch(()=>({}));
+      if(r.status!==409)break;
+      await new Promise(resolve=>setTimeout(resolve,160));
+    }
+    if(!r.ok) throw new Error(data.error||"Pick failed.");
+    s.room=data.room;s.side=data.room.yourSide||s.side;s.lastRenderedAt=data.room.updatedAt||"";
+    renderLiveDraftRoom(data.room);
+  }catch(err){
+    alert(err.message);
+    await refreshLiveDraft({force:true}).catch(()=>{});
+  }
+}
+
+async function fightLiveDraft(){
+  const s=liveDraftSession;
+  if(!s.code||!s.token) return;
+  try{
+    const r=await fetch(`/api/live-drafts/${s.code}/fight`,{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify({token:s.token})
+    });
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok && r.status!==202) throw new Error(data.error||"Could not start the battle.");
+    if(data.room){
+      s.room=data.room;s.lastRenderedAt=data.room.updatedAt||"";
+      renderLiveDraftRoom(data.room);
+    }
+  }catch(err){
+    console.error(err);alert(`Live draft battle failed: ${err.message}`);
+    await refreshLiveDraft({force:true}).catch(()=>{});
+  }
+}
+
+async function copyLiveDraftInvite(){
+  const code=liveDraftSession.code;
+  if(!code)return;
+  const invite=`${location.origin}/draft/${code}`;
+  try{await navigator.clipboard.writeText(invite);}
+  catch{prompt("Copy this live draft invite:",invite);}
+}
+
+function newLiveDraftRoom(){
+  stopLiveDraftPolling();
+  liveDraftSession={code:null,token:"",side:null,room:null,pollTimer:null,lastRenderedAt:""};
+  history.replaceState(null,"","/");
+  $("liveDraftSetup").classList.remove("hidden");
+  $("liveDraftActive").classList.add("hidden");
+  $("liveDraftActive").innerHTML="";
+  $("modeWorkspace").innerHTML=`<div class="emptyState">Create a 2–4 player room or enter a 6-character room code to join one.</div>`;
+}
+
+async function bootLiveDraftFromUrl(){
+  const m=location.pathname.match(/^\/draft\/([23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{6})\/?$/);
+  if(!m)return false;
+  setGameMode("draft");
+  setDraftFlavor("live");
+  return await joinLiveDraft(m[1],{fromUrl:true});
 }
 
 const SCENARIOS={
@@ -680,7 +1040,10 @@ function setTab(which) {
   $("manualControls").classList.toggle("hidden", random);
 }
 
-document.querySelectorAll(".modeTab").forEach(btn=>btn.onclick=()=>setGameMode(btn.dataset.mode));
+document.querySelectorAll(".modeTab").forEach(btn=>btn.onclick=()=>{
+  if(btn.dataset.mode!=="draft")stopLiveDraftPolling();
+  setGameMode(btn.dataset.mode);
+});
 $("randomTab").onclick=()=>setTab("random");
 $("manualTab").onclick=()=>setTab("manual");
 $("randomizeBtn").onclick=async()=>{[currentA,currentB]=randomPair();renderArena();populateSelectors();await judge(currentA,currentB);};
@@ -698,9 +1061,28 @@ $("teamSize").onchange=()=>document.querySelectorAll(".teamThird").forEach(el=>e
 $("draftToA").onclick=()=>addDraft("A");
 $("draftToB").onclick=()=>addDraft("B");
 $("draftReset").onclick=resetDraft;
+$("draftLocalTab").onclick=()=>setDraftFlavor("local");
+$("draftLiveTab").onclick=()=>setDraftFlavor("live");
+$("createLiveDraftBtn").onclick=createLiveDraft;
+$("joinLiveDraftBtn").onclick=()=>joinLiveDraft($("liveDraftCode").value);
+$("liveDraftCode").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g,"").slice(0,6);});
+$("liveDraftCode").addEventListener("keydown",e=>{if(e.key==="Enter")joinLiveDraft(e.target.value);});
 $("scenarioPreset").onchange=()=>$("customScenarioWrap").classList.toggle("hidden",$("scenarioPreset").value!=="custom");
 $("survivalBtn").onclick=runSurvival;
 $("modeWorkspace").onclick=async e=>{const action=e.target.closest("[data-action]")?.dataset.action;if(action==="gauntlet-next")await runGauntletNext();if(action==="tournament-next")await runTournamentNext();if(action==="draft-fight")await runTeamBattle(draftState.A,draftState.B,"DRAFT SHOWDOWN");};
+$("liveDraftActive").onclick=async e=>{
+  const target=e.target.closest("[data-action]");if(!target)return;
+  const action=target.dataset.action;
+  if(action==="live-copy-invite")await copyLiveDraftInvite();
+  if(action==="live-new-room")newLiveDraftRoom();
+  if(action==="live-draft-pick")await makeLiveDraftPick(target.dataset.fighterId);
+  if(action==="live-draft-fight")await fightLiveDraft();
+};
+$("liveDraftActive").oninput=e=>{
+  if(e.target.id!=="liveRosterSearch")return;
+  const q=e.target.value.trim().toLowerCase();
+  document.querySelectorAll(".liveRosterRow").forEach(row=>row.classList.toggle("hidden",q&&!row.dataset.search.includes(q)));
+};
 
 ensureAvatarStyles();
 $("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters`;
@@ -708,7 +1090,10 @@ renderArena();
 populateSelectors();
 resetDraft();
 await checkHealth();
-const loadedShortBattle = await loadShortBattle();
-if (!loadedShortBattle) await loadFrozenBattle();
-if (loadedShortBattle || currentResult) setGameMode("classic");
+const loadedLiveDraft = await bootLiveDraftFromUrl();
+if(!loadedLiveDraft){
+  const loadedShortBattle = await loadShortBattle();
+  if (!loadedShortBattle) await loadFrozenBattle();
+  if (loadedShortBattle || currentResult) setGameMode("classic");
+}
 
