@@ -6,6 +6,10 @@ let currentA = CHARACTERS.find(c => c.id === "mcu_thor");
 let currentB = CHARACTERS.find(c => c.id === "dceu_superman");
 let currentResult = null;
 let aiConfigured = false;
+let gameMode = "classic";
+let gauntletState = null;
+let tournamentState = null;
+let draftState = { A: [], B: [], budget: 12 };
 
 function esc(s="") {
   return String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -89,15 +93,30 @@ function optionLabel(c) {
   return `${c.name} — ${c.version}`;
 }
 
-function populateManual() {
-  const sorted = [...CHARACTERS].sort((a,b) =>
+function sortedCharacters() {
+  return [...CHARACTERS].sort((a,b) =>
     a.franchise.localeCompare(b.franchise) || a.name.localeCompare(b.name) || a.version.localeCompare(b.version)
   );
+}
+
+function populateSelectors() {
+  const sorted = sortedCharacters();
   const opts = sorted.map(c => `<option value="${c.id}">${esc(optionLabel(c))}</option>`).join("");
-  $("fighterA").innerHTML = opts;
-  $("fighterB").innerHTML = opts;
+  const ids = [
+    "fighterA","fighterB","gauntletChampion","teamA1","teamA2","teamA3","teamB1","teamB2","teamB3",
+    "draftPick","survivalFighter"
+  ];
+  for (const id of ids) if ($(id)) $(id).innerHTML = opts;
+
   $("fighterA").value = currentA.id;
   $("fighterB").value = currentB.id;
+  $("gauntletChampion").value = currentA.id;
+  $("survivalFighter").value = currentA.id;
+
+  const defaults = ["mcu_captain_america","mcu_iron_man","mcu_thor","dceu_superman","dceu_batman","dceu_wonder_woman"];
+  ["teamA1","teamA2","teamA3","teamB1","teamB2","teamB3"].forEach((id,i) => {
+    if ($(id) && fighterById(defaults[i])) $(id).value = defaults[i];
+  });
 }
 
 function settings() {
@@ -115,8 +134,7 @@ function applySettings(s={}) {
   }
 }
 
-function poolList() {
-  const pool = $("randomPool").value;
+function poolByValue(pool="all") {
   return CHARACTERS.filter(c => {
     if (pool === "all") return true;
     if (pool === "marvel") return c.franchise === "Marvel";
@@ -126,6 +144,10 @@ function poolList() {
     if (pool === "screen") return c.medium === "Movie/TV";
     return true;
   });
+}
+
+function poolList() {
+  return poolByValue($("randomPool").value);
 }
 
 function pickRandom(arr) {
@@ -190,40 +212,46 @@ function localJudge(a, b) {
   };
 }
 
-async function judge(a, b, {forceFallback=false}={}) {
-  setLoading(true);
-  $("verdictPanel").classList.add("hidden");
+async function callJudgeResult(a, b, {forceFallback=false}={}) {
+  if (forceFallback || !aiConfigured) return localJudge(a,b);
   try {
-    if (forceFallback || !aiConfigured) {
-      currentResult = localJudge(a,b);
-    } else {
-      const r = await fetch("/api/judge", {
-        method: "POST",
-        headers: {"content-type":"application/json"},
-        body: JSON.stringify({fighterA:a, fighterB:b, settings:settings()})
-      });
-      if (!r.ok) {
-        const e = await r.json().catch(()=>({}));
-        throw new Error(e.error || `Judge failed (${r.status})`);
-      }
-      currentResult = await r.json();
+    const r = await fetch("/api/judge", {
+      method: "POST",
+      headers: {"content-type":"application/json"},
+      body: JSON.stringify({fighterA:a, fighterB:b, settings:settings()})
+    });
+    if (!r.ok) {
+      const e = await r.json().catch(()=>({}));
+      throw new Error(e.error || `Judge failed (${r.status})`);
     }
-    renderVerdict(currentResult);
+    return await r.json();
   } catch (err) {
     console.error(err);
-    currentResult = localJudge(a,b);
-    currentResult.fallbackReason = err.message;
+    const fallback = localJudge(a,b);
+    fallback.fallbackReason = err.message;
+    return fallback;
+  }
+}
+
+async function judge(a, b, {forceFallback=false}={}) {
+  setLoading(true, "Researching the matchup…", "Checking version-specific feats, then sending the evidence to the judge.");
+  $("verdictPanel").classList.add("hidden");
+  try {
+    currentResult = await callJudgeResult(a,b,{forceFallback});
     renderVerdict(currentResult);
   } finally {
     setLoading(false);
   }
 }
 
-function setLoading(on) {
+function setLoading(on, title="Researching the matchup…", text="Checking version-specific feats, then sending the evidence to the judge.") {
   $("loading").classList.toggle("hidden", !on);
-  for (const id of ["randomizeBtn","manualFightBtn","rematchBtn","newBattleBtn"]) {
-    if ($(id)) $(id).disabled = on;
-  }
+  $("loadingTitle").textContent = title;
+  $("loadingText").textContent = text;
+  document.querySelectorAll("button").forEach(btn => {
+    if (btn.classList.contains("modeTab")) return;
+    btn.disabled = on;
+  });
 }
 
 function fighterById(id) {
@@ -390,7 +418,7 @@ async function loadShortBattle() {
     currentResult = p.r;
     applySettings(p.s);
     renderArena();
-    populateManual();
+    populateSelectors();
     renderVerdict(currentResult);
     return true;
   } catch (e) {
@@ -411,7 +439,7 @@ async function loadFrozenBattle() {
     currentA=a;currentB=b;currentResult=p.r;
     applySettings(p.s);
     renderArena();
-    populateManual();
+    populateSelectors();
     renderVerdict(currentResult);
     return true;
   } catch (e) {
@@ -419,6 +447,216 @@ async function loadFrozenBattle() {
     return false;
   }
 }
+
+
+function miniFighter(c, {cost=false}={}) {
+  if (!c) return "";
+  return `<div class="miniFighter">
+    <img src="${esc(fighterImagePath(c))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">
+    <div><strong>${esc(c.name)}</strong><small>${esc(c.version)}</small></div>
+    <span class="miniTier">${cost ? `${c.tier} pt${c.tier===1?'':'s'}` : `T${c.tier}`}</span>
+  </div>`;
+}
+
+function sourceHtml(sources=[]) {
+  if (!sources.length) return "";
+  return `<div class="sourcesWrap"><h3>Research sources</h3><div class="sources">${sources.map((s,i)=>
+    `<a class="source" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">[${i+1}] ${esc(s.title)}</a>`
+  ).join("")}</div></div>`;
+}
+
+function genericDetails(title, analysis, lists=[], extra="", sources=[]) {
+  return `<details class="analysisDetails modeAnalysis"><summary><span>${esc(title)}</span><span class="analysisChevron">⌄</span></summary><div class="analysisBody">
+    <p class="analysis">${linkifyCitations(analysis || "", sources)}</p>
+    ${lists.map(x=>`<div class="factorBox"><h3>${esc(x.title)}</h3><ul>${(x.items||[]).map(i=>`<li>${esc(i)}</li>`).join("")}</ul></div>`).join("")}
+    ${extra}${sourceHtml(sources)}
+  </div></details>`;
+}
+
+function setGameMode(mode) {
+  gameMode = mode;
+  document.querySelectorAll(".modeTab").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+  for (const name of ["classic","gauntlet","tournament","team","draft","survival"]) {
+    $(`${name}Mode`)?.classList.toggle("hidden", name !== mode);
+  }
+  const classic = mode === "classic";
+  $("arena").classList.toggle("hidden", !classic);
+  $("verdictPanel").classList.toggle("hidden", !classic || !currentResult);
+  $("modeWorkspace").classList.toggle("hidden", classic);
+  if (!classic) {
+    if (mode === "draft") renderDraft();
+    else if (mode === "gauntlet" && gauntletState) renderGauntlet();
+    else if (mode === "tournament" && tournamentState) renderTournament();
+    else if (!["team","survival"].includes(mode)) $("modeWorkspace").innerHTML = "";
+    else $("modeWorkspace").innerHTML = `<div class="emptyState">Set your options above and start the mode.</div>`;
+  }
+}
+
+function pickUnique(list, count) {
+  const copy = [...list];
+  for (let i=copy.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [copy[i],copy[j]]=[copy[j],copy[i]]; }
+  return copy.slice(0,count);
+}
+
+function buildGauntletOpponents(champion, length, pool) {
+  let available = poolByValue(pool).filter(c => c.id !== champion.id);
+  if (available.length < length) available = CHARACTERS.filter(c => c.id !== champion.id);
+  const offsets = length === 3 ? [-1,0,1] : [-1,0,0,1,2];
+  const chosen = [];
+  for (const off of offsets) {
+    if (!available.length) break;
+    const target = Math.max(1, Math.min(7, champion.tier + off));
+    const ranked = [...available].sort((a,b) => Math.abs(a.tier-target)-Math.abs(b.tier-target) || Math.random()-.5);
+    const top = ranked.filter(c => Math.abs(c.tier-target) === Math.abs(ranked[0].tier-target));
+    const pick = pickRandom(top);
+    chosen.push(pick);
+    available = available.filter(c => c.id !== pick.id);
+  }
+  return chosen;
+}
+
+function startGauntlet() {
+  const champion = fighterById($("gauntletChampion").value);
+  const length = Number($("gauntletLength").value);
+  if (!champion) return;
+  gauntletState = { champion, opponents: buildGauntletOpponents(champion,length,$("gauntletPool").value), results:[], index:0, ended:false };
+  renderGauntlet();
+}
+
+function renderGauntlet() {
+  const s = gauntletState;
+  if (!s) return;
+  const rows = s.opponents.map((opp,i) => {
+    const result = s.results[i];
+    const winner = result ? fighterById(result.verdict.winnerId) : null;
+    const state = result ? (winner?.id === s.champion.id ? "cleared" : "lost") : i === s.index && !s.ended ? "current" : "pending";
+    return `<div class="ladderRow ${state}"><div class="roundNum">${i+1}</div>${miniFighter(opp)}<div class="ladderOutcome">${result ? `${esc(winner?.name || 'Winner')} • ${result.verdict.winnerProbability}%` : state === 'current' ? 'NEXT' : '—'}</div></div>`;
+  }).join("");
+  const completed = s.index >= s.opponents.length && !s.ended;
+  const finalText = completed ? `${s.champion.name} CLEARS THE GAUNTLET` : s.ended ? `${s.champion.name} FALLS IN ROUND ${s.index+1}` : "";
+  $("modeWorkspace").innerHTML = `<div class="modeResultCard">
+    <div class="modeResultHeader"><div><div class="eyebrow">GAUNTLET CHAMPION</div>${miniFighter(s.champion)}</div><div class="modeScore">${s.results.filter(r=>r.verdict.winnerId===s.champion.id).length}/${s.opponents.length}</div></div>
+    <div class="ladder">${rows}</div>
+    ${finalText ? `<div class="modeFinal">${esc(finalText)}</div>` : `<button class="primary big" data-action="gauntlet-next">⚔ FIGHT NEXT OPPONENT</button>`}
+    <p class="modeNote">Each gauntlet matchup uses the same AI battle judge. Fighters start each round fresh in this baseline version.</p>
+  </div>`;
+}
+
+async function runGauntletNext() {
+  const s = gauntletState;
+  if (!s || s.ended || s.index >= s.opponents.length) return;
+  const opp = s.opponents[s.index];
+  setLoading(true, `Gauntlet round ${s.index+1}…`, `${s.champion.name} vs ${opp.name}`);
+  const result = await callJudgeResult(s.champion, opp);
+  setLoading(false);
+  s.results[s.index] = result;
+  if (result.verdict.winnerId !== s.champion.id) s.ended = true;
+  else s.index += 1;
+  renderGauntlet();
+}
+
+function roundLabel(totalEntrants, roundIndex, matches) {
+  if (matches === 1) return "FINAL";
+  if (matches === 2) return "SEMIFINALS";
+  if (matches === 4) return "QUARTERFINALS";
+  return `ROUND ${roundIndex+1}`;
+}
+
+function startTournament() {
+  const size = Number($("tournamentSize").value);
+  let list = poolByValue($("tournamentPool").value);
+  if (list.length < size) list = CHARACTERS;
+  const entrants = pickUnique(list,size);
+  tournamentState = { size, rounds:[{participants:entrants, matches:[], cursor:0}], currentRound:0, champion:null };
+  tournamentState.rounds[0].matches = pairParticipants(entrants);
+  renderTournament();
+}
+
+function pairParticipants(arr) {
+  const matches=[];
+  for (let i=0;i<arr.length;i+=2) matches.push({a:arr[i],b:arr[i+1],result:null,winner:null});
+  return matches;
+}
+
+function currentTournamentMatch() {
+  const s=tournamentState;if(!s||s.champion)return null;
+  const round=s.rounds[s.currentRound];
+  return round.matches.find(m=>!m.result) || null;
+}
+
+function renderTournament() {
+  const s=tournamentState;if(!s)return;
+  const rounds=s.rounds.map((round,ri)=>`<div class="bracketRound"><h3>${roundLabel(s.size,ri,round.matches.length)}</h3>${round.matches.map(m=>`<div class="bracketMatch ${m.result?'resolved':''}"><div>${miniFighter(m.a)}</div><div class="bracketVs">VS</div><div>${miniFighter(m.b)}</div>${m.result?`<div class="matchWinner">✓ ${esc(m.winner.name)} • ${m.result.verdict.winnerProbability}%</div>`:""}</div>`).join("")}</div>`).join("");
+  $("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="modeResultHeader"><div><div class="eyebrow">TOURNAMENT</div><h2>${s.champion?`${esc(s.champion.name)} IS CHAMPION`:`${s.size}-FIGHTER BRACKET`}</h2></div>${s.champion?`<div class="championBadge">🏆</div>`:""}</div><div class="bracket">${rounds}</div>${!s.champion?`<button class="primary big" data-action="tournament-next">⚔ RESOLVE NEXT MATCH</button>`:""}<p class="modeNote">Baseline tournament resolves one matchup at a time so you can watch the bracket develop and avoid a long all-at-once wait.</p></div>`;
+}
+
+async function runTournamentNext() {
+  const s=tournamentState; const match=currentTournamentMatch(); if(!s||!match)return;
+  setLoading(true,"Resolving tournament match…",`${match.a.name} vs ${match.b.name}`);
+  const result=await callJudgeResult(match.a,match.b); setLoading(false);
+  match.result=result; match.winner=fighterById(result.verdict.winnerId);
+  const round=s.rounds[s.currentRound];
+  if (round.matches.every(m=>m.result)) {
+    const winners=round.matches.map(m=>m.winner);
+    if (winners.length===1) s.champion=winners[0];
+    else { s.currentRound+=1; s.rounds.push({participants:winners,matches:pairParticipants(winners),cursor:0}); }
+  }
+  renderTournament();
+}
+
+function selectedTeam(prefix) {
+  const size=Number($("teamSize").value);
+  return Array.from({length:size},(_,i)=>fighterById($(`${prefix}${i+1}`).value)).filter(Boolean);
+}
+
+function validateTeams(a,b) {
+  const all=[...a,...b];
+  if (!a.length || !b.length) return "Both teams need fighters.";
+  if (new Set(all.map(c=>c.id)).size !== all.length) return "A fighter can only appear once in a team battle.";
+  return "";
+}
+
+async function callTeamJudge(teamA,teamB) {
+  const r=await fetch("/api/team-judge",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({teamA,teamB,settings:settings()})});
+  const data=await r.json().catch(()=>({})); if(!r.ok) throw new Error(data.error||`Team judge failed (${r.status})`); return data;
+}
+
+function renderTeamResult(result,teamA,teamB,title="TEAM BATTLE") {
+  const v=result.verdict; const win=v.winnerTeam==="A"?teamA:teamB;
+  const teamNames=win.map(c=>c.name).join(" + ");
+  $("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="verdictTop"><div><div class="eyebrow">${esc(title)}</div><h2>TEAM ${v.winnerTeam} WINS</h2><div class="pill">${esc(v.difficulty)}</div></div><div class="oddsBox"><div class="pct">${v.winnerProbability}%</div><div class="oddsLabel">estimated win rate</div></div></div><div class="oddsTrack"><div style="width:${v.winnerProbability}%"></div></div><p class="headline">${esc(v.headline)}</p><div class="winningTeam">${win.map(c=>miniFighter(c)).join("")}</div>${genericDetails("Full Team Analysis",v.analysis,[{title:"Case for Team A",items:v.caseForA},{title:"Case for Team B",items:v.caseForB},{title:"Deciding factors",items:v.decidingFactors}],`<div class="factorBox"><p><strong>Swing factor:</strong> ${esc(v.swingFactor)}</p><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}</div>`;
+}
+
+async function runTeamBattle(teamA=null,teamB=null,title="TEAM BATTLE") {
+  teamA=teamA||selectedTeam("teamA"); teamB=teamB||selectedTeam("teamB");
+  const error=validateTeams(teamA,teamB); if(error){alert(error);return;}
+  setLoading(true,"Researching the team battle…","Checking every fighter plus team synergy and counters.");
+  try { const result=await callTeamJudge(teamA,teamB); renderTeamResult(result,teamA,teamB,title); }
+  catch(err){ console.error(err); alert(`Team battle failed: ${err.message}`); }
+  finally { setLoading(false); }
+}
+
+function draftCost(c){return Math.max(1,Number(c.tier)||1);}
+function draftSpent(side){return draftState[side].reduce((s,c)=>s+draftCost(c),0);}
+function draftAvailable(side,c){return draftState[side].length<3 && draftSpent(side)+draftCost(c)<=draftState.budget && ![...draftState.A,...draftState.B].some(x=>x.id===c.id);}
+function addDraft(side){const c=fighterById($("draftPick").value);if(!c)return;if(!draftAvailable(side,c)){alert("That pick is unavailable, over budget, already drafted, or the team already has 3 fighters.");return;}draftState[side].push(c);renderDraft();}
+function resetDraft(){draftState={A:[],B:[],budget:12};renderDraft();}
+function renderDraft(){
+  const block=side=>`<div class="draftTeam"><h3>Team ${side} <span>${draftState.budget-draftSpent(side)} pts left</span></h3>${draftState[side].length?draftState[side].map(c=>miniFighter(c,{cost:true})).join(""):`<div class="draftEmpty">No picks yet</div>`}</div>`;
+  const canFight=draftState.A.length&&draftState.B.length;
+  $("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="draftBoard">${block('A')}${block('B')}</div>${canFight?`<button class="primary big" data-action="draft-fight">👥 FIGHT DRAFTED TEAMS</button>`:""}<p class="modeNote">Cost = power tier. Budget 12 each. Maximum 3 fighters per side. One character cannot be drafted twice.</p></div>`;
+}
+
+const SCENARIOS={
+  xenomorph:"Escape an isolated spacecraft infested by multiple Xenomorphs. The character begins alone, has only their standard equipment, must reach an escape craft, and does not know the ship layout in advance.",
+  zombies:"Survive 72 hours in a dense modern city during a fast-zombie outbreak, protect themself from infection, secure basic supplies, and reach a military extraction zone.",
+  dinosaurs:"Cross a large dinosaur-filled island from one coast to the other and reach a functioning extraction point while dangerous prehistoric predators actively roam the route.",
+  terminator:"Survive 24 hours while a T-800 Terminator relentlessly hunts the character through a modern city. No outside allies are available.",
+  mordor:"Enter Mordor from outside its borders, reach Mount Doom, complete the objective at the Cracks of Doom, and escape the region alive while facing the setting's normal defenses and hazards."
+};
+function scenarioText(){const p=$("scenarioPreset").value;return p==="custom"?$("customScenario").value.trim():SCENARIOS[p];}
+async function runSurvival(){const fighter=fighterById($("survivalFighter").value),scenario=scenarioText();if(!fighter||!scenario){alert("Choose a fighter and describe the scenario.");return;}setLoading(true,"Researching survival scenario…","Checking the character's exact version and the threats they would face.");try{const r=await fetch("/api/scenario-judge",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({fighter,scenario,settings:settings()})});const result=await r.json().catch(()=>({}));if(!r.ok)throw new Error(result.error||`Scenario judge failed (${r.status})`);renderSurvivalResult(result,fighter,scenario);}catch(err){console.error(err);alert(`Survival scenario failed: ${err.message}`);}finally{setLoading(false);}}
+function renderSurvivalResult(result,fighter,scenario){const v=result.verdict;$("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="modeResultHeader"><div><div class="eyebrow">CAN THEY SURVIVE?</div><h2>${esc(fighter.name)} ${v.survives?'SURVIVES':'DOES NOT SURVIVE'}</h2><div class="pill">${esc(v.difficulty)}</div></div><div class="oddsBox"><div class="pct">${v.survivalProbability}%</div><div class="oddsLabel">survival chance</div></div></div><p class="scenarioQuote">${esc(scenario)}</p><div class="oddsTrack"><div style="width:${v.survivalProbability}%"></div></div><p class="headline">${esc(v.headline)}</p>${genericDetails("Full Survival Analysis",v.analysis,[{title:"Advantages",items:v.keyAdvantages},{title:"Major threats",items:v.keyThreats},{title:"How they survive",items:v.winConditions},{title:"How they fail",items:v.failureConditions}],`<div class="factorBox"><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}</div>`;}
 
 async function checkHealth() {
   try {
@@ -442,62 +680,35 @@ function setTab(which) {
   $("manualControls").classList.toggle("hidden", random);
 }
 
+document.querySelectorAll(".modeTab").forEach(btn=>btn.onclick=()=>setGameMode(btn.dataset.mode));
 $("randomTab").onclick=()=>setTab("random");
 $("manualTab").onclick=()=>setTab("manual");
-$("randomizeBtn").onclick=async()=>{
-  [currentA,currentB]=randomPair();
-  renderArena(); populateManual();
-  await judge(currentA,currentB);
-};
-$("manualFightBtn").onclick=async()=>{
-  const a=fighterById($("fighterA").value), b=fighterById($("fighterB").value);
-  if (!a || !b || a.id===b.id) { alert("Pick two different fighters."); return; }
-  currentA=a;currentB=b;renderArena();
-  await judge(currentA,currentB);
-};
+$("randomizeBtn").onclick=async()=>{[currentA,currentB]=randomPair();renderArena();populateSelectors();await judge(currentA,currentB);};
+$("manualFightBtn").onclick=async()=>{const a=fighterById($("fighterA").value),b=fighterById($("fighterB").value);if(!a||!b||a.id===b.id){alert("Pick two different fighters.");return;}currentA=a;currentB=b;renderArena();await judge(currentA,currentB);};
 $("fighterA").onchange=()=>{const c=fighterById($("fighterA").value);if(c){currentA=c;renderArena();}};
 $("fighterB").onchange=()=>{const c=fighterById($("fighterB").value);if(c){currentB=c;renderArena();}};
 $("rematchBtn").onclick=()=>judge(currentA,currentB);
-$("newBattleBtn").onclick=async()=>{
-  setTab("random");
-  [currentA,currentB]=randomPair();renderArena();populateManual();
-  await judge(currentA,currentB);
-};
-$("shareBtn").onclick=async()=>{
-  const btn = $("shareBtn");
-  const old = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = "SAVING BATTLE…";
+$("newBattleBtn").onclick=async()=>{setTab("random");[currentA,currentB]=randomPair();renderArena();populateSelectors();await judge(currentA,currentB);};
+$("shareBtn").onclick=async()=>{const btn=$("shareBtn"),old=btn.textContent;btn.disabled=true;btn.textContent="SAVING BATTLE…";try{const shareUrl=await getShortBattleUrl();try{await navigator.clipboard.writeText(shareUrl);btn.textContent="✓ SHORT LINK COPIED";}catch{prompt("Copy this short battle link:",shareUrl);btn.textContent="✓ SHORT LINK READY";}}catch(err){console.error("Short battle link error:",err);alert("Could not create a short battle link. Check the battle-storage setup in Render.");btn.textContent="SHORT LINK FAILED";}finally{setTimeout(()=>{btn.textContent=old;btn.disabled=false;},2200);}};
 
-  try {
-    const shareUrl = await getShortBattleUrl();
-
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      btn.textContent = "✓ SHORT LINK COPIED";
-    } catch {
-      prompt("Copy this short battle link:", shareUrl);
-      btn.textContent = "✓ SHORT LINK READY";
-    }
-  } catch (err) {
-    console.error("Short battle link error:", err);
-    alert(
-      "Could not create a short battle link. " +
-      "The site owner needs to finish the free battle-storage setup in Render."
-    );
-    btn.textContent = "SHORT LINK FAILED";
-  } finally {
-    setTimeout(() => {
-      btn.textContent = old;
-      btn.disabled = false;
-    }, 2200);
-  }
-};
+$("startGauntletBtn").onclick=startGauntlet;
+$("startTournamentBtn").onclick=startTournament;
+$("teamFightBtn").onclick=()=>runTeamBattle();
+$("teamSize").onchange=()=>document.querySelectorAll(".teamThird").forEach(el=>el.classList.toggle("hidden",$("teamSize").value==="2"));
+$("draftToA").onclick=()=>addDraft("A");
+$("draftToB").onclick=()=>addDraft("B");
+$("draftReset").onclick=resetDraft;
+$("scenarioPreset").onchange=()=>$("customScenarioWrap").classList.toggle("hidden",$("scenarioPreset").value!=="custom");
+$("survivalBtn").onclick=runSurvival;
+$("modeWorkspace").onclick=async e=>{const action=e.target.closest("[data-action]")?.dataset.action;if(action==="gauntlet-next")await runGauntletNext();if(action==="tournament-next")await runTournamentNext();if(action==="draft-fight")await runTeamBattle(draftState.A,draftState.B,"DRAFT SHOWDOWN");};
 
 ensureAvatarStyles();
 $("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters`;
 renderArena();
-populateManual();
+populateSelectors();
+resetDraft();
 await checkHealth();
 const loadedShortBattle = await loadShortBattle();
 if (!loadedShortBattle) await loadFrozenBattle();
+if (loadedShortBattle || currentResult) setGameMode("classic");
+

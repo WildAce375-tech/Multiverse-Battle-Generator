@@ -771,6 +771,70 @@ Use only source numbers that exist above. winnerId and loserId must be the exact
   };
 }
 
+
+const TEAM_JUDGE_SYSTEM = `${JUDGE_SYSTEM}
+Additional team-battle rules:
+- Judge the teams as teams, not as a list of isolated 1v1s.
+- Consider synergy, communication, battlefield roles, focus fire, protection, area control, speed mismatches, counters, and whether a team can realistically coordinate.
+- Do not assume perfect teamwork between characters who would not naturally have it, but they understand that their listed teammates are allies.
+- winnerTeam must be A or B.`;
+
+function teamSchema() {
+  return {
+    type:"object", additionalProperties:false,
+    properties:{
+      winnerTeam:{type:"string",enum:["A","B"]},
+      winnerProbability:{type:"integer",minimum:50,maximum:100},
+      difficulty:{type:"string",enum:["Stomp","No Difficulty","Low Difficulty","Mid Difficulty","High Difficulty","Extreme Difficulty"]},
+      headline:{type:"string"}, analysis:{type:"string"},
+      decidingFactors:{type:"array",minItems:2,maxItems:5,items:{type:"string"}},
+      caseForA:{type:"array",minItems:2,maxItems:4,items:{type:"string"}},
+      caseForB:{type:"array",minItems:2,maxItems:4,items:{type:"string"}},
+      swingFactor:{type:"string"}, assumptions:{type:"string"}
+    },
+    required:["winnerTeam","winnerProbability","difficulty","headline","analysis","decidingFactors","caseForA","caseForB","swingFactor","assumptions"]
+  };
+}
+
+async function runTeamJudge(body) {
+  const teamA=(Array.isArray(body?.teamA)?body.teamA:[]).map(cleanFighter).filter(Boolean).slice(0,3);
+  const teamB=(Array.isArray(body?.teamB)?body.teamB:[]).map(cleanFighter).filter(Boolean).slice(0,3);
+  const settings=cleanSettings(body?.settings);
+  if(!teamA.length||!teamB.length) return {status:400,body:{error:"Both teams need at least one valid fighter."}};
+  const ids=[...teamA,...teamB].map(x=>x.id);
+  if(new Set(ids).size!==ids.length) return {status:400,body:{error:"A fighter can only appear once in a team battle."}};
+  if(!process.env.OPENAI_API_KEY) return {status:503,body:{error:"OPENAI_API_KEY is not configured on the server.",code:"NO_API_KEY"}};
+
+  const researchPrompt=`Research this team battle. Build one concise version-specific dossier covering matchup-relevant abilities and team interactions. Do not decide the winner yet.\n\nTEAM A\n${JSON.stringify(teamA,null,2)}\n\nTEAM B\n${JSON.stringify(teamB,null,2)}\n\nSETTINGS\n${JSON.stringify(settings,null,2)}`;
+  const research=await openAIRequest({model:RESEARCH_MODEL,reasoning:{effort:"low"},tools:[{type:"web_search",search_context_size:"low"}],input:[{role:"system",content:RESEARCH_SYSTEM},{role:"user",content:researchPrompt}],max_output_tokens:900});
+  const researchText=outputText(research),sources=extractSources(research);
+  const sourceList=sources.length?sources.map((s,i)=>`[${i+1}] ${s.title} — ${s.url}`).join("\n"):"(No web citation annotations were returned.)";
+  const judgePrompt=`Decide this team battle.\n\nTEAM A\n${JSON.stringify(teamA,null,2)}\n\nTEAM B\n${JSON.stringify(teamB,null,2)}\n\nSETTINGS\n${JSON.stringify(settings,null,2)}\n\nRESEARCH DOSSIER\n${researchText}\n\nAVAILABLE SOURCES\n${sourceList}\n\nUse only source numbers that exist above.`;
+  const judged=await openAIRequest({model:MODEL,reasoning:{effort:"low"},input:[{role:"system",content:TEAM_JUDGE_SYSTEM},{role:"user",content:judgePrompt}],text:{format:{type:"json_schema",name:"team_battle_verdict",strict:true,schema:teamSchema()}},max_output_tokens:1400});
+  const verdict=JSON.parse(outputText(judged));
+  return {status:200,body:{verdict,sources,model:MODEL,researchModel:RESEARCH_MODEL,researched:true,generatedAt:new Date().toISOString()}};
+}
+
+const SCENARIO_JUDGE_SYSTEM = `You are an impartial fictional survival-scenario judge.
+Evaluate only the exact character version supplied. Judge whether that character can accomplish the stated objective and survive under the supplied assumptions.
+Use representative feats, not absurd one-off outliers. Consider knowledge, temperament, equipment, mobility, endurance, vulnerabilities, environmental constraints, and whether the threats have realistic ways to stop them.
+A 50% result means essentially a coin flip. survivalProbability can range from 0 to 100.
+Use supplied research citations as [1], [2], etc. and never invent source numbers.`;
+
+function scenarioSchema(){return {type:"object",additionalProperties:false,properties:{survives:{type:"boolean"},survivalProbability:{type:"integer",minimum:0,maximum:100},difficulty:{type:"string",enum:["Easy","Manageable","Dangerous","Brutal","Near Impossible"]},headline:{type:"string"},analysis:{type:"string"},keyAdvantages:{type:"array",minItems:2,maxItems:5,items:{type:"string"}},keyThreats:{type:"array",minItems:2,maxItems:5,items:{type:"string"}},winConditions:{type:"array",minItems:1,maxItems:4,items:{type:"string"}},failureConditions:{type:"array",minItems:1,maxItems:4,items:{type:"string"}},assumptions:{type:"string"}},required:["survives","survivalProbability","difficulty","headline","analysis","keyAdvantages","keyThreats","winConditions","failureConditions","assumptions"]};}
+
+async function runScenarioJudge(body){
+  const fighter=cleanFighter(body?.fighter),settings=cleanSettings(body?.settings);const scenario=String(body?.scenario||"").trim().slice(0,500);
+  if(!fighter||!scenario)return {status:400,body:{error:"A valid fighter and scenario are required."}};
+  if(!process.env.OPENAI_API_KEY)return {status:503,body:{error:"OPENAI_API_KEY is not configured on the server.",code:"NO_API_KEY"}};
+  const researchPrompt=`Research the exact character version and any established fictional threats/settings named in this survival scenario. Focus only on evidence relevant to surviving and completing the objective. Do not decide the outcome yet.\n\nCHARACTER\n${JSON.stringify(fighter,null,2)}\n\nSCENARIO\n${scenario}\n\nGENERAL SETTINGS\n${JSON.stringify(settings,null,2)}`;
+  const research=await openAIRequest({model:RESEARCH_MODEL,reasoning:{effort:"low"},tools:[{type:"web_search",search_context_size:"low"}],input:[{role:"system",content:RESEARCH_SYSTEM},{role:"user",content:researchPrompt}],max_output_tokens:800});
+  const researchText=outputText(research),sources=extractSources(research);const sourceList=sources.length?sources.map((s,i)=>`[${i+1}] ${s.title} — ${s.url}`).join("\n"):"(No web citation annotations were returned.)";
+  const judgePrompt=`Judge this survival scenario.\n\nCHARACTER\n${JSON.stringify(fighter,null,2)}\n\nSCENARIO\n${scenario}\n\nSETTINGS\n${JSON.stringify(settings,null,2)}\n\nRESEARCH DOSSIER\n${researchText}\n\nAVAILABLE SOURCES\n${sourceList}\n\nSet survives true when the character is more likely than not to complete the objective alive.`;
+  const judged=await openAIRequest({model:MODEL,reasoning:{effort:"low"},input:[{role:"system",content:SCENARIO_JUDGE_SYSTEM},{role:"user",content:judgePrompt}],text:{format:{type:"json_schema",name:"survival_verdict",strict:true,schema:scenarioSchema()}},max_output_tokens:1300});
+  const verdict=JSON.parse(outputText(judged));return {status:200,body:{verdict,sources,model:MODEL,researchModel:RESEARCH_MODEL,researched:true,generatedAt:new Date().toISOString()}};
+}
+
 async function readBody(req, maxBytes = 256_000) {
   return await new Promise((resolve, reject) => {
     let size = 0;
@@ -995,6 +1059,20 @@ const server = http.createServer(async (req, res) => {
         error: "Could not load this battle right now."
       });
     }
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/team-judge") {
+    try {
+      const rate=consumeRateLimit(req); if(!rate.ok)return json(res,429,{error:rate.message,code:"RATE_LIMITED"});
+      const body=await readBody(req); const result=await runTeamJudge(body); return json(res,result.status,result.body);
+    } catch(err) { console.error("Team judge error:",err); return json(res,500,{error:"The AI team judge failed to complete this battle."}); }
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/scenario-judge") {
+    try {
+      const rate=consumeRateLimit(req); if(!rate.ok)return json(res,429,{error:rate.message,code:"RATE_LIMITED"});
+      const body=await readBody(req); const result=await runScenarioJudge(body); return json(res,result.status,result.body);
+    } catch(err) { console.error("Scenario judge error:",err); return json(res,500,{error:"The AI scenario judge failed to complete this scenario."}); }
   }
 
   if (req.method === "POST" && url.pathname === "/api/judge") {

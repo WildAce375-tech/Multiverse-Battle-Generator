@@ -59,3 +59,16 @@ The page no longer auto-scrolls after a fight. The result always shows the winne
 
 The MULTIVERSE BATTLE GENERATOR masthead is substantially smaller and uses less vertical spacing.
 The battle controls now appear much higher on desktop and mobile screens.
+
+
+## v2.0 baseline game modes
+
+Added six top-level modes:
+- Versus (existing classic mode, including short frozen links)
+- Gauntlet (3 or 5 progressively harder opponents; one match at a time)
+- Tournament (4 or 8 fighter random bracket; one match at a time)
+- Team Battle (2v2 or 3v3 with a dedicated AI team judge)
+- Draft (12-point hot-seat draft, max 3 fighters per team, then team battle)
+- Can They Survive? (five presets plus custom survival scenarios with dedicated AI judge)
+
+This is intentionally the baseline functionality. Short-link sharing for non-classic modes, endurance damage in gauntlets, automatic full-bracket resolution, and deeper draft rules can be added after the core flow is tested.
