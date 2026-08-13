@@ -1,24 +1,20 @@
-# Multiverse Battle Generator — Flat Build
+# Multiverse Battle Generator — Automatic Web Portraits
 
-This version intentionally has **no public folder**. All site files live at the repository root so GitHub's browser uploader cannot flatten the project incorrectly.
+This is the flat, no-folder build.
 
-## Required Render environment variables
+## What changed
+- Real-character identification thumbnails load automatically through `/api/portrait`.
+- Most portraits come from curated version-specific Wikipedia/Wikimedia pages.
+- A few screen versions that do not have a useful Wikipedia portrait use a curated direct web image.
+- If an exact-enough image cannot be resolved, the card intentionally keeps the initials placeholder instead of showing the wrong version.
+- Portrait lookups are cached by the server for 7 days.
+- Fan-made/noncommercial/IP disclaimer added to the footer.
 
-- `OPENAI_API_KEY` = your secret OpenAI API key
+## Render variables
+- `OPENAI_API_KEY` = your secret OpenAI key
 - `OPENAI_MODEL` = `gpt-5.6-terra`
 
-The web-research model defaults to `gpt-5.4-mini`.
+The research model defaults to `gpt-5.4-mini`.
 
-## Render
-
-Keep the Render Root Directory pointed at the folder/repository containing these files. Dockerfile Path should be `./Dockerfile`.
-
-## Files
-
-- `server.js` — secure server + AI judge
-- `index.html`, `app.js`, `characters.js`, `styles.css` — website
-- `Dockerfile`, `package.json`, `render.yaml` — deployment
-
-## Portraits
-
-The app currently shows clean initials placeholders. The next portrait update can use one single `portraits.webp` sprite sheet at the root instead of an images folder.
+## GitHub
+Upload/replace these top-level files. There is no `public` folder.

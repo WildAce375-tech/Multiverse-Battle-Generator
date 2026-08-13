@@ -13,7 +13,7 @@ function esc(s="") {
 
 
 function fighterImagePath(c) {
-  return c.image || "";
+  return `/api/portrait?id=${encodeURIComponent(c.id)}`;
 }
 
 function fighterInitials(c) {
@@ -58,7 +58,7 @@ function renderFighter(cardId, c, side) {
     <div class="fighterSide">FIGHTER ${side}</div>
     <div class="fighterHeader">
       <div class="fighterAvatar ${tone}" aria-hidden="true">
-        ${imagePath ? `<img src="${esc(imagePath)}" alt="" aria-hidden="true" loading="lazy" />` : ""}
+        ${imagePath ? `<img src="${esc(imagePath)}" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer" />` : ""}
         <div class="fighterAvatarFallback">${esc(initials)}</div>
       </div>
       <div class="fighterHeaderText">

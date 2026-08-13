@@ -27,6 +27,467 @@ const PORT = Number(process.env.PORT || 3000);
 const MODEL = process.env.OPENAI_MODEL || "gpt-5.6-terra";
 const RESEARCH_MODEL = process.env.OPENAI_RESEARCH_MODEL || "gpt-5.4-mini";
 
+// Real-character thumbnail sources for the fan-made roster.
+// Most use the first suitable image from a version-specific Wikipedia page.
+// A few exact screen versions use direct small web-image URLs when Wikipedia has no useful character image.
+const PORTRAIT_SOURCES = {
+  "mcu_iron_man": {
+    "page": "Tony Stark (Marvel Cinematic Universe)"
+  },
+  "mcu_captain_america": {
+    "page": "Steve Rogers (Marvel Cinematic Universe)"
+  },
+  "mcu_thor": {
+    "page": "Thor (Marvel Cinematic Universe)"
+  },
+  "mcu_hulk": {
+    "page": "Bruce Banner (Marvel Cinematic Universe)"
+  },
+  "mcu_spider_man": {
+    "page": "Peter Parker (Marvel Cinematic Universe)",
+    "preferred": [
+      "Spider-Man_No_Way_Home_classic_suit",
+      "Spider-Man_Far_From_Home_suit"
+    ]
+  },
+  "mcu_black_panther": {
+    "page": "T'Challa (Marvel Cinematic Universe)"
+  },
+  "mcu_doctor_strange": {
+    "page": "Stephen Strange (Marvel Cinematic Universe)"
+  },
+  "mcu_scarlet_witch": {
+    "page": "Wanda Maximoff (Marvel Cinematic Universe)"
+  },
+  "mcu_captain_marvel": {
+    "page": "Carol Danvers (Marvel Cinematic Universe)"
+  },
+  "mcu_vision": {
+    "page": "Vision (Marvel Cinematic Universe)"
+  },
+  "mcu_thanos": {
+    "page": "Thanos (Marvel Cinematic Universe)"
+  },
+  "mcu_thanos_gauntlet": {
+    "page": "Thanos (Marvel Cinematic Universe)"
+  },
+  "mcu_loki": {
+    "page": "Loki (Marvel Cinematic Universe)"
+  },
+  "mcu_hela": {
+    "page": "Hela (character)",
+    "preferred": [
+      "Cate_Blanchett_as_Hela"
+    ],
+    "requirePreferred": true
+  },
+  "fox_wolverine": {
+    "page": "Logan (film character)"
+  },
+  "movie_deadpool": {
+    "page": "Wade Wilson (film character)",
+    "search": "Deadpool film character Ryan Reynolds"
+  },
+  "sony_venom": {
+    "page": "Eddie Brock (Sony's Spider-Man Universe)",
+    "search": "Eddie Brock Sony Spider-Man Universe Venom Tom Hardy"
+  },
+  "fox_magneto": {
+    "page": "Magneto (film character)"
+  },
+  "fox_xavier": {
+    "page": "Charles Xavier (film character)"
+  },
+  "fox_quicksilver": {
+    "page": "Peter Maximoff"
+  },
+  "marvel_spider_man": {
+    "page": "Spider-Man",
+    "search": "Spider-Man Marvel Comics character"
+  },
+  "marvel_iron_man": {
+    "page": "Iron Man",
+    "search": "Iron Man Marvel Comics character"
+  },
+  "marvel_captain_america": {
+    "page": "Captain America",
+    "search": "Captain America Marvel Comics character"
+  },
+  "marvel_thor": {
+    "page": "Thor (Marvel Comics)",
+    "search": "Thor Marvel Comics character"
+  },
+  "marvel_hulk": {
+    "page": "Hulk (Marvel Comics)",
+    "search": "Hulk Marvel Comics character"
+  },
+  "marvel_wolverine": {
+    "page": "Wolverine (character)",
+    "search": "Wolverine Marvel Comics character"
+  },
+  "marvel_doctor_strange": {
+    "page": "Doctor Strange",
+    "search": "Doctor Strange Marvel Comics character"
+  },
+  "marvel_scarlet_witch": {
+    "page": "Scarlet Witch",
+    "search": "Scarlet Witch Marvel Comics character"
+  },
+  "marvel_silver_surfer": {
+    "page": "Silver Surfer",
+    "search": "Silver Surfer Marvel Comics character"
+  },
+  "marvel_thanos": {
+    "page": "Thanos",
+    "search": "Thanos Marvel Comics character"
+  },
+  "marvel_thanos_ig": {
+    "page": "Thanos",
+    "search": "Thanos Marvel Comics Infinity Gauntlet"
+  },
+  "marvel_doom": {
+    "page": "Doctor Doom",
+    "search": "Doctor Doom Marvel Comics"
+  },
+  "marvel_magneto": {
+    "page": "Magneto (Marvel Comics)",
+    "search": "Magneto Marvel Comics"
+  },
+  "marvel_phoenix": {
+    "page": "Jean Grey",
+    "search": "Jean Grey Phoenix Marvel Comics"
+  },
+  "marvel_sentry": {
+    "page": "Sentry (Robert Reynolds)",
+    "search": "Sentry Robert Reynolds Marvel Comics"
+  },
+  "marvel_black_bolt": {
+    "page": "Black Bolt",
+    "search": "Black Bolt Marvel Comics"
+  },
+  "marvel_apocalypse": {
+    "page": "Apocalypse (Marvel Comics)",
+    "search": "Apocalypse Marvel Comics character"
+  },
+  "marvel_galactus": {
+    "page": "Galactus",
+    "search": "Galactus Marvel Comics"
+  },
+  "dceu_superman": {
+    "page": "Superman (DC Extended Universe)"
+  },
+  "dceu_batman": {
+    "page": "Bruce Wayne (DC Extended Universe)",
+    "preferred": [
+      "Batman-BenAffleck",
+      "Batman_tactical_suit",
+      "Unmasked_Batman_DCEU"
+    ]
+  },
+  "dceu_wonder_woman": {
+    "page": "Diana Prince (DC Extended Universe)",
+    "preferred": [
+      "Gal_Gadot_as_Wonder_Woman"
+    ]
+  },
+  "dceu_flash": {
+    "page": "Barry Allen (DC Extended Universe)"
+  },
+  "dceu_aquaman": {
+    "page": "Arthur Curry (DC Extended Universe)"
+  },
+  "dceu_black_adam": {
+    "page": "Black Adam (film)",
+    "allowPoster": true
+  },
+  "reeves_batman": {
+    "page": "The Batman (film)",
+    "preferred": [
+      "Robert_Pattinson_Test_Footage_for_The_Batman"
+    ],
+    "requirePreferred": true
+  },
+  "nolan_batman": {
+    "page": "Bruce Wayne (Dark Knight trilogy)",
+    "preferred": [
+      "Bruce_Wayne_(The_Dark_Knight_Trilogy)",
+      "Bale_as_Batman"
+    ]
+  },
+  "dc_superman": {
+    "page": "Superman",
+    "search": "Superman DC Comics character"
+  },
+  "dc_batman": {
+    "page": "Batman",
+    "search": "Batman DC Comics character"
+  },
+  "dc_wonder_woman": {
+    "page": "Wonder Woman",
+    "search": "Wonder Woman DC Comics character"
+  },
+  "dc_flash": {
+    "page": "Wally West",
+    "search": "Wally West Flash DC Comics"
+  },
+  "dc_green_lantern": {
+    "page": "Hal Jordan",
+    "search": "Hal Jordan Green Lantern DC Comics"
+  },
+  "dc_aquaman": {
+    "page": "Aquaman",
+    "search": "Aquaman DC Comics character"
+  },
+  "dc_martian_manhunter": {
+    "page": "Martian Manhunter",
+    "search": "Martian Manhunter DC Comics"
+  },
+  "dc_shazam": {
+    "page": "Captain Marvel (DC Comics)",
+    "search": "Shazam Billy Batson DC Comics"
+  },
+  "dc_doctor_fate": {
+    "page": "Doctor Fate",
+    "search": "Doctor Fate DC Comics"
+  },
+  "dc_zatanna": {
+    "page": "Zatanna",
+    "search": "Zatanna DC Comics"
+  },
+  "dc_raven": {
+    "page": "Raven (DC Comics)",
+    "search": "Raven DC Comics character"
+  },
+  "dc_darkseid": {
+    "page": "Darkseid",
+    "search": "Darkseid DC Comics"
+  },
+  "dc_doomsday": {
+    "page": "Doomsday (DC Comics)",
+    "search": "Doomsday DC Comics character"
+  },
+  "dc_reverse_flash": {
+    "page": "Eobard Thawne",
+    "search": "Eobard Thawne Reverse-Flash DC Comics"
+  },
+  "dc_lex": {
+    "page": "Lex Luthor",
+    "search": "Lex Luthor DC Comics"
+  },
+  "dc_constantine": {
+    "page": "John Constantine",
+    "search": "John Constantine DC Comics"
+  },
+  "sw_vader": {
+    "page": "Darth Vader",
+    "preferred": [
+      "Darth_Vader_in_The_Empire_Strikes_Back",
+      "Darth_Vader_at_Galaxy"
+    ],
+    "requirePreferred": true
+  },
+  "sw_luke": {
+    "page": "Luke Skywalker"
+  },
+  "sw_yoda": {
+    "page": "Yoda"
+  },
+  "sw_palpatine": {
+    "page": "Palpatine"
+  },
+  "lotr_gandalf": {
+    "page": "Gandalf",
+    "preferred": [
+      "Gandalf600ppx",
+      "GANDALF.jpg"
+    ],
+    "requirePreferred": true
+  },
+  "lotr_aragorn": {
+    "page": "Aragorn",
+    "preferred": [
+      "Aragorn300ppx"
+    ],
+    "requirePreferred": true
+  },
+  "lotr_legolas": {
+    "page": "Legolas",
+    "preferred": [
+      "Legolas600ppx"
+    ],
+    "requirePreferred": true
+  },
+  "hp_dumbledore": {
+    "page": "Albus Dumbledore",
+    "preferred": [
+      "Dumbledore_-_Prisoner_of_Azkaban"
+    ],
+    "requirePreferred": true
+  },
+  "hp_voldemort": {
+    "remote": "https://wallpapercrafter.com/th8004/1289021-look-mantle-villain-evil-Harry-Potter-Ralph-Fiennes.jpg"
+  },
+  "matrix_neo": {
+    "page": "Neo (The Matrix)"
+  },
+  "matrix_smith": {
+    "page": "Agent Smith"
+  },
+  "terminator_t800": {
+    "page": "Terminator (character)",
+    "search": "T-800 Terminator character Arnold Schwarzenegger"
+  },
+  "terminator_t1000": {
+    "page": "T-1000"
+  },
+  "alien_xenomorph": {
+    "page": "Xenomorph"
+  },
+  "predator_hunter": {
+    "page": "Predator (fictional species)",
+    "search": "Predator fictional species film character"
+  },
+  "john_wick": {
+    "page": "John Wick (character)"
+  },
+  "jack_reacher": {
+    "remote": "https://hips.hearstapps.com/hmg-prod/images/alan-ritchson-reacher-season-2-654a4e61423fe.jpg?crop=0.635xw%3A0.952xh%3B0.266xw%2C0.0484xh&resize=980%3A%2A"
+  },
+  "boys_homelander": {
+    "page": "Homelander"
+  },
+  "boys_soldier_boy": {
+    "page": "Soldier Boy (The Boys)",
+    "search": "Soldier Boy The Boys Jensen Ackles"
+  },
+  "invincible_omniman": {
+    "remote": "https://images2.minutemediacdn.com/image/upload/c_fill%2Cw_1200%2Car_1%3A1%2Cf_auto%2Cq_auto%2Cg_auto/images/ImageExchange/mmsport/385/01j5qjvbkxg5qp94y5r3.jpg"
+  },
+  "invincible_mark": {
+    "remote": "https://images2.minutemediacdn.com/image/upload/c_fill%2Cw_1200%2Car_1%3A1%2Cf_auto%2Cq_auto%2Cg_auto/shape/cover/sport/Inv-e6a68da74f4542298b1f43989cf194fc.jpg"
+  },
+  "st_eleven": {
+    "page": "Eleven (Stranger Things)"
+  },
+  "witcher_geralt": {
+    "remote": "https://cdn.mos.cms.futurecdn.net/v2/t%3A0%2Cl%3A280%2Ccw%3A720%2Cch%3A720%2Cq%3A80%2Cw%3A720/rcPgfJvUj2WCfWMDbJXvLH.jpg"
+  },
+  "buffy": {
+    "page": "Buffy Summers"
+  },
+  "robocop": {
+    "page": "RoboCop (character)",
+    "search": "RoboCop character 1987 Peter Weller"
+  },
+  "godzilla_mv": {
+    "page": "Godzilla (Monsterverse)"
+  },
+  "kong_mv": {
+    "page": "Kong (Monsterverse)"
+  }
+};
+const portraitCache = new Map();
+
+function normImageName(s = "") {
+  return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+function imageCandidateAllowed(name, allowPoster = false) {
+  const n = String(name || "");
+  if (!/\.(jpe?g|png|webp)$/i.test(n)) return false;
+  if (/\b(symbol|icon|logo|flag|map|wiki|commons|wikipetan|dragon|shackle|ambox|question_book|edit-ltr|blank_television|cc_by|scale_of_justice)\b/i.test(n.replace(/[_-]/g, " "))) return false;
+  if (!allowPoster && /poster/i.test(n)) return false;
+  return true;
+}
+
+async function wikiJson(params) {
+  const u = new URL("https://en.wikipedia.org/w/api.php");
+  for (const [k, v] of Object.entries({ action: "query", format: "json", origin: "*", ...params })) u.searchParams.set(k, v);
+  const r = await fetch(u, {
+    headers: { "user-agent": "MultiverseBattleGenerator/1.3 (noncommercial fan project; portrait lookup)" },
+    signal: AbortSignal.timeout(8000)
+  });
+  if (!r.ok) throw new Error(`Wikipedia API ${r.status}`);
+  return await r.json();
+}
+
+async function wikiPageImages(pageTitle) {
+  const u = new URL("https://en.wikipedia.org/w/api.php");
+  for (const [k, v] of Object.entries({ action: "parse", page: pageTitle, prop: "images", format: "json", origin: "*" })) u.searchParams.set(k, v);
+  const r = await fetch(u, {
+    headers: { "user-agent": "MultiverseBattleGenerator/1.3 (noncommercial fan project; portrait lookup)" },
+    signal: AbortSignal.timeout(8000)
+  });
+  if (!r.ok) return null;
+  const data = await r.json();
+  if (data?.error || !data?.parse?.images) return null;
+  return { title: data.parse.title || pageTitle, images: data.parse.images };
+}
+
+async function wikiSearchPage(query) {
+  const data = await wikiJson({ list: "search", srsearch: query, srlimit: "5", srnamespace: "0" });
+  return data?.query?.search?.[0]?.title || null;
+}
+
+function chooseWikiImage(images, spec) {
+  const candidates = (images || []).filter(n => imageCandidateAllowed(n, Boolean(spec.allowPoster)));
+  const preferred = Array.isArray(spec.preferred) ? spec.preferred : (spec.preferred ? [spec.preferred] : []);
+  if (preferred.length) {
+    for (const p of preferred) {
+      const pn = normImageName(p);
+      const hit = candidates.find(n => normImageName(n).includes(pn));
+      if (hit) return hit;
+    }
+    if (spec.requirePreferred) return null;
+  }
+  return candidates[0] || null;
+}
+
+async function wikiFileUrl(filename) {
+  const data = await wikiJson({
+    prop: "imageinfo",
+    titles: `File:${filename}`,
+    iiprop: "url",
+    iiurlwidth: "360"
+  });
+  const pages = Object.values(data?.query?.pages || {});
+  const info = pages[0]?.imageinfo?.[0];
+  return info?.thumburl || info?.url || null;
+}
+
+async function resolvePortrait(id) {
+  const cached = portraitCache.get(id);
+  if (cached && cached.expires > Date.now()) return cached.url;
+  const spec = PORTRAIT_SOURCES[id];
+  if (!spec) return null;
+
+  try {
+    if (spec.remote) {
+      portraitCache.set(id, { url: spec.remote, expires: Date.now() + 7 * 86400000 });
+      return spec.remote;
+    }
+
+    let parsed = spec.page ? await wikiPageImages(spec.page) : null;
+    if (!parsed && spec.search) {
+      const found = await wikiSearchPage(spec.search);
+      if (found) parsed = await wikiPageImages(found);
+    }
+    if (!parsed) return null;
+
+    const filename = chooseWikiImage(parsed.images, spec);
+    if (!filename) return null;
+    const imageUrl = await wikiFileUrl(filename);
+    if (!imageUrl) return null;
+
+    portraitCache.set(id, { url: imageUrl, expires: Date.now() + 7 * 86400000 });
+    return imageUrl;
+  } catch (err) {
+    console.warn(`Portrait lookup failed for ${id}:`, err?.message || err);
+    portraitCache.set(id, { url: null, expires: Date.now() + 15 * 60000 });
+    return null;
+  }
+}
+
 const PER_IP_HOURLY_LIMIT = Number(process.env.AI_BATTLES_PER_IP_PER_HOUR || 12);
 const GLOBAL_HOURLY_LIMIT = Number(process.env.AI_GLOBAL_BATTLES_PER_HOUR || 120);
 const rateState = { hour: Math.floor(Date.now() / 3_600_000), global: 0, ips: new Map() };
@@ -359,6 +820,20 @@ const server = http.createServer(async (req, res) => {
       model: MODEL,
       researchModel: RESEARCH_MODEL
     });
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/portrait") {
+    const id = url.searchParams.get("id") || "";
+    const imageUrl = await resolvePortrait(id);
+    if (!imageUrl) {
+      res.writeHead(404, { "cache-control": "public, max-age=900" });
+      return res.end();
+    }
+    res.writeHead(302, {
+      location: imageUrl,
+      "cache-control": "public, max-age=604800"
+    });
+    return res.end();
   }
 
   if (req.method === "POST" && url.pathname === "/api/judge") {
