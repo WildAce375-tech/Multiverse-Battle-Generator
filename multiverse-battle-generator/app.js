@@ -95,6 +95,7 @@ function renderArena() {
 function matchesRosterScope(c, scope=rosterScope) {
   if (scope === "comics") return c.medium === "Comics";
   if (scope === "screen") return c.medium === "Movie/TV";
+  if (scope === "games") return c.medium === "Games";
   return true;
 }
 
@@ -105,6 +106,7 @@ function eligibleCharacters(scope=rosterScope) {
 function rosterScopeLabel(scope=rosterScope) {
   if (scope === "comics") return "Comics only";
   if (scope === "screen") return "Movies / TV only";
+  if (scope === "games") return "Video Games only";
   return "Everything";
 }
 
@@ -170,7 +172,7 @@ function applySettings(s={}) {
   for (const k of ["mode","prep","battlefield","distance"]) {
     if (s[k] && $(`${k}`)) $(`${k}`).value = s[k];
   }
-  if (["all","comics","screen"].includes(s.rosterScope)) {
+  if (["all","comics","screen","games"].includes(s.rosterScope)) {
     rosterScope = s.rosterScope;
     if ($("rosterScope")) $("rosterScope").value = rosterScope;
     populateSelectors();
@@ -869,7 +871,7 @@ function renderLiveDraftRoom(room){
       <div>
         <div class="eyebrow">LIVE MULTIPLAYER DRAFT</div>
         <div class="liveRoomCode">${esc(room.code)}</div>
-        <div class="liveRoomMeta">${room.config.playerCount} players • ${room.config.teamSize} fighter${room.config.teamSize===1?"":"s"} each • ${room.config.budget} points each • ${esc(room.config.mediumScope==="comics"?"Comics only":room.config.mediumScope==="screen"?"Movies / TV only":"All media")} • ${esc(liveDraftOrderLabel(room.config.order))}</div>
+        <div class="liveRoomMeta">${room.config.playerCount} players • ${room.config.teamSize} fighter${room.config.teamSize===1?"":"s"} each • ${room.config.budget} points each • ${esc(room.config.mediumScope==="comics"?"Comics only":room.config.mediumScope==="screen"?"Movies / TV only":room.config.mediumScope==="games"?"Video Games only":"All media")} • ${esc(liveDraftOrderLabel(room.config.order))}</div>
       </div>
       <div class="liveRoomActions">
         <button class="secondary" data-action="live-copy-invite">🔗 COPY INVITE</button>
@@ -955,7 +957,7 @@ async function joinLiveDraft(code,{fromUrl=false}={}){
 
   const token=data.token||existingToken||"";
   liveDraftSession={code,token,side:data.room.yourSide||null,room:data.room,pollTimer:null,lastRenderedAt:data.room.updatedAt||""};
-  if (["all","comics","screen"].includes(data.room.config?.mediumScope)) {
+  if (["all","comics","screen","games"].includes(data.room.config?.mediumScope)) {
     rosterScope = data.room.config.mediumScope;
     $("rosterScope").value = rosterScope;
     populateSelectors();

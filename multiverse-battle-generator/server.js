@@ -460,8 +460,15 @@ async function wikiFileUrl(filename) {
 async function resolvePortrait(id) {
   const cached = portraitCache.get(id);
   if (cached && cached.expires > Date.now()) return cached.url;
-  const spec = PORTRAIT_SOURCES[id];
-  if (!spec) return null;
+
+  const fighter = CHARACTERS.find(c => c.id === id);
+  if (!fighter) return null;
+
+  // Existing roster entries keep their hand-curated source. New roster entries
+  // automatically search a version/franchise-specific Wikipedia character page.
+  const spec = PORTRAIT_SOURCES[id] || {
+    search: fighter.portraitSearch || `${fighter.name} ${fighter.franchise} character`
+  };
 
   try {
     if (spec.remote) {
@@ -1161,7 +1168,7 @@ function cleanLiveDraftConfig(config = {}) {
   const rawBudget = Number(config.budget);
   const budget = Number.isInteger(rawBudget) && rawBudget >= teamSize && rawBudget <= 30 ? rawBudget : 12;
   const order = ["alternating","snake"].includes(config.order) ? config.order : "snake";
-  const mediumScope = ["all","comics","screen"].includes(config.mediumScope) ? config.mediumScope : "all";
+  const mediumScope = ["all","comics","screen","games"].includes(config.mediumScope) ? config.mediumScope : "all";
   return { playerCount, teamSize, budget, order, mediumScope };
 }
 
@@ -1300,6 +1307,7 @@ function validateLiveDraftPick(room, side, fighterId) {
   if (!fighter) return "That fighter is not in the roster.";
   if (room.config.mediumScope === "comics" && fighter.medium !== "Comics") return "This room is Comics only.";
   if (room.config.mediumScope === "screen" && fighter.medium !== "Movie/TV") return "This room is Movies / TV only.";
+  if (room.config.mediumScope === "games" && fighter.medium !== "Games") return "This room is Video Games only.";
 
   const allDrafted = liveDraftSides(room).flatMap(s => room.teams?.[s] || []);
   if (allDrafted.includes(fighterId)) return "That fighter has already been drafted.";

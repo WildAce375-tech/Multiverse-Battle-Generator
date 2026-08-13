@@ -2,7 +2,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_iron_man",
     "name": "Iron Man",
-    "version": "MCU \u2014 late-series standard armor",
+    "version": "MCU — late-series standard armor",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 3,
@@ -12,7 +12,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_captain_america",
     "name": "Captain America",
-    "version": "MCU \u2014 Steve Rogers, standard shield",
+    "version": "MCU — Steve Rogers, standard shield",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 2,
@@ -22,7 +22,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_thor",
     "name": "Thor",
-    "version": "MCU \u2014 Infinity War/Endgame era, Stormbreaker",
+    "version": "MCU — Infinity War/Endgame era, Stormbreaker",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -32,7 +32,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_hulk",
     "name": "Hulk",
-    "version": "MCU \u2014 standard Hulk, no Infinity Gauntlet",
+    "version": "MCU — standard Hulk, no Infinity Gauntlet",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -42,7 +42,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_spider_man",
     "name": "Spider-Man",
-    "version": "MCU \u2014 No Way Home era, standard suit",
+    "version": "MCU — No Way Home era, standard suit",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 3,
@@ -52,7 +52,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_black_panther",
     "name": "Black Panther",
-    "version": "MCU \u2014 T'Challa, standard suit",
+    "version": "MCU — T'Challa, standard suit",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 2,
@@ -62,7 +62,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_doctor_strange",
     "name": "Doctor Strange",
-    "version": "MCU \u2014 standard post-Endgame, no Time Stone",
+    "version": "MCU — standard post-Endgame, no Time Stone",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -72,7 +72,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_scarlet_witch",
     "name": "Scarlet Witch",
-    "version": "MCU \u2014 Multiverse of Madness",
+    "version": "MCU — Multiverse of Madness",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 5,
@@ -82,7 +82,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_captain_marvel",
     "name": "Captain Marvel",
-    "version": "MCU \u2014 standard Carol Danvers",
+    "version": "MCU — standard Carol Danvers",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -92,7 +92,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_vision",
     "name": "Vision",
-    "version": "MCU \u2014 standard pre-Infinity War",
+    "version": "MCU — standard pre-Infinity War",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -102,7 +102,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_thanos",
     "name": "Thanos",
-    "version": "MCU \u2014 Endgame, no Infinity Stones",
+    "version": "MCU — Endgame, no Infinity Stones",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -112,7 +112,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_thanos_gauntlet",
     "name": "Thanos",
-    "version": "MCU \u2014 completed Infinity Gauntlet",
+    "version": "MCU — completed Infinity Gauntlet",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 6,
@@ -122,7 +122,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_loki",
     "name": "Loki",
-    "version": "MCU \u2014 Avengers-era combat version",
+    "version": "MCU — Avengers-era combat version",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 3,
@@ -132,7 +132,7 @@ export const CHARACTERS = [
   {
     "id": "mcu_hela",
     "name": "Hela",
-    "version": "MCU \u2014 on Asgard",
+    "version": "MCU — on Asgard",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 5,
@@ -142,7 +142,7 @@ export const CHARACTERS = [
   {
     "id": "fox_wolverine",
     "name": "Wolverine",
-    "version": "Fox X-Men films \u2014 prime Logan",
+    "version": "Fox X-Men films — prime Logan",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 3,
@@ -152,7 +152,7 @@ export const CHARACTERS = [
   {
     "id": "movie_deadpool",
     "name": "Deadpool",
-    "version": "Deadpool films \u2014 standard gear",
+    "version": "Deadpool films — standard gear",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 3,
@@ -162,7 +162,7 @@ export const CHARACTERS = [
   {
     "id": "sony_venom",
     "name": "Venom",
-    "version": "Sony films \u2014 Eddie Brock",
+    "version": "Sony films — Eddie Brock",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 3,
@@ -172,7 +172,7 @@ export const CHARACTERS = [
   {
     "id": "fox_magneto",
     "name": "Magneto",
-    "version": "Fox X-Men films \u2014 peak standard portrayal",
+    "version": "Fox X-Men films — peak standard portrayal",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -182,7 +182,7 @@ export const CHARACTERS = [
   {
     "id": "fox_xavier",
     "name": "Professor X",
-    "version": "Fox X-Men films \u2014 standard Charles Xavier",
+    "version": "Fox X-Men films — standard Charles Xavier",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -192,7 +192,7 @@ export const CHARACTERS = [
   {
     "id": "fox_quicksilver",
     "name": "Quicksilver",
-    "version": "Fox X-Men films \u2014 Peter Maximoff",
+    "version": "Fox X-Men films — Peter Maximoff",
     "franchise": "Marvel",
     "medium": "Movie/TV",
     "tier": 4,
@@ -202,7 +202,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_spider_man",
     "name": "Spider-Man",
-    "version": "Marvel Comics \u2014 Earth-616 Peter Parker, standard",
+    "version": "Marvel Comics — Earth-616 Peter Parker, standard",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 3,
@@ -212,7 +212,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_iron_man",
     "name": "Iron Man",
-    "version": "Marvel Comics \u2014 Earth-616 modern standard armor",
+    "version": "Marvel Comics — Earth-616 modern standard armor",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 4,
@@ -222,7 +222,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_captain_america",
     "name": "Captain America",
-    "version": "Marvel Comics \u2014 Earth-616 standard",
+    "version": "Marvel Comics — Earth-616 standard",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 2,
@@ -232,7 +232,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_thor",
     "name": "Thor",
-    "version": "Marvel Comics \u2014 Earth-616 standard Thor, Mjolnir, no temporary amps",
+    "version": "Marvel Comics — Earth-616 standard Thor, Mjolnir, no temporary amps",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 5,
@@ -242,7 +242,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_hulk",
     "name": "Hulk",
-    "version": "Marvel Comics \u2014 Earth-616 standard Hulk, no temporary amp",
+    "version": "Marvel Comics — Earth-616 standard Hulk, no temporary amp",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 5,
@@ -252,7 +252,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_wolverine",
     "name": "Wolverine",
-    "version": "Marvel Comics \u2014 Earth-616 standard",
+    "version": "Marvel Comics — Earth-616 standard",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 3,
@@ -262,7 +262,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_doctor_strange",
     "name": "Doctor Strange",
-    "version": "Marvel Comics \u2014 Earth-616 standard Sorcerer Supreme-level portrayal",
+    "version": "Marvel Comics — Earth-616 standard Sorcerer Supreme-level portrayal",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 6,
@@ -272,7 +272,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_scarlet_witch",
     "name": "Scarlet Witch",
-    "version": "Marvel Comics \u2014 Earth-616 standard modern portrayal, no temporary god-tier amp",
+    "version": "Marvel Comics — Earth-616 standard modern portrayal, no temporary god-tier amp",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 6,
@@ -282,7 +282,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_silver_surfer",
     "name": "Silver Surfer",
-    "version": "Marvel Comics \u2014 Earth-616 standard",
+    "version": "Marvel Comics — Earth-616 standard",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 6,
@@ -292,7 +292,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_thanos",
     "name": "Thanos",
-    "version": "Marvel Comics \u2014 Earth-616 base Thanos, no artifacts",
+    "version": "Marvel Comics — Earth-616 base Thanos, no artifacts",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 6,
@@ -302,7 +302,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_thanos_ig",
     "name": "Thanos",
-    "version": "Marvel Comics \u2014 Infinity Gauntlet with all six gems",
+    "version": "Marvel Comics — Infinity Gauntlet with all six gems",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 7,
@@ -312,7 +312,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_doom",
     "name": "Doctor Doom",
-    "version": "Marvel Comics \u2014 Earth-616 standard armor and magic, no stolen cosmic power",
+    "version": "Marvel Comics — Earth-616 standard armor and magic, no stolen cosmic power",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 5,
@@ -322,7 +322,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_magneto",
     "name": "Magneto",
-    "version": "Marvel Comics \u2014 Earth-616 standard",
+    "version": "Marvel Comics — Earth-616 standard",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 5,
@@ -332,7 +332,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_phoenix",
     "name": "Jean Grey / Phoenix",
-    "version": "Marvel Comics \u2014 Phoenix Force host",
+    "version": "Marvel Comics — Phoenix Force host",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 7,
@@ -342,7 +342,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_sentry",
     "name": "Sentry",
-    "version": "Marvel Comics \u2014 standard Sentry/Void-era portrayal",
+    "version": "Marvel Comics — standard Sentry/Void-era portrayal",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 6,
@@ -352,7 +352,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_black_bolt",
     "name": "Black Bolt",
-    "version": "Marvel Comics \u2014 Earth-616 standard",
+    "version": "Marvel Comics — Earth-616 standard",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 5,
@@ -362,7 +362,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_apocalypse",
     "name": "Apocalypse",
-    "version": "Marvel Comics \u2014 Earth-616 standard",
+    "version": "Marvel Comics — Earth-616 standard",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 5,
@@ -372,7 +372,7 @@ export const CHARACTERS = [
   {
     "id": "marvel_galactus",
     "name": "Galactus",
-    "version": "Marvel Comics \u2014 normally fed, no Ultimate Nullifier",
+    "version": "Marvel Comics — normally fed, no Ultimate Nullifier",
     "franchise": "Marvel",
     "medium": "Comics",
     "tier": 7,
@@ -382,7 +382,7 @@ export const CHARACTERS = [
   {
     "id": "dceu_superman",
     "name": "Superman",
-    "version": "DCEU \u2014 Justice League/Zack Snyder era",
+    "version": "DCEU — Justice League/Zack Snyder era",
     "franchise": "DC",
     "medium": "Movie/TV",
     "tier": 4,
@@ -392,7 +392,7 @@ export const CHARACTERS = [
   {
     "id": "dceu_batman",
     "name": "Batman",
-    "version": "DCEU \u2014 standard gear, no anti-Superman prep suit",
+    "version": "DCEU — standard gear, no anti-Superman prep suit",
     "franchise": "DC",
     "medium": "Movie/TV",
     "tier": 1,
@@ -402,7 +402,7 @@ export const CHARACTERS = [
   {
     "id": "dceu_wonder_woman",
     "name": "Wonder Woman",
-    "version": "DCEU \u2014 standard Diana",
+    "version": "DCEU — standard Diana",
     "franchise": "DC",
     "medium": "Movie/TV",
     "tier": 4,
@@ -412,7 +412,7 @@ export const CHARACTERS = [
   {
     "id": "dceu_flash",
     "name": "The Flash",
-    "version": "DCEU \u2014 Barry Allen, standard movie portrayal",
+    "version": "DCEU — Barry Allen, standard movie portrayal",
     "franchise": "DC",
     "medium": "Movie/TV",
     "tier": 4,
@@ -422,7 +422,7 @@ export const CHARACTERS = [
   {
     "id": "dceu_aquaman",
     "name": "Aquaman",
-    "version": "DCEU \u2014 standard Arthur with trident",
+    "version": "DCEU — standard Arthur with trident",
     "franchise": "DC",
     "medium": "Movie/TV",
     "tier": 4,
@@ -432,7 +432,7 @@ export const CHARACTERS = [
   {
     "id": "dceu_black_adam",
     "name": "Black Adam",
-    "version": "DCEU \u2014 film version",
+    "version": "DCEU — film version",
     "franchise": "DC",
     "medium": "Movie/TV",
     "tier": 4,
@@ -442,7 +442,7 @@ export const CHARACTERS = [
   {
     "id": "reeves_batman",
     "name": "Batman",
-    "version": "The Batman (2022) \u2014 standard gear",
+    "version": "The Batman (2022) — standard gear",
     "franchise": "DC",
     "medium": "Movie/TV",
     "tier": 1,
@@ -452,7 +452,7 @@ export const CHARACTERS = [
   {
     "id": "nolan_batman",
     "name": "Batman",
-    "version": "Dark Knight trilogy \u2014 standard gear",
+    "version": "Dark Knight trilogy — standard gear",
     "franchise": "DC",
     "medium": "Movie/TV",
     "tier": 1,
@@ -462,7 +462,7 @@ export const CHARACTERS = [
   {
     "id": "dc_superman",
     "name": "Superman",
-    "version": "DC Comics \u2014 mainline standard Superman, no temporary amps",
+    "version": "DC Comics — mainline standard Superman, no temporary amps",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 5,
@@ -472,7 +472,7 @@ export const CHARACTERS = [
   {
     "id": "dc_batman",
     "name": "Batman",
-    "version": "DC Comics \u2014 mainline standard gear, no prep",
+    "version": "DC Comics — mainline standard gear, no prep",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 1,
@@ -482,7 +482,7 @@ export const CHARACTERS = [
   {
     "id": "dc_wonder_woman",
     "name": "Wonder Woman",
-    "version": "DC Comics \u2014 mainline standard",
+    "version": "DC Comics — mainline standard",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 5,
@@ -492,7 +492,7 @@ export const CHARACTERS = [
   {
     "id": "dc_flash",
     "name": "The Flash",
-    "version": "DC Comics \u2014 mainline Wally West, standard",
+    "version": "DC Comics — mainline Wally West, standard",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 6,
@@ -502,7 +502,7 @@ export const CHARACTERS = [
   {
     "id": "dc_green_lantern",
     "name": "Green Lantern",
-    "version": "DC Comics \u2014 Hal Jordan, standard ring",
+    "version": "DC Comics — Hal Jordan, standard ring",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 5,
@@ -512,7 +512,7 @@ export const CHARACTERS = [
   {
     "id": "dc_aquaman",
     "name": "Aquaman",
-    "version": "DC Comics \u2014 mainline Arthur Curry, standard",
+    "version": "DC Comics — mainline Arthur Curry, standard",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 4,
@@ -522,7 +522,7 @@ export const CHARACTERS = [
   {
     "id": "dc_martian_manhunter",
     "name": "Martian Manhunter",
-    "version": "DC Comics \u2014 mainline standard",
+    "version": "DC Comics — mainline standard",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 6,
@@ -532,7 +532,7 @@ export const CHARACTERS = [
   {
     "id": "dc_shazam",
     "name": "Shazam",
-    "version": "DC Comics \u2014 mainline standard Billy Batson",
+    "version": "DC Comics — mainline standard Billy Batson",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 5,
@@ -542,7 +542,7 @@ export const CHARACTERS = [
   {
     "id": "dc_doctor_fate",
     "name": "Doctor Fate",
-    "version": "DC Comics \u2014 mainline standard host with Helmet of Fate",
+    "version": "DC Comics — mainline standard host with Helmet of Fate",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 6,
@@ -552,7 +552,7 @@ export const CHARACTERS = [
   {
     "id": "dc_zatanna",
     "name": "Zatanna",
-    "version": "DC Comics \u2014 mainline standard",
+    "version": "DC Comics — mainline standard",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 6,
@@ -562,7 +562,7 @@ export const CHARACTERS = [
   {
     "id": "dc_raven",
     "name": "Raven",
-    "version": "DC Comics \u2014 mainline standard, no temporary amp",
+    "version": "DC Comics — mainline standard, no temporary amp",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 6,
@@ -572,7 +572,7 @@ export const CHARACTERS = [
   {
     "id": "dc_darkseid",
     "name": "Darkseid",
-    "version": "DC Comics \u2014 standard manifested/avatar combat portrayal",
+    "version": "DC Comics — standard manifested/avatar combat portrayal",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 6,
@@ -582,7 +582,7 @@ export const CHARACTERS = [
   {
     "id": "dc_doomsday",
     "name": "Doomsday",
-    "version": "DC Comics \u2014 standard evolved combat portrayal",
+    "version": "DC Comics — standard evolved combat portrayal",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 6,
@@ -592,7 +592,7 @@ export const CHARACTERS = [
   {
     "id": "dc_reverse_flash",
     "name": "Reverse-Flash",
-    "version": "DC Comics \u2014 Eobard Thawne, standard",
+    "version": "DC Comics — Eobard Thawne, standard",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 6,
@@ -602,7 +602,7 @@ export const CHARACTERS = [
   {
     "id": "dc_lex",
     "name": "Lex Luthor",
-    "version": "DC Comics \u2014 standard warsuit",
+    "version": "DC Comics — standard warsuit",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 4,
@@ -612,7 +612,7 @@ export const CHARACTERS = [
   {
     "id": "dc_constantine",
     "name": "John Constantine",
-    "version": "DC Comics \u2014 standard, no prep",
+    "version": "DC Comics — standard, no prep",
     "franchise": "DC",
     "medium": "Comics",
     "tier": 3,
@@ -622,7 +622,7 @@ export const CHARACTERS = [
   {
     "id": "sw_vader",
     "name": "Darth Vader",
-    "version": "Star Wars canon \u2014 suited Vader, prime Imperial era",
+    "version": "Star Wars canon — suited Vader, prime Imperial era",
     "franchise": "Star Wars",
     "medium": "Movie/TV",
     "tier": 3,
@@ -632,7 +632,7 @@ export const CHARACTERS = [
   {
     "id": "sw_luke",
     "name": "Luke Skywalker",
-    "version": "Star Wars canon \u2014 post-ROTJ prime on-screen era",
+    "version": "Star Wars canon — post-ROTJ prime on-screen era",
     "franchise": "Star Wars",
     "medium": "Movie/TV",
     "tier": 3,
@@ -642,7 +642,7 @@ export const CHARACTERS = [
   {
     "id": "sw_yoda",
     "name": "Yoda",
-    "version": "Star Wars canon \u2014 prequel-era prime",
+    "version": "Star Wars canon — prequel-era prime",
     "franchise": "Star Wars",
     "medium": "Movie/TV",
     "tier": 3,
@@ -652,7 +652,7 @@ export const CHARACTERS = [
   {
     "id": "sw_palpatine",
     "name": "Emperor Palpatine",
-    "version": "Star Wars canon \u2014 standard Sidious",
+    "version": "Star Wars canon — standard Sidious",
     "franchise": "Star Wars",
     "medium": "Movie/TV",
     "tier": 3,
@@ -662,7 +662,7 @@ export const CHARACTERS = [
   {
     "id": "lotr_gandalf",
     "name": "Gandalf",
-    "version": "The Lord of the Rings films \u2014 Gandalf the White",
+    "version": "The Lord of the Rings films — Gandalf the White",
     "franchise": "LOTR",
     "medium": "Movie/TV",
     "tier": 3,
@@ -692,7 +692,7 @@ export const CHARACTERS = [
   {
     "id": "hp_dumbledore",
     "name": "Albus Dumbledore",
-    "version": "Harry Potter films \u2014 standard peak-era portrayal",
+    "version": "Harry Potter films — standard peak-era portrayal",
     "franchise": "Harry Potter",
     "medium": "Movie/TV",
     "tier": 3,
@@ -702,7 +702,7 @@ export const CHARACTERS = [
   {
     "id": "hp_voldemort",
     "name": "Lord Voldemort",
-    "version": "Harry Potter films \u2014 standard resurrected Voldemort",
+    "version": "Harry Potter films — standard resurrected Voldemort",
     "franchise": "Harry Potter",
     "medium": "Movie/TV",
     "tier": 3,
@@ -712,7 +712,7 @@ export const CHARACTERS = [
   {
     "id": "matrix_neo",
     "name": "Neo",
-    "version": "The Matrix trilogy \u2014 inside the Matrix, peak",
+    "version": "The Matrix trilogy — inside the Matrix, peak",
     "franchise": "The Matrix",
     "medium": "Movie/TV",
     "tier": 4,
@@ -722,7 +722,7 @@ export const CHARACTERS = [
   {
     "id": "matrix_smith",
     "name": "Agent Smith",
-    "version": "The Matrix trilogy \u2014 upgraded Smith, inside Matrix",
+    "version": "The Matrix trilogy — upgraded Smith, inside Matrix",
     "franchise": "The Matrix",
     "medium": "Movie/TV",
     "tier": 4,
@@ -732,7 +732,7 @@ export const CHARACTERS = [
   {
     "id": "terminator_t800",
     "name": "T-800",
-    "version": "Terminator films \u2014 standard Model 101",
+    "version": "Terminator films — standard Model 101",
     "franchise": "Terminator",
     "medium": "Movie/TV",
     "tier": 2,
@@ -752,7 +752,7 @@ export const CHARACTERS = [
   {
     "id": "alien_xenomorph",
     "name": "Xenomorph",
-    "version": "Alien films \u2014 standard adult",
+    "version": "Alien films — standard adult",
     "franchise": "Alien",
     "medium": "Movie/TV",
     "tier": 2,
@@ -762,7 +762,7 @@ export const CHARACTERS = [
   {
     "id": "predator_hunter",
     "name": "Predator",
-    "version": "Predator films \u2014 experienced standard hunter",
+    "version": "Predator films — experienced standard hunter",
     "franchise": "Predator",
     "medium": "Movie/TV",
     "tier": 2,
@@ -772,7 +772,7 @@ export const CHARACTERS = [
   {
     "id": "john_wick",
     "name": "John Wick",
-    "version": "John Wick films \u2014 standard equipment",
+    "version": "John Wick films — standard equipment",
     "franchise": "John Wick",
     "medium": "Movie/TV",
     "tier": 1,
@@ -782,7 +782,7 @@ export const CHARACTERS = [
   {
     "id": "jack_reacher",
     "name": "Jack Reacher",
-    "version": "Reacher TV \u2014 standard",
+    "version": "Reacher TV — standard",
     "franchise": "Reacher",
     "medium": "Movie/TV",
     "tier": 1,
@@ -792,7 +792,7 @@ export const CHARACTERS = [
   {
     "id": "boys_homelander",
     "name": "Homelander",
-    "version": "The Boys TV \u2014 standard",
+    "version": "The Boys TV — standard",
     "franchise": "The Boys",
     "medium": "Movie/TV",
     "tier": 4,
@@ -802,7 +802,7 @@ export const CHARACTERS = [
   {
     "id": "boys_soldier_boy",
     "name": "Soldier Boy",
-    "version": "The Boys TV \u2014 standard",
+    "version": "The Boys TV — standard",
     "franchise": "The Boys",
     "medium": "Movie/TV",
     "tier": 3,
@@ -812,7 +812,7 @@ export const CHARACTERS = [
   {
     "id": "invincible_omniman",
     "name": "Omni-Man",
-    "version": "Invincible TV \u2014 standard Nolan Grayson",
+    "version": "Invincible TV — standard Nolan Grayson",
     "franchise": "Invincible",
     "medium": "Movie/TV",
     "tier": 4,
@@ -822,7 +822,7 @@ export const CHARACTERS = [
   {
     "id": "invincible_mark",
     "name": "Invincible",
-    "version": "Invincible TV \u2014 current standard Mark Grayson",
+    "version": "Invincible TV — current standard Mark Grayson",
     "franchise": "Invincible",
     "medium": "Movie/TV",
     "tier": 4,
@@ -832,7 +832,7 @@ export const CHARACTERS = [
   {
     "id": "st_eleven",
     "name": "Eleven",
-    "version": "Stranger Things TV \u2014 standard peak portrayal",
+    "version": "Stranger Things TV — standard peak portrayal",
     "franchise": "Stranger Things",
     "medium": "Movie/TV",
     "tier": 2,
@@ -842,7 +842,7 @@ export const CHARACTERS = [
   {
     "id": "witcher_geralt",
     "name": "Geralt of Rivia",
-    "version": "The Witcher TV \u2014 standard",
+    "version": "The Witcher TV — standard",
     "franchise": "The Witcher",
     "medium": "Movie/TV",
     "tier": 2,
@@ -852,7 +852,7 @@ export const CHARACTERS = [
   {
     "id": "buffy",
     "name": "Buffy Summers",
-    "version": "Buffy the Vampire Slayer TV \u2014 standard Slayer",
+    "version": "Buffy the Vampire Slayer TV — standard Slayer",
     "franchise": "Buffy",
     "medium": "Movie/TV",
     "tier": 2,
@@ -862,7 +862,7 @@ export const CHARACTERS = [
   {
     "id": "robocop",
     "name": "RoboCop",
-    "version": "RoboCop (1987) film continuity \u2014 standard",
+    "version": "RoboCop (1987) film continuity — standard",
     "franchise": "RoboCop",
     "medium": "Movie/TV",
     "tier": 2,
@@ -872,7 +872,7 @@ export const CHARACTERS = [
   {
     "id": "godzilla_mv",
     "name": "Godzilla",
-    "version": "MonsterVerse films \u2014 standard adult Godzilla",
+    "version": "MonsterVerse films — standard adult Godzilla",
     "franchise": "MonsterVerse",
     "medium": "Movie/TV",
     "tier": 5,
@@ -882,11 +882,2011 @@ export const CHARACTERS = [
   {
     "id": "kong_mv",
     "name": "Kong",
-    "version": "MonsterVerse films \u2014 adult Kong with standard axe",
+    "version": "MonsterVerse films — adult Kong with standard axe",
     "franchise": "MonsterVerse",
     "medium": "Movie/TV",
     "tier": 4,
     "tierName": "Heavyweight",
     "traits": "kaiju strength, agility, intelligence, axe"
+  },
+  {
+    "id": "marvel_daredevil",
+    "name": "Daredevil",
+    "version": "Marvel Comics — Earth-616 Matt Murdock, standard gear",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "enhanced senses, radar sense, acrobatics, billy club, elite martial arts"
+  },
+  {
+    "id": "marvel_punisher",
+    "name": "Punisher",
+    "version": "Marvel Comics — Earth-616 Frank Castle, standard combat loadout",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "firearms, explosives, tactics, military training, pain tolerance"
+  },
+  {
+    "id": "marvel_moon_knight",
+    "name": "Moon Knight",
+    "version": "Marvel Comics — Earth-616 Marc Spector, standard modern gear",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "combat skill, crescent weapons, armor, endurance, unpredictable tactics"
+  },
+  {
+    "id": "marvel_blade",
+    "name": "Blade",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "daywalker physiology, swordsmanship, firearms, vampire hunting, regeneration"
+  },
+  {
+    "id": "marvel_ghost_rider",
+    "name": "Ghost Rider",
+    "version": "Marvel Comics — Earth-616 Johnny Blaze, standard Spirit of Vengeance",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "hellfire, supernatural durability, Penance Stare, chains, regeneration"
+  },
+  {
+    "id": "marvel_carnage",
+    "name": "Carnage",
+    "version": "Marvel Comics — Earth-616 Cletus Kasady, standard symbiote",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "symbiote strength, regeneration, weapon morphing, tendrils, agility"
+  },
+  {
+    "id": "marvel_green_goblin",
+    "name": "Green Goblin",
+    "version": "Marvel Comics — Earth-616 Norman Osborn, standard Goblin gear",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "enhanced physicals, glider, pumpkin bombs, gadgets, intelligence"
+  },
+  {
+    "id": "marvel_doc_ock",
+    "name": "Doctor Octopus",
+    "version": "Marvel Comics — Earth-616 Otto Octavius, standard tentacles",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "mechanical arms, reach, multitasking, engineering genius, grappling"
+  },
+  {
+    "id": "marvel_mysterio",
+    "name": "Mysterio",
+    "version": "Marvel Comics — Earth-616 Quentin Beck, standard equipment",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "illusions, holograms, gas, drones, deception, special effects"
+  },
+  {
+    "id": "marvel_kingpin",
+    "name": "Kingpin",
+    "version": "Marvel Comics — Earth-616 Wilson Fisk, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "massive strength, durability, grappling, criminal resources, tactics"
+  },
+  {
+    "id": "marvel_bullseye",
+    "name": "Bullseye",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "perfect projectile accuracy, improvisation, martial arts, assassination"
+  },
+  {
+    "id": "marvel_elektra",
+    "name": "Elektra",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "ninjutsu, sai, stealth, assassination, elite agility"
+  },
+  {
+    "id": "marvel_luke_cage",
+    "name": "Luke Cage",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "super strength, bulletproof skin, durability, brawling"
+  },
+  {
+    "id": "marvel_iron_fist",
+    "name": "Iron Fist",
+    "version": "Marvel Comics — Earth-616 Danny Rand, standard chi access",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "chi-enhanced strikes, Iron Fist, martial arts, agility, healing"
+  },
+  {
+    "id": "marvel_she_hulk",
+    "name": "She-Hulk",
+    "version": "Marvel Comics — Earth-616 Jennifer Walters, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "gamma strength, durability, regeneration, combat skill"
+  },
+  {
+    "id": "marvel_hawkeye",
+    "name": "Hawkeye",
+    "version": "Marvel Comics — Earth-616 Clint Barton, standard trick arrows",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "master archery, trick arrows, acrobatics, tactics"
+  },
+  {
+    "id": "marvel_black_widow",
+    "name": "Black Widow",
+    "version": "Marvel Comics — Earth-616 Natasha Romanoff, standard gear",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "espionage, martial arts, firearms, Widow's Bite, agility"
+  },
+  {
+    "id": "marvel_ant_man",
+    "name": "Ant-Man",
+    "version": "Marvel Comics — Earth-616 Scott Lang, standard Pym-particle suit",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "size change, giant form, shrinking, insect control, engineering"
+  },
+  {
+    "id": "marvel_wasp",
+    "name": "Wasp",
+    "version": "Marvel Comics — Earth-616 Janet van Dyne, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "size change, flight, bio-electric stings, agility"
+  },
+  {
+    "id": "marvel_war_machine",
+    "name": "War Machine",
+    "version": "Marvel Comics — Earth-616 James Rhodes, standard armor",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "powered armor, flight, heavy weapons, targeting systems"
+  },
+  {
+    "id": "marvel_falcon",
+    "name": "Falcon",
+    "version": "Marvel Comics — Earth-616 Sam Wilson, standard wings and gear",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "flight, aerial combat, Redwing link, martial arts, tactics"
+  },
+  {
+    "id": "marvel_winter_soldier",
+    "name": "Winter Soldier",
+    "version": "Marvel Comics — Earth-616 Bucky Barnes, standard gear",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "cybernetic arm, firearms, stealth, assassination, martial arts"
+  },
+  {
+    "id": "marvel_cyclops",
+    "name": "Cyclops",
+    "version": "Marvel Comics — Earth-616 Scott Summers, standard visor",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "optic blasts, precision, ricochet shots, battlefield leadership"
+  },
+  {
+    "id": "marvel_storm",
+    "name": "Storm",
+    "version": "Marvel Comics — Earth-616 Ororo Munroe, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "weather control, lightning, wind, flight, temperature manipulation"
+  },
+  {
+    "id": "marvel_rogue",
+    "name": "Rogue",
+    "version": "Marvel Comics — Earth-616 standard modern portrayal",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "power absorption, super strength, flight, durability"
+  },
+  {
+    "id": "marvel_gambit",
+    "name": "Gambit",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "kinetic charging, explosive cards, staff fighting, agility"
+  },
+  {
+    "id": "marvel_nightcrawler",
+    "name": "Nightcrawler",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "teleportation, acrobatics, stealth, swordsmanship"
+  },
+  {
+    "id": "marvel_colossus",
+    "name": "Colossus",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "organic steel body, super strength, durability"
+  },
+  {
+    "id": "marvel_beast",
+    "name": "Beast",
+    "version": "Marvel Comics — Earth-616 Hank McCoy, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "enhanced strength, agility, acrobatics, scientific genius"
+  },
+  {
+    "id": "marvel_iceman",
+    "name": "Iceman",
+    "version": "Marvel Comics — Earth-616 Bobby Drake, standard omega-level portrayal",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "cryokinesis, ice constructs, regeneration through ice, environmental freezing"
+  },
+  {
+    "id": "marvel_cable",
+    "name": "Cable",
+    "version": "Marvel Comics — Earth-616/Nathan Summers standard loadout",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "telepathy, telekinesis, advanced weapons, cybernetics, tactics"
+  },
+  {
+    "id": "marvel_x23",
+    "name": "X-23",
+    "version": "Marvel Comics — Earth-616 Laura Kinney, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "healing factor, adamantium claws, agility, assassination training"
+  },
+  {
+    "id": "marvel_mister_fantastic",
+    "name": "Mister Fantastic",
+    "version": "Marvel Comics — Earth-616 Reed Richards, standard equipment",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "elastic body, extreme intelligence, durability, improvisation"
+  },
+  {
+    "id": "marvel_invisible_woman",
+    "name": "Invisible Woman",
+    "version": "Marvel Comics — Earth-616 Sue Storm, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "force fields, invisibility, barriers, internal force constructs"
+  },
+  {
+    "id": "marvel_human_torch",
+    "name": "Human Torch",
+    "version": "Marvel Comics — Earth-616 Johnny Storm, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "pyrokinesis, flight, flame projection, nova flame"
+  },
+  {
+    "id": "dc_joker",
+    "name": "Joker",
+    "version": "DC Comics — mainline standard, typical weapons",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "deception, toxins, firearms, traps, unpredictability"
+  },
+  {
+    "id": "dc_harley_quinn",
+    "name": "Harley Quinn",
+    "version": "DC Comics — mainline standard gear",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "acrobatics, melee weapons, firearms, unpredictability"
+  },
+  {
+    "id": "dc_nightwing",
+    "name": "Nightwing",
+    "version": "DC Comics — mainline Dick Grayson, standard gear",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "elite martial arts, acrobatics, escrima sticks, stealth, tactics"
+  },
+  {
+    "id": "dc_red_hood",
+    "name": "Red Hood",
+    "version": "DC Comics — mainline Jason Todd, standard gear",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "firearms, martial arts, explosives, tactics, armor"
+  },
+  {
+    "id": "dc_green_arrow",
+    "name": "Green Arrow",
+    "version": "DC Comics — mainline Oliver Queen, standard trick arrows",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "master archery, trick arrows, martial arts, stealth"
+  },
+  {
+    "id": "dc_black_canary",
+    "name": "Black Canary",
+    "version": "DC Comics — mainline Dinah Lance, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Canary Cry, elite martial arts, agility"
+  },
+  {
+    "id": "dc_cyborg",
+    "name": "Cyborg",
+    "version": "DC Comics — mainline Victor Stone, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "cybernetics, energy weapons, sensors, hacking, durability"
+  },
+  {
+    "id": "dc_supergirl",
+    "name": "Supergirl",
+    "version": "DC Comics — mainline Kara Zor-El, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Kryptonian strength, speed, flight, heat vision, durability"
+  },
+  {
+    "id": "dc_batgirl",
+    "name": "Batgirl",
+    "version": "DC Comics — mainline Barbara Gordon, standard gear",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "martial arts, acrobatics, gadgets, hacking, stealth"
+  },
+  {
+    "id": "dc_catwoman",
+    "name": "Catwoman",
+    "version": "DC Comics — mainline Selina Kyle, standard gear",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "acrobatics, whip, stealth, burglary skill, martial arts"
+  },
+  {
+    "id": "dc_deathstroke",
+    "name": "Deathstroke",
+    "version": "DC Comics — mainline Slade Wilson, standard gear",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "enhanced physicals, firearms, swordsmanship, tactics, regeneration"
+  },
+  {
+    "id": "dc_bane",
+    "name": "Bane",
+    "version": "DC Comics — mainline standard Venom-enhanced portrayal",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Venom-enhanced strength, grappling, strategy, durability"
+  },
+  {
+    "id": "dc_ras_al_ghul",
+    "name": "Ra's al Ghul",
+    "version": "DC Comics — mainline standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "swordsmanship, martial arts, centuries of experience, tactics"
+  },
+  {
+    "id": "dc_poison_ivy",
+    "name": "Poison Ivy",
+    "version": "DC Comics — mainline Pamela Isley, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "plant control, toxins, pheromones, regeneration, environmental control"
+  },
+  {
+    "id": "dc_mr_freeze",
+    "name": "Mr. Freeze",
+    "version": "DC Comics — mainline standard cryogenic suit",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "freeze gun, armored suit, cryogenics, environmental control"
+  },
+  {
+    "id": "dc_riddler",
+    "name": "Riddler",
+    "version": "DC Comics — mainline Edward Nygma, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "genius intellect, traps, puzzles, gadgets, planning"
+  },
+  {
+    "id": "dc_scarecrow",
+    "name": "Scarecrow",
+    "version": "DC Comics — mainline Jonathan Crane, standard fear toxin",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "fear toxin, psychology, chemicals, ambush tactics"
+  },
+  {
+    "id": "dc_clayface",
+    "name": "Clayface",
+    "version": "DC Comics — mainline Basil Karlo, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "shapeshifting, regeneration, size change, blunt-force resistance"
+  },
+  {
+    "id": "dc_killer_croc",
+    "name": "Killer Croc",
+    "version": "DC Comics — mainline Waylon Jones, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "enhanced strength, durability, claws, aquatic ability"
+  },
+  {
+    "id": "dc_sinestro",
+    "name": "Sinestro",
+    "version": "DC Comics — mainline standard Yellow Lantern ring",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "fear-energy constructs, flight, shields, space travel"
+  },
+  {
+    "id": "dc_atrocitus",
+    "name": "Atrocitus",
+    "version": "DC Comics — mainline standard Red Lantern",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "rage-energy constructs, flight, plasma, durability"
+  },
+  {
+    "id": "dc_lobo",
+    "name": "Lobo",
+    "version": "DC Comics — mainline standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "extreme strength, regeneration, durability, weapons, space bike"
+  },
+  {
+    "id": "dc_brainiac",
+    "name": "Brainiac",
+    "version": "DC Comics — mainline standard combat body",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "superintelligence, force fields, energy weapons, technopathy, drones"
+  },
+  {
+    "id": "dc_general_zod",
+    "name": "General Zod",
+    "version": "DC Comics — mainline standard Kryptonian under yellow sun",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Kryptonian strength, speed, flight, heat vision, military skill"
+  },
+  {
+    "id": "dc_black_manta",
+    "name": "Black Manta",
+    "version": "DC Comics — mainline standard armor",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "armored suit, eye beams, weapons, underwater combat, tactics"
+  },
+  {
+    "id": "dc_cheetah",
+    "name": "Cheetah",
+    "version": "DC Comics — mainline Barbara Minerva, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "super speed, strength, claws, agility, divine curse"
+  },
+  {
+    "id": "dc_ares",
+    "name": "Ares",
+    "version": "DC Comics — mainline God of War, standard manifestation",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "divine strength, magic, weapons, war empowerment, durability"
+  },
+  {
+    "id": "dc_blue_beetle",
+    "name": "Blue Beetle",
+    "version": "DC Comics — mainline Jaime Reyes with Scarab",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "adaptive armor, flight, energy weapons, shields, scanning"
+  },
+  {
+    "id": "dc_starfire",
+    "name": "Starfire",
+    "version": "DC Comics — mainline Koriand'r, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "flight, starbolts, super strength, durability"
+  },
+  {
+    "id": "dc_beast_boy",
+    "name": "Beast Boy",
+    "version": "DC Comics — mainline Garfield Logan, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "animal shapeshifting, versatility, flight forms, enhanced senses"
+  },
+  {
+    "id": "dc_swamp_thing",
+    "name": "Swamp Thing",
+    "version": "DC Comics — mainline Avatar of the Green, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "plant control, regeneration, body recreation, elemental awareness"
+  },
+  {
+    "id": "dc_etrigan",
+    "name": "Etrigan",
+    "version": "DC Comics — mainline standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "demonic strength, hellfire, durability, magic"
+  },
+  {
+    "id": "dc_spectre",
+    "name": "The Spectre",
+    "version": "DC Comics — mainline standard divine-agent manifestation",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "reality manipulation, matter control, soul powers, cosmic judgment"
+  },
+  {
+    "id": "dc_anti_monitor",
+    "name": "Anti-Monitor",
+    "version": "DC Comics — standard Crisis-scale portrayal",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "antimatter energy, cosmic durability, matter destruction, reality-scale power"
+  },
+  {
+    "id": "dc_captain_atom",
+    "name": "Captain Atom",
+    "version": "DC Comics — mainline Nathaniel Adam, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "quantum energy, flight, energy absorption, matter manipulation, durability"
+  },
+  {
+    "id": "sw_obi_wan",
+    "name": "Obi-Wan Kenobi",
+    "version": "Star Wars canon — Revenge of the Sith era",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "lightsaber mastery, Force push/pull, precognition, defense"
+  },
+  {
+    "id": "sw_anakin",
+    "name": "Anakin Skywalker",
+    "version": "Star Wars canon — Revenge of the Sith, pre-suit",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "lightsaber mastery, powerful Force abilities, precognition, aggression"
+  },
+  {
+    "id": "sw_ahsoka",
+    "name": "Ahsoka Tano",
+    "version": "Star Wars canon — mature live-action era",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "dual lightsabers, Force abilities, agility, experience"
+  },
+  {
+    "id": "sw_darth_maul",
+    "name": "Darth Maul",
+    "version": "Star Wars canon — prime combat portrayal",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "double-bladed lightsaber, Force abilities, acrobatics, endurance"
+  },
+  {
+    "id": "sw_mace_windu",
+    "name": "Mace Windu",
+    "version": "Star Wars canon — Revenge of the Sith era",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "elite lightsaber skill, Force abilities, Vaapad, precognition"
+  },
+  {
+    "id": "sw_count_dooku",
+    "name": "Count Dooku",
+    "version": "Star Wars canon — Clone Wars era",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Makashi fencing, Force lightning, telekinesis, precision"
+  },
+  {
+    "id": "sw_kylo_ren",
+    "name": "Kylo Ren",
+    "version": "Star Wars canon — Rise of Skywalker era",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "lightsaber, Force stasis, telekinesis, mind probing"
+  },
+  {
+    "id": "sw_rey",
+    "name": "Rey",
+    "version": "Star Wars canon — Rise of Skywalker, standard gear",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "lightsaber, Force abilities, healing, precognition"
+  },
+  {
+    "id": "sw_din_djarin",
+    "name": "Din Djarin",
+    "version": "Star Wars canon — The Mandalorian, standard peak gear",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "beskar armor, blasters, whistling birds, jetpack, tactics"
+  },
+  {
+    "id": "sw_boba_fett",
+    "name": "Boba Fett",
+    "version": "Star Wars canon — standard armored bounty-hunter portrayal",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Mandalorian armor, blasters, jetpack, explosives, tracking"
+  },
+  {
+    "id": "sw_general_grievous",
+    "name": "General Grievous",
+    "version": "Star Wars canon — Revenge of the Sith/Clone Wars standard",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "four lightsabers, cybernetic speed, strength, intimidation"
+  },
+  {
+    "id": "sw_han_solo",
+    "name": "Han Solo",
+    "version": "Star Wars canon — original trilogy prime",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "blaster accuracy, quick draw, improvisation, piloting"
+  },
+  {
+    "id": "sw_chewbacca",
+    "name": "Chewbacca",
+    "version": "Star Wars canon — original trilogy standard",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Wookiee strength, bowcaster, durability, mechanical skill"
+  },
+  {
+    "id": "sw_jango_fett",
+    "name": "Jango Fett",
+    "version": "Star Wars canon — Attack of the Clones",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Mandalorian armor, dual blasters, jetpack, explosives"
+  },
+  {
+    "id": "sw_asajj_ventress",
+    "name": "Asajj Ventress",
+    "version": "Star Wars canon — Clone Wars prime",
+    "franchise": "Star Wars",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "dual lightsabers, Force abilities, assassination, agility"
+  },
+  {
+    "id": "db_goku",
+    "name": "Goku",
+    "version": "Dragon Ball Super anime — standard late-series combat portrayal",
+    "franchise": "Dragon Ball",
+    "medium": "Movie/TV",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "Saiyan power, ki blasts, Ultra Instinct access, flight, extreme speed"
+  },
+  {
+    "id": "db_vegeta",
+    "name": "Vegeta",
+    "version": "Dragon Ball Super anime — standard late-series combat portrayal",
+    "franchise": "Dragon Ball",
+    "medium": "Movie/TV",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "Saiyan power, ki blasts, Ultra Ego-era abilities, flight, extreme speed"
+  },
+  {
+    "id": "db_frieza",
+    "name": "Frieza",
+    "version": "Dragon Ball Super anime — standard modern combat portrayal",
+    "franchise": "Dragon Ball",
+    "medium": "Movie/TV",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "ki attacks, transformations, flight, extreme durability, speed"
+  },
+  {
+    "id": "db_piccolo",
+    "name": "Piccolo",
+    "version": "Dragon Ball Super/Super Hero anime-film continuity — Orange Piccolo available",
+    "franchise": "Dragon Ball",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "ki attacks, regeneration, giant form, flight, tactical skill"
+  },
+  {
+    "id": "db_gohan",
+    "name": "Gohan",
+    "version": "Dragon Ball Super: Super Hero — Beast Gohan available",
+    "franchise": "Dragon Ball",
+    "medium": "Movie/TV",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "ki attacks, Beast transformation, flight, extreme speed and power"
+  },
+  {
+    "id": "db_broly",
+    "name": "Broly",
+    "version": "Dragon Ball Super: Broly film — standard peak shown portrayal",
+    "franchise": "Dragon Ball",
+    "medium": "Movie/TV",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "rapid power growth, Saiyan transformations, ki attacks, extreme durability"
+  },
+  {
+    "id": "naruto_naruto",
+    "name": "Naruto Uzumaki",
+    "version": "Naruto Shippuden anime — end-of-series standard peak",
+    "franchise": "Naruto",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "chakra, shadow clones, Rasengan, Sage abilities, Kurama power"
+  },
+  {
+    "id": "naruto_sasuke",
+    "name": "Sasuke Uchiha",
+    "version": "Naruto Shippuden anime — end-of-series standard peak",
+    "franchise": "Naruto",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "Sharingan/Rinnegan, lightning, fire, Susanoo, space-time techniques"
+  },
+  {
+    "id": "naruto_kakashi",
+    "name": "Kakashi Hatake",
+    "version": "Naruto Shippuden anime — standard war-era portrayal, no temporary DMS amp",
+    "franchise": "Naruto",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "Sharingan, ninjutsu, lightning blade, tactics, clones"
+  },
+  {
+    "id": "naruto_madara",
+    "name": "Madara Uchiha",
+    "version": "Naruto Shippuden anime — Ten-Tails jinchuriki combat portrayal",
+    "franchise": "Naruto",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "Rinnegan, Susanoo, Limbo, regeneration, massive ninjutsu"
+  },
+  {
+    "id": "naruto_itachi",
+    "name": "Itachi Uchiha",
+    "version": "Naruto Shippuden anime — healthy hypothetical standard toolkit",
+    "franchise": "Naruto",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Mangekyo Sharingan, genjutsu, Amaterasu, Susanoo, tactics"
+  },
+  {
+    "id": "op_luffy",
+    "name": "Monkey D. Luffy",
+    "version": "One Piece anime — Gear 5 era",
+    "franchise": "One Piece",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "Gear 5, Haki, rubber physiology, extreme endurance, combat creativity"
+  },
+  {
+    "id": "op_zoro",
+    "name": "Roronoa Zoro",
+    "version": "One Piece anime — current standard three-sword style",
+    "franchise": "One Piece",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "swordsmanship, Haki, extreme strength, endurance"
+  },
+  {
+    "id": "op_sanji",
+    "name": "Sanji",
+    "version": "One Piece anime — current standard awakened modifications",
+    "franchise": "One Piece",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "extreme speed, kicks, Ifrit Jambe, durability, observation Haki"
+  },
+  {
+    "id": "op_kaido",
+    "name": "Kaido",
+    "version": "One Piece anime — Wano peak",
+    "franchise": "One Piece",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "dragon transformation, Haki, elemental breath, extreme durability"
+  },
+  {
+    "id": "op_shanks",
+    "name": "Shanks",
+    "version": "One Piece anime — standard current portrayal",
+    "franchise": "One Piece",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "elite Haki, swordsmanship, intimidation, extreme speed"
+  },
+  {
+    "id": "bleach_ichigo",
+    "name": "Ichigo Kurosaki",
+    "version": "Bleach: Thousand-Year Blood War anime — peak standard form",
+    "franchise": "Bleach",
+    "medium": "Movie/TV",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "spiritual power, Bankai, Getsuga attacks, extreme speed"
+  },
+  {
+    "id": "bleach_aizen",
+    "name": "Sosuke Aizen",
+    "version": "Bleach anime — evolved post-Hogyoku standard",
+    "franchise": "Bleach",
+    "medium": "Movie/TV",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "perfect hypnosis, regeneration, spiritual pressure, kido, intelligence"
+  },
+  {
+    "id": "bleach_rukia",
+    "name": "Rukia Kuchiki",
+    "version": "Bleach: Thousand-Year Blood War anime — Bankai available",
+    "franchise": "Bleach",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "ice Zanpakuto, Bankai, flash step, kido"
+  },
+  {
+    "id": "jjk_gojo",
+    "name": "Satoru Gojo",
+    "version": "Jujutsu Kaisen anime — standard peak, Domain Expansion available",
+    "franchise": "Jujutsu Kaisen",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "Infinity, Six Eyes, Limitless, Hollow Purple, Domain Expansion"
+  },
+  {
+    "id": "jjk_sukuna",
+    "name": "Ryomen Sukuna",
+    "version": "Jujutsu Kaisen anime — peak animated standard portrayal",
+    "franchise": "Jujutsu Kaisen",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "slashing techniques, Domain Expansion, regeneration, cursed energy"
+  },
+  {
+    "id": "jjk_yuji",
+    "name": "Yuji Itadori",
+    "version": "Jujutsu Kaisen anime — current animated standard",
+    "franchise": "Jujutsu Kaisen",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "superhuman physicals, cursed energy, Black Flash, martial arts"
+  },
+  {
+    "id": "jjk_toji",
+    "name": "Toji Fushiguro",
+    "version": "Jujutsu Kaisen anime — standard full arsenal",
+    "franchise": "Jujutsu Kaisen",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Heavenly Restriction, extreme speed, cursed tools, stealth, tactics"
+  },
+  {
+    "id": "ds_tanjiro",
+    "name": "Tanjiro Kamado",
+    "version": "Demon Slayer anime — standard late-series animated portrayal",
+    "franchise": "Demon Slayer",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Sun/Water Breathing, swordsmanship, heightened senses, endurance"
+  },
+  {
+    "id": "ds_nezuko",
+    "name": "Nezuko Kamado",
+    "version": "Demon Slayer anime — standard demon combat portrayal",
+    "franchise": "Demon Slayer",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "regeneration, demon strength, blood flames, size change"
+  },
+  {
+    "id": "ds_rengoku",
+    "name": "Kyojuro Rengoku",
+    "version": "Demon Slayer anime — Mugen Train peak",
+    "franchise": "Demon Slayer",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Flame Breathing, swordsmanship, speed, endurance"
+  },
+  {
+    "id": "ds_muzan",
+    "name": "Muzan Kibutsuji",
+    "version": "Demon Slayer anime — standard peak demon portrayal",
+    "franchise": "Demon Slayer",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "extreme regeneration, shapeshifting, toxic attacks, multi-limb strikes"
+  },
+  {
+    "id": "mha_deku",
+    "name": "Izuku Midoriya",
+    "version": "My Hero Academia anime — late-series One For All toolkit",
+    "franchise": "My Hero Academia",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "One For All, enhanced speed/strength, Blackwhip, Danger Sense, mobility"
+  },
+  {
+    "id": "mha_bakugo",
+    "name": "Katsuki Bakugo",
+    "version": "My Hero Academia anime — late-series standard",
+    "franchise": "My Hero Academia",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "explosions, flight-like mobility, speed, combat instincts"
+  },
+  {
+    "id": "mha_all_might",
+    "name": "All Might",
+    "version": "My Hero Academia anime — prime hypothetical portrayal",
+    "franchise": "My Hero Academia",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "One For All strength, speed, shockwaves, durability"
+  },
+  {
+    "id": "mha_shigaraki",
+    "name": "Tomura Shigaraki",
+    "version": "My Hero Academia anime — enhanced late-series portrayal",
+    "franchise": "My Hero Academia",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Decay, enhanced physicals, regeneration, multiple quirks"
+  },
+  {
+    "id": "aot_eren",
+    "name": "Eren Yeager",
+    "version": "Attack on Titan anime — Founding Titan endgame portrayal",
+    "franchise": "Attack on Titan",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Founding Titan, Titan transformation, regeneration, War Hammer abilities"
+  },
+  {
+    "id": "aot_levi",
+    "name": "Levi Ackerman",
+    "version": "Attack on Titan anime — prime standard ODM loadout",
+    "franchise": "Attack on Titan",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Ackerman physicals, ODM mobility, blades, precision, experience"
+  },
+  {
+    "id": "aot_mikasa",
+    "name": "Mikasa Ackerman",
+    "version": "Attack on Titan anime — prime standard ODM loadout",
+    "franchise": "Attack on Titan",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Ackerman physicals, ODM mobility, blades, combat skill"
+  },
+  {
+    "id": "opm_saitama",
+    "name": "Saitama",
+    "version": "One-Punch Man anime — standard serious-combat portrayal",
+    "franchise": "One-Punch Man",
+    "medium": "Movie/TV",
+    "tier": 7,
+    "tierName": "Reality Warper",
+    "traits": "overwhelming strength, speed, durability, shockwaves"
+  },
+  {
+    "id": "opm_genos",
+    "name": "Genos",
+    "version": "One-Punch Man anime — upgraded standard combat body",
+    "franchise": "One-Punch Man",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "cyborg strength, incineration cannons, flight bursts, sensors"
+  },
+  {
+    "id": "opm_garou",
+    "name": "Garou",
+    "version": "One-Punch Man anime — peak animated monster portrayal",
+    "franchise": "One-Punch Man",
+    "medium": "Movie/TV",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "martial arts adaptation, extreme speed, strength, evolution"
+  },
+  {
+    "id": "hxh_gon",
+    "name": "Gon Freecss",
+    "version": "Hunter x Hunter anime — standard Nen combat portrayal",
+    "franchise": "Hunter x Hunter",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Nen enhancement, Jajanken, strength, instincts"
+  },
+  {
+    "id": "hxh_killua",
+    "name": "Killua Zoldyck",
+    "version": "Hunter x Hunter anime — Godspeed available",
+    "franchise": "Hunter x Hunter",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Godspeed, electricity, assassination, speed, claws"
+  },
+  {
+    "id": "hxh_hisoka",
+    "name": "Hisoka Morow",
+    "version": "Hunter x Hunter anime — standard",
+    "franchise": "Hunter x Hunter",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Bungee Gum, Texture Surprise, cards, agility, battle IQ"
+  },
+  {
+    "id": "game_mario",
+    "name": "Mario",
+    "version": "Super Mario games — mainline standard power-up access, no one-off cosmic artifacts",
+    "franchise": "Super Mario",
+    "medium": "Games",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "superhuman jumping, power-ups, fire/ice abilities, durability, versatility"
+  },
+  {
+    "id": "game_luigi",
+    "name": "Luigi",
+    "version": "Super Mario games — mainline standard power-up access",
+    "franchise": "Super Mario",
+    "medium": "Games",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "superhuman jumping, power-ups, agility, Poltergust familiarity"
+  },
+  {
+    "id": "game_sonic",
+    "name": "Sonic the Hedgehog",
+    "version": "Sonic games — mainline standard, Super Sonic available with Chaos Emeralds only if normally accessible",
+    "franchise": "Sonic",
+    "medium": "Games",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "extreme speed, Spin Dash, homing attacks, Chaos Emerald transformations"
+  },
+  {
+    "id": "game_shadow",
+    "name": "Shadow the Hedgehog",
+    "version": "Sonic games — mainline standard",
+    "franchise": "Sonic",
+    "medium": "Games",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "extreme speed, Chaos Control, energy attacks, teleportation"
+  },
+  {
+    "id": "game_link",
+    "name": "Link",
+    "version": "The Legend of Zelda — composite modern mainline Link, standard iconic arsenal, no Triforce wish",
+    "franchise": "The Legend of Zelda",
+    "medium": "Games",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "Master Sword, shields, bows, bombs, magical tools, combat skill"
+  },
+  {
+    "id": "game_ganondorf",
+    "name": "Ganondorf",
+    "version": "The Legend of Zelda — composite standard Demon King portrayal",
+    "franchise": "The Legend of Zelda",
+    "medium": "Games",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "dark magic, super strength, regeneration, transformations, weapon skill"
+  },
+  {
+    "id": "game_samus",
+    "name": "Samus Aran",
+    "version": "Metroid games — standard fully upgraded Power Suit, no temporary hyper amps",
+    "franchise": "Metroid",
+    "medium": "Games",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "Power Suit, missiles, beams, bombs, mobility, scanning"
+  },
+  {
+    "id": "game_kirby",
+    "name": "Kirby",
+    "version": "Kirby games — mainline standard copy-ability portrayal",
+    "franchise": "Kirby",
+    "medium": "Games",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "copy abilities, inhalation, flight, extreme durability, versatile powers"
+  },
+  {
+    "id": "game_pikachu",
+    "name": "Pikachu",
+    "version": "Pokémon games — high-level standard Pikachu, battle moveset",
+    "franchise": "Pokémon",
+    "medium": "Games",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "electric attacks, agility, status moves, ranged attacks"
+  },
+  {
+    "id": "game_mewtwo",
+    "name": "Mewtwo",
+    "version": "Pokémon games — standard legendary portrayal",
+    "franchise": "Pokémon",
+    "medium": "Games",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "psychic power, telekinesis, barriers, energy attacks, teleportation"
+  },
+  {
+    "id": "game_master_chief",
+    "name": "Master Chief",
+    "version": "Halo games — MJOLNIR armor, standard UNSC loadout",
+    "franchise": "Halo",
+    "medium": "Games",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Spartan enhancements, powered armor, firearms, shields, tactics"
+  },
+  {
+    "id": "game_doom_slayer",
+    "name": "Doom Slayer",
+    "version": "DOOM games — Eternal-era standard arsenal",
+    "franchise": "DOOM",
+    "medium": "Games",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "superhuman strength, Praetor Suit, heavy weapons, Crucible, extreme endurance"
+  },
+  {
+    "id": "game_kratos",
+    "name": "Kratos",
+    "version": "God of War games — Norse-era standard arsenal",
+    "franchise": "God of War",
+    "medium": "Games",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "godly strength, Leviathan Axe, Blades of Chaos, Spartan Rage, durability"
+  },
+  {
+    "id": "game_lara_croft",
+    "name": "Lara Croft",
+    "version": "Tomb Raider games — modern survivor-era standard",
+    "franchise": "Tomb Raider",
+    "medium": "Games",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "archery, firearms, climbing, survival, improvisation"
+  },
+  {
+    "id": "game_nathan_drake",
+    "name": "Nathan Drake",
+    "version": "Uncharted games — standard",
+    "franchise": "Uncharted",
+    "medium": "Games",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "firearms, climbing, brawling, improvisation, luck"
+  },
+  {
+    "id": "game_solid_snake",
+    "name": "Solid Snake",
+    "version": "Metal Gear Solid games — prime standard infiltration loadout",
+    "franchise": "Metal Gear",
+    "medium": "Games",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "stealth, firearms, CQC, gadgets, battlefield experience"
+  },
+  {
+    "id": "game_cloud",
+    "name": "Cloud Strife",
+    "version": "Final Fantasy VII games — standard endgame combat kit, no temporary story-only amps",
+    "franchise": "Final Fantasy VII",
+    "medium": "Games",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Buster Sword, materia magic, Limit Breaks, enhanced speed/strength"
+  },
+  {
+    "id": "game_sephiroth",
+    "name": "Sephiroth",
+    "version": "Final Fantasy VII games — standard peak combat portrayal",
+    "franchise": "Final Fantasy VII",
+    "medium": "Games",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "Masamune, magic, flight, extreme speed, telekinesis"
+  },
+  {
+    "id": "game_tifa",
+    "name": "Tifa Lockhart",
+    "version": "Final Fantasy VII games — standard endgame combat kit",
+    "franchise": "Final Fantasy VII",
+    "medium": "Games",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "martial arts, enhanced strength, Limit Breaks, materia access"
+  },
+  {
+    "id": "game_mega_man",
+    "name": "Mega Man",
+    "version": "Mega Man games — classic-series standard weapon-copy arsenal",
+    "franchise": "Mega Man",
+    "medium": "Games",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "Mega Buster, copied Robot Master weapons, durability, mobility"
+  },
+  {
+    "id": "game_ryu",
+    "name": "Ryu",
+    "version": "Street Fighter games — standard modern portrayal",
+    "franchise": "Street Fighter",
+    "medium": "Games",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Ansatsuken, Hadoken, Shoryuken, ki control, martial arts"
+  },
+  {
+    "id": "game_chun_li",
+    "name": "Chun-Li",
+    "version": "Street Fighter games — standard modern portrayal",
+    "franchise": "Street Fighter",
+    "medium": "Games",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "martial arts, extreme kicking speed, Kikoken, agility"
+  },
+  {
+    "id": "game_scorpion",
+    "name": "Scorpion",
+    "version": "Mortal Kombat games — standard Hanzo Hasashi specter portrayal",
+    "franchise": "Mortal Kombat",
+    "medium": "Games",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "hellfire, teleportation, spear, martial arts, resurrection"
+  },
+  {
+    "id": "game_sub_zero",
+    "name": "Sub-Zero",
+    "version": "Mortal Kombat games — Kuai Liang standard cryomancer portrayal",
+    "franchise": "Mortal Kombat",
+    "medium": "Games",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "cryomancy, ice weapons, martial arts, freezing"
+  },
+  {
+    "id": "game_raiden_mk",
+    "name": "Raiden",
+    "version": "Mortal Kombat games — standard thunder-god portrayal",
+    "franchise": "Mortal Kombat",
+    "medium": "Games",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "lightning, teleportation, flight, divine durability, martial arts"
+  },
+  {
+    "id": "game_leon_kennedy",
+    "name": "Leon S. Kennedy",
+    "version": "Resident Evil games — prime standard tactical loadout",
+    "franchise": "Resident Evil",
+    "medium": "Games",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "firearms, combat training, knife skill, agility, survival"
+  },
+  {
+    "id": "game_jill_valentine",
+    "name": "Jill Valentine",
+    "version": "Resident Evil games — prime standard tactical loadout",
+    "franchise": "Resident Evil",
+    "medium": "Games",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "firearms, lockpicking, combat training, survival, tactics"
+  },
+  {
+    "id": "game_albert_wesker",
+    "name": "Albert Wesker",
+    "version": "Resident Evil games — Uroboros-era standard superhuman portrayal",
+    "franchise": "Resident Evil",
+    "medium": "Games",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "superhuman speed, strength, regeneration, firearms, tactics"
+  },
+  {
+    "id": "game_dante",
+    "name": "Dante",
+    "version": "Devil May Cry games — DMC5 standard peak arsenal",
+    "franchise": "Devil May Cry",
+    "medium": "Games",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "demonic regeneration, Devil Trigger, swords, firearms, extreme speed"
+  },
+  {
+    "id": "game_vergil",
+    "name": "Vergil",
+    "version": "Devil May Cry games — DMC5 standard peak",
+    "franchise": "Devil May Cry",
+    "medium": "Games",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "Yamato, teleportation, Devil Trigger, dimensional cuts, extreme speed"
+  },
+  {
+    "id": "game_bayonetta",
+    "name": "Bayonetta",
+    "version": "Bayonetta games — standard peak equipment",
+    "franchise": "Bayonetta",
+    "medium": "Games",
+    "tier": 6,
+    "tierName": "Cosmic",
+    "traits": "Witch Time, summons, magic, firearms, extreme speed"
+  },
+  {
+    "id": "game_ezio",
+    "name": "Ezio Auditore",
+    "version": "Assassin's Creed games — Brotherhood/Revelations prime standard gear",
+    "franchise": "Assassin's Creed",
+    "medium": "Games",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "assassination, hidden blades, swordsmanship, stealth, gadgets"
+  },
+  {
+    "id": "game_arthur_morgan",
+    "name": "Arthur Morgan",
+    "version": "Red Dead Redemption 2 — standard peak gunslinger",
+    "franchise": "Red Dead Redemption",
+    "medium": "Games",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "Dead Eye, firearms, tracking, brawling, survival"
+  },
+  {
+    "id": "game_aloy",
+    "name": "Aloy",
+    "version": "Horizon games — standard late-game hunter gear",
+    "franchise": "Horizon",
+    "medium": "Games",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "bows, elemental ammunition, traps, spear, Focus scanning"
+  },
+  {
+    "id": "game_shepard",
+    "name": "Commander Shepard",
+    "version": "Mass Effect games — Soldier-biotic-balanced representative N7 loadout",
+    "franchise": "Mass Effect",
+    "medium": "Games",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "N7 armor, firearms, tech/biotic combat options, tactics"
+  },
+  {
+    "id": "game_marcus_fenix",
+    "name": "Marcus Fenix",
+    "version": "Gears of War games — standard COG loadout",
+    "franchise": "Gears of War",
+    "medium": "Games",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Lancer rifle, armor, explosives, battlefield experience"
+  },
+  {
+    "id": "game_agent_47",
+    "name": "Agent 47",
+    "version": "Hitman games — standard mission loadout",
+    "franchise": "Hitman",
+    "medium": "Games",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "assassination, stealth, firearms, disguise, improvisation"
+  },
+  {
+    "id": "game_cole_macgrath",
+    "name": "Cole MacGrath",
+    "version": "inFAMOUS games — good-karma late-game standard",
+    "franchise": "inFAMOUS",
+    "medium": "Games",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "electrokinesis, lightning, rail grinding, regeneration, area attacks"
+  },
+  {
+    "id": "game_alex_mercer",
+    "name": "Alex Mercer",
+    "version": "Prototype games — standard peak infected portrayal",
+    "franchise": "Prototype",
+    "medium": "Games",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "shapeshifting, biomass absorption, regeneration, super strength, weapon morphing"
+  },
+  {
+    "id": "game_minecraft_steve",
+    "name": "Steve",
+    "version": "Minecraft — Survival Mode with standard obtainable combat gear, no Creative Mode",
+    "franchise": "Minecraft",
+    "medium": "Games",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "armor, weapons, potions, crafting, blocks, inventory versatility"
+  },
+  {
+    "id": "lotr_gimli",
+    "name": "Gimli",
+    "version": "The Lord of the Rings films — standard",
+    "franchise": "LOTR",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "dwarven strength, axe fighting, armor, endurance"
+  },
+  {
+    "id": "lotr_boromir",
+    "name": "Boromir",
+    "version": "The Lord of the Rings films — standard",
+    "franchise": "LOTR",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "swordsmanship, shield, archery, endurance"
+  },
+  {
+    "id": "lotr_sauron",
+    "name": "Sauron",
+    "version": "The Lord of the Rings films — Second Age armored combat manifestation with One Ring",
+    "franchise": "LOTR",
+    "medium": "Movie/TV",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "immense strength, dark magic, One Ring, fear, durability"
+  },
+  {
+    "id": "lotr_saruman",
+    "name": "Saruman",
+    "version": "The Lord of the Rings films — standard White Wizard portrayal",
+    "franchise": "LOTR",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "wizardry, telekinesis, voice influence, staff, knowledge"
+  },
+  {
+    "id": "lotr_witch_king",
+    "name": "Witch-king of Angmar",
+    "version": "The Lord of the Rings films — Pelennor Fields standard",
+    "franchise": "LOTR",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "Nazgûl durability, fear aura, sword, flail, supernatural presence"
+  },
+  {
+    "id": "hp_harry",
+    "name": "Harry Potter",
+    "version": "Harry Potter films — Deathly Hallows era, standard wand",
+    "franchise": "Harry Potter",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "spellcasting, disarming, shields, Patronus, broom skill"
+  },
+  {
+    "id": "hp_hermione",
+    "name": "Hermione Granger",
+    "version": "Harry Potter films — Deathly Hallows era",
+    "franchise": "Harry Potter",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "versatile spellcasting, shields, transfiguration knowledge, tactics"
+  },
+  {
+    "id": "hp_snape",
+    "name": "Severus Snape",
+    "version": "Harry Potter films — standard peak portrayal",
+    "franchise": "Harry Potter",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "advanced magic, dueling, nonverbal spells, Occlumency, potions"
+  },
+  {
+    "id": "hp_sirius",
+    "name": "Sirius Black",
+    "version": "Harry Potter films — standard adult portrayal",
+    "franchise": "Harry Potter",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "dueling magic, Animagus transformation, agility, experience"
+  },
+  {
+    "id": "hp_bellatrix",
+    "name": "Bellatrix Lestrange",
+    "version": "Harry Potter films — standard peak portrayal",
+    "franchise": "Harry Potter",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "aggressive dueling, dark magic, curses, unpredictability"
+  },
+  {
+    "id": "got_jon_snow",
+    "name": "Jon Snow",
+    "version": "Game of Thrones TV — late-series standard",
+    "franchise": "Game of Thrones",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "Longclaw, swordsmanship, battlefield experience, endurance"
+  },
+  {
+    "id": "got_arya",
+    "name": "Arya Stark",
+    "version": "Game of Thrones TV — late-series standard",
+    "franchise": "Game of Thrones",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "assassination, stealth, sword/knife skill, disguise"
+  },
+  {
+    "id": "got_mountain",
+    "name": "Gregor Clegane",
+    "version": "Game of Thrones TV — undead Mountain, standard",
+    "franchise": "Game of Thrones",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "massive strength, armor, durability, greatsword"
+  },
+  {
+    "id": "got_night_king",
+    "name": "Night King",
+    "version": "Game of Thrones TV — standard",
+    "franchise": "Game of Thrones",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "ice weapons, undead raising, supernatural strength, cold immunity"
+  },
+  {
+    "id": "got_daenerys",
+    "name": "Daenerys Targaryen",
+    "version": "Game of Thrones TV — mounted on Drogon",
+    "franchise": "Game of Thrones",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "Drogon, aerial mobility, dragonfire, command"
+  },
+  {
+    "id": "avatar_aang",
+    "name": "Aang",
+    "version": "Avatar: The Last Airbender animated series — end-of-series, Avatar State available",
+    "franchise": "Avatar",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "four-element bending, Avatar State, agility, air mobility"
+  },
+  {
+    "id": "avatar_korra",
+    "name": "Korra",
+    "version": "The Legend of Korra — end-of-series standard, Avatar State available",
+    "franchise": "Avatar",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "four-element bending, Avatar State, metalbending, combat skill"
+  },
+  {
+    "id": "avatar_zuko",
+    "name": "Zuko",
+    "version": "Avatar: The Last Airbender — end-of-series standard",
+    "franchise": "Avatar",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "firebending, swordsmanship, agility, lightning redirection"
+  },
+  {
+    "id": "avatar_azula",
+    "name": "Azula",
+    "version": "Avatar: The Last Airbender — sane peak portrayal",
+    "franchise": "Avatar",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "blue firebending, lightning, acrobatics, precision"
+  },
+  {
+    "id": "avatar_toph",
+    "name": "Toph Beifong",
+    "version": "Avatar: The Last Airbender — end-of-series standard",
+    "franchise": "Avatar",
+    "medium": "Movie/TV",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "earthbending, metalbending, seismic sense, battlefield control"
+  },
+  {
+    "id": "tmnt_leonardo",
+    "name": "Leonardo",
+    "version": "Teenage Mutant Ninja Turtles — representative animated standard",
+    "franchise": "TMNT",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "dual katana, ninjutsu, leadership, agility"
+  },
+  {
+    "id": "tmnt_raphael",
+    "name": "Raphael",
+    "version": "Teenage Mutant Ninja Turtles — representative animated standard",
+    "franchise": "TMNT",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "sai, ninjutsu, strength, aggression"
+  },
+  {
+    "id": "tmnt_michelangelo",
+    "name": "Michelangelo",
+    "version": "Teenage Mutant Ninja Turtles — representative animated standard",
+    "franchise": "TMNT",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "nunchaku, ninjutsu, agility, improvisation"
+  },
+  {
+    "id": "tmnt_donatello",
+    "name": "Donatello",
+    "version": "Teenage Mutant Ninja Turtles — representative animated standard",
+    "franchise": "TMNT",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "bo staff, ninjutsu, engineering, gadgets"
+  },
+  {
+    "id": "tmnt_shredder",
+    "name": "Shredder",
+    "version": "Teenage Mutant Ninja Turtles — representative animated standard",
+    "franchise": "TMNT",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "elite ninjutsu, bladed armor, tactics, strength"
+  },
+  {
+    "id": "transformers_optimus",
+    "name": "Optimus Prime",
+    "version": "Transformers live-action films — standard prime combat portrayal",
+    "franchise": "Transformers",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "Cybertronian strength, durability, energy weapons, blades, vehicle transformation"
+  },
+  {
+    "id": "transformers_megatron",
+    "name": "Megatron",
+    "version": "Transformers live-action films — standard prime combat portrayal",
+    "franchise": "Transformers",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "Cybertronian strength, fusion weapons, durability, melee weapons, transformation"
+  },
+  {
+    "id": "startrek_data",
+    "name": "Data",
+    "version": "Star Trek: The Next Generation films/TV — standard",
+    "franchise": "Star Trek",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "android strength, speed, durability, precision, computation"
+  },
+  {
+    "id": "startrek_worf",
+    "name": "Worf",
+    "version": "Star Trek TNG/DS9 — standard peak warrior portrayal",
+    "franchise": "Star Trek",
+    "medium": "Movie/TV",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "Klingon strength, bat'leth skill, firearms, durability"
+  },
+  {
+    "id": "indiana_jones",
+    "name": "Indiana Jones",
+    "version": "Indiana Jones films — prime standard gear",
+    "franchise": "Indiana Jones",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "revolver, whip, brawling, improvisation, archaeology knowledge"
+  },
+  {
+    "id": "james_bond",
+    "name": "James Bond",
+    "version": "EON films — representative prime 007 with standard field gear",
+    "franchise": "James Bond",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "firearms, espionage, gadgets, driving, hand-to-hand combat"
+  },
+  {
+    "id": "rambo",
+    "name": "John Rambo",
+    "version": "Rambo films — prime standard combat loadout",
+    "franchise": "Rambo",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "guerrilla warfare, firearms, archery, explosives, survival"
+  },
+  {
+    "id": "ethan_hunt",
+    "name": "Ethan Hunt",
+    "version": "Mission: Impossible films — standard field gear",
+    "franchise": "Mission: Impossible",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "espionage, firearms, martial arts, infiltration, improvisation"
+  },
+  {
+    "id": "terminator_sarah_connor",
+    "name": "Sarah Connor",
+    "version": "Terminator films — Terminator 2 era standard",
+    "franchise": "Terminator",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "firearms, tactics, survival training, explosives"
+  },
+  {
+    "id": "alien_ellen_ripley",
+    "name": "Ellen Ripley",
+    "version": "Alien films — Aliens-era standard combat loadout",
+    "franchise": "Alien",
+    "medium": "Movie/TV",
+    "tier": 1,
+    "tierName": "Human",
+    "traits": "pulse rifle familiarity, flamethrower, survival, improvisation"
   }
 ];

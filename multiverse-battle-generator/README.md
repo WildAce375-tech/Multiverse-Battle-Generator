@@ -148,3 +148,28 @@ Franchise pools stack with the global source filter. Example:
 `Comics only + Marvel` gives Marvel Comics characters only.
 
 Live rooms freeze the selected roster source when the room is created, and the server rejects picks outside that room's source.
+
+
+## v2.4 — 200-character expansion
+
+Roster expanded from **89 to 289 version-specific fighters**.
+
+New fighters:
+- 35 Marvel Comics
+- 35 DC Comics
+- 15 Star Wars
+- 40 anime/animated-TV fighters
+- 40 video-game fighters
+- 35 additional fantasy, sci-fi, action, and TV/film fighters
+
+Current source totals:
+- Everything: 289
+- Comics: 104
+- Movies / TV: 145
+- Video Games: 40
+
+The global Roster Source filter now includes **Video Games only** in addition to the existing Everything / Comics / Movies & TV options.
+
+Live Draft freezes and server-enforces all four roster-source choices.
+
+Portrait lookup was also generalized: any fighter without a hand-curated portrait source now automatically searches Wikipedia using the fighter name + franchise, while preserving initials as the safe fallback if no suitable image is found.
