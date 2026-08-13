@@ -24,7 +24,8 @@ if (fs.existsSync(envPath)) {
 }
 
 const PORT = Number(process.env.PORT || 3000);
-const MODEL = process.env.OPENAI_MODEL || "gpt-5.6";
+const MODEL = process.env.OPENAI_MODEL || "gpt-5.6-terra";
+const RESEARCH_MODEL = process.env.OPENAI_RESEARCH_MODEL || "gpt-5.4-mini";
 
 const PER_IP_HOURLY_LIMIT = Number(process.env.AI_BATTLES_PER_IP_PER_HOUR || 12);
 const GLOBAL_HOURLY_LIMIT = Number(process.env.AI_GLOBAL_BATTLES_PER_HOUR || 120);
@@ -238,14 +239,14 @@ ${JSON.stringify(settings, null, 2)}
 Do not decide the winner yet. Build a fair version-specific evidence dossier for the judge.`;
 
   const research = await openAIRequest({
-    model: MODEL,
+    model: RESEARCH_MODEL,
     reasoning: { effort: "low" },
     tools: [{ type: "web_search", search_context_size: "low" }],
     input: [
       { role: "system", content: RESEARCH_SYSTEM },
       { role: "user", content: researchPrompt }
     ],
-    max_output_tokens: 900
+    max_output_tokens: 700
   });
 
   const researchText = outputText(research);
@@ -301,6 +302,7 @@ Use only source numbers that exist above. winnerId and loserId must be the exact
       verdict,
       sources,
       model: MODEL,
+      researchModel: RESEARCH_MODEL,
       researched: true,
       generatedAt: new Date().toISOString()
     }
@@ -354,7 +356,8 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, {
       ok: true,
       aiConfigured: Boolean(process.env.OPENAI_API_KEY),
-      model: MODEL
+      model: MODEL,
+      researchModel: RESEARCH_MODEL
     });
   }
 
@@ -390,5 +393,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`Multiverse Battle Generator running on http://localhost:${PORT}`);
-  console.log(`AI judge: ${process.env.OPENAI_API_KEY ? `enabled (${MODEL})` : "disabled — local fallback only"}`);
+  console.log(`AI judge: ${process.env.OPENAI_API_KEY ? `enabled (judge: ${MODEL}, research: ${RESEARCH_MODEL})` : "disabled — local fallback only"}`);
 });
