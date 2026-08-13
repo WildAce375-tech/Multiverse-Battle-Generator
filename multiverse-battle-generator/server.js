@@ -239,12 +239,13 @@ Do not decide the winner yet. Build a fair version-specific evidence dossier for
 
   const research = await openAIRequest({
     model: MODEL,
-    tools: [{ type: "web_search" }],
+    reasoning: { effort: "low" },
+    tools: [{ type: "web_search", search_context_size: "low" }],
     input: [
       { role: "system", content: RESEARCH_SYSTEM },
       { role: "user", content: researchPrompt }
     ],
-    max_output_tokens: 1800
+    max_output_tokens: 900
   });
 
   const researchText = outputText(research);
@@ -274,6 +275,7 @@ Use only source numbers that exist above. winnerId and loserId must be the exact
 
   const judged = await openAIRequest({
     model: MODEL,
+    reasoning: { effort: "low" },
     input: [
       { role: "system", content: JUDGE_SYSTEM },
       { role: "user", content: judgePrompt }
@@ -286,7 +288,7 @@ Use only source numbers that exist above. winnerId and loserId must be the exact
         schema: schemaFor(a, b)
       }
     },
-    max_output_tokens: 1600
+    max_output_tokens: 1200
   });
 
   const judgedText = outputText(judged);
