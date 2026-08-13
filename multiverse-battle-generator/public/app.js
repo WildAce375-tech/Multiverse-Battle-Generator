@@ -57,7 +57,7 @@ function renderFighter(cardId, c, side) {
     <div class="fighterSide">FIGHTER ${side}</div>
     <div class="fighterHeader">
       <div class="fighterAvatar ${tone}" aria-hidden="true">
-        <img src="${esc(imagePath)}" alt="${esc(c.name)} portrait" loading="lazy" />
+        <img src="${esc(imagePath)}" alt="" loading="lazy" style="display:none" />
         <div class="fighterAvatarFallback">${esc(initials)}</div>
       </div>
       <div class="fighterHeaderText">
@@ -73,9 +73,18 @@ function renderFighter(cardId, c, side) {
   const avatar = el.querySelector('.fighterAvatar');
   const img = el.querySelector('img');
   if (img) {
-    img.addEventListener('load', () => avatar?.classList.add('hasImage'), { once: true });
-    img.addEventListener('error', () => avatar?.classList.remove('hasImage'), { once: true });
-    if (img.complete && img.naturalWidth > 0) avatar?.classList.add('hasImage');
+    img.addEventListener('load', () => {
+      img.style.display = 'block';
+      avatar?.classList.add('hasImage');
+    }, { once: true });
+    img.addEventListener('error', () => {
+      img.style.display = 'none';
+      avatar?.classList.remove('hasImage');
+    }, { once: true });
+    if (img.complete && img.naturalWidth > 0) {
+      img.style.display = 'block';
+      avatar?.classList.add('hasImage');
+    }
   }
 }
 
