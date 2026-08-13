@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PUBLIC_DIR = path.join(__dirname, "public");
+const PUBLIC_DIR = __dirname;
 
 // Tiny .env loader so the project has zero npm dependencies.
 const envPath = path.join(__dirname, ".env");
@@ -380,12 +380,23 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "GET") {
     let pathname;
     try { pathname = decodeURIComponent(url.pathname); } catch { pathname = "/"; }
-    if (pathname === "/") pathname = "/index.html";
-    const requested = path.resolve(PUBLIC_DIR, "." + pathname);
-    if (requested.startsWith(PUBLIC_DIR) && serveFile(res, requested)) return;
 
-    // SPA-style fallback so shared URLs still render the app.
-    if (serveFile(res, path.join(PUBLIC_DIR, "index.html"))) return;
+    // Flat-project mode: only explicitly public frontend files can be served.
+    // This prevents .env, server.js, and other deployment files from ever being exposed.
+    const PUBLIC_FILES = new Map([
+      ["/", "index.html"],
+      ["/index.html", "index.html"],
+      ["/app.js", "app.js"],
+      ["/characters.js", "characters.js"],
+      ["/styles.css", "styles.css"],
+      ["/portraits.webp", "portraits.webp"]
+    ]);
+
+    const publicName = PUBLIC_FILES.get(pathname);
+    if (publicName && serveFile(res, path.join(PUBLIC_DIR, publicName))) return;
+
+    // Unknown browser routes fall back to the app shell, but arbitrary files are never served.
+    if (!pathname.startsWith("/api/") && serveFile(res, path.join(PUBLIC_DIR, "index.html"))) return;
   }
 
   json(res, 404, { error: "Not found" });

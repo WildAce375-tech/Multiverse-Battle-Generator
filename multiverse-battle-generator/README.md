@@ -1,39 +1,24 @@
-# Multiverse Battle Generator — Clean Build
+# Multiverse Battle Generator — Flat Build
 
-This is the consolidated working project.
+This version intentionally has **no public folder**. All site files live at the repository root so GitHub's browser uploader cannot flatten the project incorrectly.
 
-## Included
-- Random and manual battles
-- Tier-aware matchmaking + Chaos Mode
-- Battle rules, prep, battlefield, and starting distance
-- OpenAI web research using `gpt-5.4-mini`
-- Final battle judge using `gpt-5.6-terra`
-- Frozen shareable battle links
-- Research citations
-- Portrait-ready fighter cards
-- Clean initials fallback when a portrait is missing
-- Basic hourly API throttling
+## Required Render environment variables
 
-## Render environment variables
-Keep these in Render:
-
-- `OPENAI_API_KEY` = your secret API key
+- `OPENAI_API_KEY` = your secret OpenAI API key
 - `OPENAI_MODEL` = `gpt-5.6-terra`
 
-Optional:
-- `OPENAI_RESEARCH_MODEL` = `gpt-5.4-mini`
-- `AI_BATTLES_PER_IP_PER_HOUR` = `12`
-- `AI_GLOBAL_BATTLES_PER_HOUR` = `120`
+The web-research model defaults to `gpt-5.4-mini`.
+
+## Render
+
+Keep the Render Root Directory pointed at the folder/repository containing these files. Dockerfile Path should be `./Dockerfile`.
+
+## Files
+
+- `server.js` — secure server + AI judge
+- `index.html`, `app.js`, `characters.js`, `styles.css` — website
+- `Dockerfile`, `package.json`, `render.yaml` — deployment
 
 ## Portraits
-Put `.webp` files in:
 
-`public/images/characters/`
-
-The filename must exactly match the fighter ID in `public/characters.js`.
-
-Example:
-
-`mcu_thor.webp`
-
-No code change is required when you add a portrait.
+The app currently shows clean initials placeholders. The next portrait update can use one single `portraits.webp` sprite sheet at the root instead of an images folder.
