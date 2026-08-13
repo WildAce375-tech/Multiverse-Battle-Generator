@@ -30,6 +30,18 @@
         <button class="modeTab" data-mode="survival">☠ Survival</button>
       </nav>
 
+      <div class="rosterScopeBar">
+        <div class="rosterScopeCopy">
+          <span class="eyebrow">ROSTER SOURCE</span>
+          <span class="rosterScopeHint">Applies to all new fights and game modes.</span>
+        </div>
+        <select id="rosterScope" aria-label="Roster source">
+          <option value="all">Everything — 89 fighters</option>
+          <option value="comics">Comics only — 34</option>
+          <option value="screen">Movies / TV only — 55</option>
+        </select>
+      </div>
+
       <div id="classicMode" class="modePane">
         <div class="tabs">
           <button id="randomTab" class="tab active">Random Battle</button>
@@ -41,12 +53,10 @@
             <label>
               Fighter pool
               <select id="randomPool">
-                <option value="all">Everything</option>
+                <option value="all">All franchises in roster</option>
                 <option value="marvel">Marvel</option>
                 <option value="dc">DC</option>
-                <option value="other">Other Movies / TV</option>
-                <option value="comics">Comics only</option>
-                <option value="screen">Movies / TV only</option>
+                <option value="other">Other universes</option>
               </select>
             </label>
             <label class="checkLabel">
@@ -71,7 +81,7 @@
         <div class="modeForm threeCol">
           <label>Champion<select id="gauntletChampion"></select></label>
           <label>Opponents<select id="gauntletLength"><option value="3">3 fights</option><option value="5" selected>5 fights</option></select></label>
-          <label>Opponent pool<select id="gauntletPool"><option value="all">Everything</option><option value="marvel">Marvel</option><option value="dc">DC</option><option value="other">Other Movies / TV</option><option value="comics">Comics only</option><option value="screen">Movies / TV only</option></select></label>
+          <label>Opponent pool<select id="gauntletPool"><option value="all">All franchises in roster</option><option value="marvel">Marvel</option><option value="dc">DC</option><option value="other">Other universes</option></select></label>
         </div>
         <button id="startGauntletBtn" class="primary big">🔥 BUILD GAUNTLET</button>
       </div>
@@ -80,7 +90,7 @@
         <div class="modeIntro"><strong>Tournament Mode</strong><span>Generate a random bracket, then resolve one matchup at a time until one champion remains.</span></div>
         <div class="modeForm twoCol">
           <label>Bracket size<select id="tournamentSize"><option value="4">4 fighters</option><option value="8" selected>8 fighters</option></select></label>
-          <label>Fighter pool<select id="tournamentPool"><option value="all">Everything</option><option value="marvel">Marvel</option><option value="dc">DC</option><option value="other">Other Movies / TV</option><option value="comics">Comics only</option><option value="screen">Movies / TV only</option></select></label>
+          <label>Fighter pool<select id="tournamentPool"><option value="all">All franchises in roster</option><option value="marvel">Marvel</option><option value="dc">DC</option><option value="other">Other universes</option></select></label>
         </div>
         <button id="startTournamentBtn" class="primary big">🏆 GENERATE BRACKET</button>
       </div>
@@ -185,6 +195,6 @@
 
     <footer>Fan-made, noncommercial discussion tool. Not affiliated with Marvel, DC, Disney, Warner Bros., or other rights holders. Character names, images and trademarks remain the property of their respective owners. Fictional-versus outcomes are subjective estimates, not canon.</footer>
   </main>
-  <script type="module" src="/app.js?v=multiplayer-2.2"></script>
+  <script type="module" src="/app.js?v=roster-scope-2.3"></script>
 </body>
 </html>

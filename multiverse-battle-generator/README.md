@@ -117,3 +117,34 @@ Example 4-player snake order with two picks each:
 `A → B → C → D → D → C → B → A`
 
 No new Render settings are required. It reuses the existing Upstash storage and OpenAI setup.
+
+
+## v2.3 — Global Roster Source Filter
+
+The roster already contains explicit `medium` tags.
+
+Current roster:
+- Everything: 89
+- Comics: 34
+- Movies / TV: 55
+
+A new global **Roster Source** selector appears under the game-mode navigation:
+- Everything
+- Comics only
+- Movies / TV only
+
+The filter applies to new:
+- Versus battles
+- Manual fighter selectors
+- Random battles
+- Gauntlets
+- Tournaments
+- Team Battles
+- Survival scenarios
+- Local drafts
+- Live multiplayer drafts
+
+Franchise pools stack with the global source filter. Example:
+`Comics only + Marvel` gives Marvel Comics characters only.
+
+Live rooms freeze the selected roster source when the room is created, and the server rejects picks outside that room's source.

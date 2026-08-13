@@ -226,3 +226,21 @@ input[type="text"]:focus,#liveDraftCode:focus,#liveRosterSearch:focus{border-col
 @media(max-width:760px){
   .modeForm.fourCol,.liveDraftBoard.players3,.liveDraftBoard.players4,.multiTeamCases{grid-template-columns:1fr}
 }
+
+
+/* v2.3 — global Comics / Screen roster scope */
+.rosterScopeBar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin:10px 0 16px;padding:10px 12px;border:1px solid var(--line);
+  border-radius:12px;background:linear-gradient(135deg,rgba(125,92,255,.08),rgba(66,230,213,.035)),#0b0f16
+}
+.rosterScopeCopy{display:flex;align-items:baseline;gap:10px;min-width:0}
+.rosterScopeCopy .eyebrow{white-space:nowrap}
+.rosterScopeHint{font-size:.72rem;color:var(--muted)}
+#rosterScope{width:auto;min-width:220px;padding:8px 10px;font-weight:900}
+@media(max-width:760px){
+  .rosterScopeBar{align-items:stretch;flex-direction:column;gap:7px}
+  .rosterScopeCopy{display:block}
+  .rosterScopeHint{display:block;margin-top:3px}
+  #rosterScope{width:100%;min-width:0}
+}

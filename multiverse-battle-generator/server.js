@@ -1161,7 +1161,8 @@ function cleanLiveDraftConfig(config = {}) {
   const rawBudget = Number(config.budget);
   const budget = Number.isInteger(rawBudget) && rawBudget >= teamSize && rawBudget <= 30 ? rawBudget : 12;
   const order = ["alternating","snake"].includes(config.order) ? config.order : "snake";
-  return { playerCount, teamSize, budget, order };
+  const mediumScope = ["all","comics","screen"].includes(config.mediumScope) ? config.mediumScope : "all";
+  return { playerCount, teamSize, budget, order, mediumScope };
 }
 
 function liveDraftSides(roomOrConfig) {
@@ -1297,6 +1298,8 @@ function validateLiveDraftPick(room, side, fighterId) {
   if (room.turn !== side) return "It is not your turn.";
   const fighter = DRAFT_ROSTER.get(fighterId);
   if (!fighter) return "That fighter is not in the roster.";
+  if (room.config.mediumScope === "comics" && fighter.medium !== "Comics") return "This room is Comics only.";
+  if (room.config.mediumScope === "screen" && fighter.medium !== "Movie/TV") return "This room is Movies / TV only.";
 
   const allDrafted = liveDraftSides(room).flatMap(s => room.teams?.[s] || []);
   if (allDrafted.includes(fighterId)) return "That fighter has already been drafted.";

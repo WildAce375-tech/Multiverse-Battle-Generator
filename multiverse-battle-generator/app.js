@@ -12,6 +12,7 @@ let tournamentState = null;
 let draftState = { A: [], B: [], budget: 12 };
 let draftFlavor = "local";
 let liveDraftSession = { code:null, token:"", side:null, room:null, pollTimer:null, lastRenderedAt:"" };
+let rosterScope = "all";
 
 function esc(s="") {
   return String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -91,34 +92,68 @@ function renderArena() {
   renderFighter("cardB", currentB, "B");
 }
 
+function matchesRosterScope(c, scope=rosterScope) {
+  if (scope === "comics") return c.medium === "Comics";
+  if (scope === "screen") return c.medium === "Movie/TV";
+  return true;
+}
+
+function eligibleCharacters(scope=rosterScope) {
+  return CHARACTERS.filter(c => matchesRosterScope(c, scope));
+}
+
+function rosterScopeLabel(scope=rosterScope) {
+  if (scope === "comics") return "Comics only";
+  if (scope === "screen") return "Movies / TV only";
+  return "Everything";
+}
+
 function optionLabel(c) {
   return `${c.name} — ${c.version}`;
 }
 
-function sortedCharacters() {
-  return [...CHARACTERS].sort((a,b) =>
+function sortedCharacters(scope=rosterScope) {
+  return [...eligibleCharacters(scope)].sort((a,b) =>
     a.franchise.localeCompare(b.franchise) || a.name.localeCompare(b.name) || a.version.localeCompare(b.version)
   );
 }
 
 function populateSelectors() {
   const sorted = sortedCharacters();
+  if (!sorted.length) return;
+
   const opts = sorted.map(c => `<option value="${c.id}">${esc(optionLabel(c))}</option>`).join("");
   const ids = [
     "fighterA","fighterB","gauntletChampion","teamA1","teamA2","teamA3","teamB1","teamB2","teamB3",
     "draftPick","survivalFighter"
   ];
-  for (const id of ids) if ($(id)) $(id).innerHTML = opts;
 
-  $("fighterA").value = currentA.id;
-  $("fighterB").value = currentB.id;
-  $("gauntletChampion").value = currentA.id;
-  $("survivalFighter").value = currentA.id;
+  const previous = Object.fromEntries(ids.filter(id => $(id)).map(id => [id, $(id).value]));
+  for (const id of ids) {
+    if (!$(id)) continue;
+    $(id).innerHTML = opts;
+    if (previous[id] && sorted.some(c => c.id === previous[id])) $(id).value = previous[id];
+  }
+
+  const eligibleIds = new Set(sorted.map(c => c.id));
+  const safeValue = (preferred, fallbackIndex=0) =>
+    preferred && eligibleIds.has(preferred) ? preferred : sorted[Math.min(fallbackIndex, sorted.length-1)].id;
+
+  $("fighterA").value = safeValue(previous.fighterA || currentA?.id, 0);
+  $("fighterB").value = safeValue(previous.fighterB || currentB?.id, sorted.length > 1 ? 1 : 0);
+  $("gauntletChampion").value = safeValue(previous.gauntletChampion || currentA?.id, 0);
+  $("survivalFighter").value = safeValue(previous.survivalFighter || currentA?.id, 0);
 
   const defaults = ["mcu_captain_america","mcu_iron_man","mcu_thor","dceu_superman","dceu_batman","dceu_wonder_woman"];
   ["teamA1","teamA2","teamA3","teamB1","teamB2","teamB3"].forEach((id,i) => {
-    if ($(id) && fighterById(defaults[i])) $(id).value = defaults[i];
+    if (!$(id)) return;
+    if (previous[id] && eligibleIds.has(previous[id])) $(id).value = previous[id];
+    else $(id).value = safeValue(defaults[i], i % sorted.length);
   });
+
+  if ($("draftPick") && previous.draftPick && eligibleIds.has(previous.draftPick)) {
+    $("draftPick").value = previous.draftPick;
+  }
 }
 
 function settings() {
@@ -126,7 +161,8 @@ function settings() {
     mode: $("mode").value,
     prep: $("prep").value,
     battlefield: $("battlefield").value,
-    distance: $("distance").value
+    distance: $("distance").value,
+    rosterScope
   };
 }
 
@@ -134,16 +170,19 @@ function applySettings(s={}) {
   for (const k of ["mode","prep","battlefield","distance"]) {
     if (s[k] && $(`${k}`)) $(`${k}`).value = s[k];
   }
+  if (["all","comics","screen"].includes(s.rosterScope)) {
+    rosterScope = s.rosterScope;
+    if ($("rosterScope")) $("rosterScope").value = rosterScope;
+    populateSelectors();
+  }
 }
 
-function poolByValue(pool="all") {
-  return CHARACTERS.filter(c => {
+function poolByValue(pool="all", scope=rosterScope) {
+  return eligibleCharacters(scope).filter(c => {
     if (pool === "all") return true;
     if (pool === "marvel") return c.franchise === "Marvel";
     if (pool === "dc") return c.franchise === "DC";
     if (pool === "other") return !["Marvel","DC"].includes(c.franchise);
-    if (pool === "comics") return c.medium === "Comics";
-    if (pool === "screen") return c.medium === "Movie/TV";
     return true;
   });
 }
@@ -158,7 +197,10 @@ function pickRandom(arr) {
 
 function randomPair() {
   const list = poolList();
-  if (list.length < 2) return [CHARACTERS[0], CHARACTERS[1]];
+  if (list.length < 2) {
+    const fallback = eligibleCharacters();
+    return [fallback[0], fallback[Math.min(1, fallback.length-1)]];
+  }
   const chaos = $("chaosMode").checked;
   const a = pickRandom(list);
   let candidates = list.filter(c => c.id !== a.id);
@@ -505,7 +547,7 @@ function pickUnique(list, count) {
 
 function buildGauntletOpponents(champion, length, pool) {
   let available = poolByValue(pool).filter(c => c.id !== champion.id);
-  if (available.length < length) available = CHARACTERS.filter(c => c.id !== champion.id);
+  if (available.length < length) available = eligibleCharacters().filter(c => c.id !== champion.id);
   const offsets = length === 3 ? [-1,0,1] : [-1,0,0,1,2];
   const chosen = [];
   for (const off of offsets) {
@@ -570,7 +612,7 @@ function roundLabel(totalEntrants, roundIndex, matches) {
 function startTournament() {
   const size = Number($("tournamentSize").value);
   let list = poolByValue($("tournamentPool").value);
-  if (list.length < size) list = CHARACTERS;
+  if (list.length < size) list = eligibleCharacters();
   const entrants = pickUnique(list,size);
   tournamentState = { size, rounds:[{participants:entrants, matches:[], cursor:0}], currentRound:0, champion:null };
   tournamentState.rounds[0].matches = pairParticipants(entrants);
@@ -769,7 +811,7 @@ function liveDraftTeamHtml(room,side){
 function liveDraftRosterHtml(room){
   if(room.status!=="drafting") return "";
   const drafted=new Set(liveSides(room).flatMap(s=>room.teams?.[s]||[]));
-  const rows=sortedCharacters().map(c=>{
+  const rows=sortedCharacters(room.config.mediumScope || "all").map(c=>{
     const picked=drafted.has(c.id);
     const allowed=liveDraftPickAllowed(room,c);
     let label="PICK";
@@ -827,7 +869,7 @@ function renderLiveDraftRoom(room){
       <div>
         <div class="eyebrow">LIVE MULTIPLAYER DRAFT</div>
         <div class="liveRoomCode">${esc(room.code)}</div>
-        <div class="liveRoomMeta">${room.config.playerCount} players • ${room.config.teamSize} fighter${room.config.teamSize===1?"":"s"} each • ${room.config.budget} points each • ${esc(liveDraftOrderLabel(room.config.order))}</div>
+        <div class="liveRoomMeta">${room.config.playerCount} players • ${room.config.teamSize} fighter${room.config.teamSize===1?"":"s"} each • ${room.config.budget} points each • ${esc(room.config.mediumScope==="comics"?"Comics only":room.config.mediumScope==="screen"?"Movies / TV only":"All media")} • ${esc(liveDraftOrderLabel(room.config.order))}</div>
       </div>
       <div class="liveRoomActions">
         <button class="secondary" data-action="live-copy-invite">🔗 COPY INVITE</button>
@@ -867,7 +909,8 @@ async function createLiveDraft(){
           playerCount:Number($("liveDraftPlayers").value),
           teamSize:Number($("liveDraftTeamSize").value),
           budget:Number($("liveDraftBudget").value),
-          order:$("liveDraftOrder").value
+          order:$("liveDraftOrder").value,
+          mediumScope:rosterScope
         },
         settings:settings()
       })
@@ -912,6 +955,11 @@ async function joinLiveDraft(code,{fromUrl=false}={}){
 
   const token=data.token||existingToken||"";
   liveDraftSession={code,token,side:data.room.yourSide||null,room:data.room,pollTimer:null,lastRenderedAt:data.room.updatedAt||""};
+  if (["all","comics","screen"].includes(data.room.config?.mediumScope)) {
+    rosterScope = data.room.config.mediumScope;
+    $("rosterScope").value = rosterScope;
+    populateSelectors();
+  }
   if(token) saveLiveDraftToken(code,token);
   history.replaceState(null,"",`/draft/${code}`);
   setGameMode("draft");
@@ -1044,6 +1092,23 @@ document.querySelectorAll(".modeTab").forEach(btn=>btn.onclick=()=>{
   if(btn.dataset.mode!=="draft")stopLiveDraftPolling();
   setGameMode(btn.dataset.mode);
 });
+$("rosterScope").onchange=()=>{
+  rosterScope=$("rosterScope").value;
+  populateSelectors();
+
+  // New local mode runs should obey the new source immediately.
+  gauntletState=null;
+  tournamentState=null;
+  resetDraft();
+
+  if(gameMode==="gauntlet" || gameMode==="tournament"){
+    $("modeWorkspace").innerHTML=`<div class="emptyState">Roster source changed to <strong>${esc(rosterScopeLabel())}</strong>. Start a new ${gameMode}.</div>`;
+  }else if(gameMode==="team" || gameMode==="survival"){
+    $("modeWorkspace").innerHTML=`<div class="emptyState">Roster source: <strong>${esc(rosterScopeLabel())}</strong>. Choose fighters and start the mode.</div>`;
+  }else if(gameMode==="draft" && draftFlavor==="local"){
+    renderDraft();
+  }
+};
 $("randomTab").onclick=()=>setTab("random");
 $("manualTab").onclick=()=>setTab("manual");
 $("randomizeBtn").onclick=async()=>{[currentA,currentB]=randomPair();renderArena();populateSelectors();await judge(currentA,currentB);};
@@ -1085,7 +1150,8 @@ $("liveDraftActive").oninput=e=>{
 };
 
 ensureAvatarStyles();
-$("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters`;
+$("rosterScope").value = rosterScope;
+$("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters • 34 comics • 55 movie/TV`;
 renderArena();
 populateSelectors();
 resetDraft();
