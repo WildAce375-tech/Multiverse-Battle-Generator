@@ -322,41 +322,83 @@ async function decodePayload(s) {
   return JSON.parse(new TextDecoder().decode(bytes));
 }
 async function buildFrozenUrl() {
+  // Legacy compatibility only. New shares use short stored battle IDs.
   if (!currentResult) return location.href;
   const encoded = await encodePayload(battlePayload());
-  const u = new URL(location.origin + location.pathname);
+  const u = new URL(location.origin + "/");
   u.searchParams.set("battle", encoded);
   return u.toString();
 }
 
-let lastLongShareUrl = "";
-let lastShortShareUrl = "";
+let lastStoredBattleKey = "";
+let lastStoredBattleUrl = "";
 
 async function getShortBattleUrl() {
-  const longUrl = await buildFrozenUrl();
+  if (!currentResult) throw new Error("Generate a battle first.");
 
-  if (longUrl === lastLongShareUrl && lastShortShareUrl) {
-    return lastShortShareUrl;
+  const payload = battlePayload();
+  const cacheKey = JSON.stringify([
+    payload.a,
+    payload.b,
+    payload.s,
+    payload.r?.generatedAt,
+    payload.r?.verdict?.winnerId,
+    payload.r?.verdict?.winnerProbability
+  ]);
+
+  if (cacheKey === lastStoredBattleKey && lastStoredBattleUrl) {
+    return lastStoredBattleUrl;
   }
 
-  const r = await fetch("/api/shorten", {
+  const r = await fetch("/api/battles", {
     method: "POST",
     headers: {"content-type": "application/json"},
-    body: JSON.stringify({url: longUrl})
+    body: JSON.stringify({battle: payload})
   });
 
+  const data = await r.json().catch(() => ({}));
   if (!r.ok) {
-    const e = await r.json().catch(() => ({}));
-    throw new Error(e.error || `Short-link service failed (${r.status})`);
+    throw new Error(data.error || `Could not save battle (${r.status})`);
   }
 
-  const data = await r.json();
-  if (!data.shortUrl) throw new Error("Short-link service returned no URL.");
+  if (!data.url) throw new Error("Battle storage returned no share URL.");
 
-  lastLongShareUrl = longUrl;
-  lastShortShareUrl = data.shortUrl;
-  return data.shortUrl;
+  lastStoredBattleKey = cacheKey;
+  lastStoredBattleUrl = data.url;
+  return data.url;
 }
+
+async function loadShortBattle() {
+  const match = location.pathname.match(/^\/b\/([23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{8})\/?$/);
+  if (!match) return false;
+
+  try {
+    const r = await fetch(`/api/battles/${encodeURIComponent(match[1])}`);
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.battle) {
+      throw new Error(data.error || "Battle not found.");
+    }
+
+    const p = data.battle;
+    const a = fighterById(p.a), b = fighterById(p.b);
+    if (!a || !b || !p.r?.verdict) throw new Error("Invalid stored battle.");
+
+    currentA = a;
+    currentB = b;
+    currentResult = p.r;
+    applySettings(p.s);
+    renderArena();
+    populateManual();
+    renderVerdict(currentResult);
+    return true;
+  } catch (e) {
+    console.error("Could not load short battle:", e);
+    alert("That shared battle could not be loaded.");
+    history.replaceState(null, "", "/");
+    return false;
+  }
+}
+
 async function loadFrozenBattle() {
   const encoded = new URLSearchParams(location.search).get("battle");
   if (!encoded) return false;
@@ -423,32 +465,30 @@ $("shareBtn").onclick=async()=>{
   const btn = $("shareBtn");
   const old = btn.textContent;
   btn.disabled = true;
-  btn.textContent = "CREATING SHORT LINK…";
+  btn.textContent = "SAVING BATTLE…";
 
   try {
     const shareUrl = await getShortBattleUrl();
+
     try {
       await navigator.clipboard.writeText(shareUrl);
       btn.textContent = "✓ SHORT LINK COPIED";
     } catch {
-      prompt("Copy this battle link:", shareUrl);
+      prompt("Copy this short battle link:", shareUrl);
       btn.textContent = "✓ SHORT LINK READY";
     }
   } catch (err) {
-    console.error("Short-link error:", err);
-    const longUrl = await buildFrozenUrl();
-    try {
-      await navigator.clipboard.writeText(longUrl);
-      btn.textContent = "✓ LINK COPIED";
-    } catch {
-      prompt("Shortener was unavailable. Copy this battle link:", longUrl);
-      btn.textContent = "LINK READY";
-    }
+    console.error("Short battle link error:", err);
+    alert(
+      "Could not create a short battle link. " +
+      "The site owner needs to finish the free battle-storage setup in Render."
+    );
+    btn.textContent = "SHORT LINK FAILED";
   } finally {
     setTimeout(() => {
       btn.textContent = old;
       btn.disabled = false;
-    }, 1800);
+    }, 2200);
   }
 };
 
@@ -457,4 +497,5 @@ $("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters`;
 renderArena();
 populateManual();
 await checkHealth();
-await loadFrozenBattle();
+const loadedShortBattle = await loadShortBattle();
+if (!loadedShortBattle) await loadFrozenBattle();

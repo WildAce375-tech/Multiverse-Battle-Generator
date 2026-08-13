@@ -1,30 +1,44 @@
-# Multiverse Battle Generator — Automatic Web Portraits
+# Multiverse Battle Generator — Short Battle IDs v1.5
 
 This is the flat, no-folder build.
 
-## What changed
-- Real-character identification thumbnails load automatically through `/api/portrait`.
-- Most portraits come from curated version-specific Wikipedia/Wikimedia pages.
-- A few screen versions that do not have a useful Wikipedia portrait use a curated direct web image.
-- If an exact-enough image cannot be resolved, the card intentionally keeps the initials placeholder instead of showing the wrong version.
-- Portrait lookups are cached by the server for 7 days.
-- Fan-made/noncommercial/IP disclaimer added to the footer.
+## Main change
 
-## Render variables
-- `OPENAI_API_KEY` = your secret OpenAI key
-- `OPENAI_MODEL` = `gpt-5.6-terra`
+Share links are now real short battle URLs:
 
-The research model defaults to `gpt-5.4-mini`.
+`https://YOUR-SITE.onrender.com/b/Ab3K7xQm`
 
-## GitHub
-Upload/replace these top-level files. There is no `public` folder.
+The AI verdict is stored in Upstash Redis instead of being embedded in the URL.
 
+Old `?battle=...` links still load for backward compatibility, but new shares use short IDs.
 
-## Short share links
+## Render environment variables
 
-Version 1.4 changes the Share button so it no longer copies the huge frozen battle URL.
-The server sends the frozen URL to the is.gd shortening API only when the user clicks Share.
-The returned short URL is permanent according to is.gd's API documentation.
+Already used:
+- `OPENAI_API_KEY`
+- `OPENAI_MODEL=gpt-5.6-terra`
 
-No new Render environment variables or accounts are required.
-If the shortening service is temporarily unavailable, the app falls back to copying the original frozen URL.
+Add these two for short links:
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+
+Get them from the REST API section of your Upstash Redis database.
+
+## Why this is better
+
+- Discord-friendly links
+- Exact frozen verdict is preserved
+- Refreshing `/b/XXXXXXXX` does not rerun the AI
+- No third-party URL shortener
+- Short link remains tied to your own domain
+- Old giant links still work
+
+## Other features retained
+
+- GPT-5.4 mini web research
+- GPT-5.6 Terra final judge
+- Automatic character portraits
+- Version-specific roster
+- Random/manual battles
+- Battle settings
+- Fan-made/noncommercial disclaimer

@@ -2,6 +2,7 @@ import http from "http";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { randomBytes } from "crypto";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -811,66 +812,108 @@ function serveFile(res, filePath) {
 }
 
 
-const shortUrlCache = new Map();
 
-async function shortenBattleUrl(longUrl, req) {
-  const cached = shortUrlCache.get(longUrl);
-  if (cached) return cached;
+function battleStorageConfigured() {
+  return Boolean(
+    process.env.UPSTASH_REDIS_REST_URL &&
+    process.env.UPSTASH_REDIS_REST_TOKEN
+  );
+}
 
-  let parsed;
-  try {
-    parsed = new URL(longUrl);
-  } catch {
-    throw new Error("Invalid battle URL.");
+async function upstashCommand(command) {
+  if (!battleStorageConfigured()) {
+    throw new Error("Battle storage is not configured.");
   }
 
-  // Prevent this endpoint from becoming a public generic URL-shortening proxy.
-  const requestHost = String(req.headers.host || "").split(":")[0].toLowerCase();
-  const urlHost = parsed.hostname.toLowerCase();
-  const localDev = ["localhost", "127.0.0.1"].includes(requestHost);
-
-  if (!localDev && urlHost !== requestHost) {
-    throw new Error("Only this site's battle links can be shortened.");
-  }
-
-  if (!parsed.searchParams.has("battle")) {
-    throw new Error("No frozen battle payload was found.");
-  }
-
-  const form = new URLSearchParams({
-    format: "json",
-    url: longUrl
-  });
-
-  const response = await fetch("https://is.gd/create.php", {
+  const response = await fetch(process.env.UPSTASH_REDIS_REST_URL, {
     method: "POST",
     headers: {
-      "content-type": "application/x-www-form-urlencoded",
-      "user-agent": "MultiverseBattleGenerator/1.4 (noncommercial fan project; share-link creation)"
+      "authorization": `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
+      "content-type": "application/json"
     },
-    body: form.toString(),
+    body: JSON.stringify(command),
     signal: AbortSignal.timeout(10000)
   });
 
   const text = await response.text();
-  let data = {};
-  try { data = JSON.parse(text); } catch {}
+  let data;
+  try { data = JSON.parse(text); } catch { data = {}; }
 
-  if (!response.ok || data.errorcode || !data.shorturl) {
-    const message = data.errormessage || text || `Shortener returned ${response.status}`;
-    throw new Error(message.slice(0, 300));
+  if (!response.ok || data.error) {
+    throw new Error(data.error || `Battle storage returned ${response.status}`);
   }
 
-  const shortUrl = String(data.shorturl);
-  shortUrlCache.set(longUrl, shortUrl);
+  return data.result;
+}
 
-  // Keep the in-memory cache bounded.
-  if (shortUrlCache.size > 500) {
-    const first = shortUrlCache.keys().next().value;
-    shortUrlCache.delete(first);
+const SHORT_ID_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+function makeBattleId(length = 8) {
+  const bytes = randomBytes(length);
+  let id = "";
+  for (let i = 0; i < length; i++) {
+    id += SHORT_ID_ALPHABET[bytes[i] % SHORT_ID_ALPHABET.length];
+  }
+  return id;
+}
+
+function validStoredBattle(payload) {
+  return Boolean(
+    payload &&
+    typeof payload === "object" &&
+    typeof payload.a === "string" &&
+    typeof payload.b === "string" &&
+    payload.r &&
+    typeof payload.r === "object" &&
+    payload.r.verdict &&
+    typeof payload.r.verdict === "object"
+  );
+}
+
+async function saveBattle(payload) {
+  if (!validStoredBattle(payload)) {
+    throw new Error("Invalid battle payload.");
   }
 
-  return shortUrl;
+  const serialized = JSON.stringify(payload);
+  if (Buffer.byteLength(serialized, "utf8") > 150_000) {
+    throw new Error("Battle payload is too large to save.");
+  }
+
+  // SET ... NX gives us collision protection without a second network request.
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const id = makeBattleId(8);
+    const result = await upstashCommand([
+      "SET",
+      `battle:${id}`,
+      serialized,
+      "NX"
+    ]);
+
+    if (result === "OK") return id;
+  }
+
+  throw new Error("Could not allocate a unique battle ID.");
+}
+
+async function loadBattle(id) {
+  if (!/^[23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{8}$/.test(id)) {
+    return null;
+  }
+
+  const raw = await upstashCommand(["GET", `battle:${id}`]);
+  if (!raw || typeof raw !== "string") return null;
+
+  let payload;
+  try { payload = JSON.parse(raw); } catch { return null; }
+  return validStoredBattle(payload) ? payload : null;
+}
+
+function publicOrigin(req) {
+  const forwarded = String(req.headers["x-forwarded-proto"] || "").split(",")[0].trim();
+  const protocol = forwarded || "https";
+  const host = req.headers.host;
+  return `${protocol}://${host}`;
 }
 
 const server = http.createServer(async (req, res) => {
@@ -880,6 +923,7 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, {
       ok: true,
       aiConfigured: Boolean(process.env.OPENAI_API_KEY),
+      shortLinksConfigured: battleStorageConfigured(),
       model: MODEL,
       researchModel: RESEARCH_MODEL
     });
@@ -899,21 +943,56 @@ const server = http.createServer(async (req, res) => {
     return res.end();
   }
 
-  if (req.method === "POST" && url.pathname === "/api/shorten") {
+  if (req.method === "POST" && url.pathname === "/api/battles") {
     try {
-      const body = await readBody(req, 80_000);
-      const longUrl = typeof body?.url === "string" ? body.url : "";
-
-      if (!longUrl || longUrl.length > 60_000) {
-        return json(res, 400, { error: "Invalid or oversized battle link." });
+      if (!battleStorageConfigured()) {
+        return json(res, 503, {
+          error: "Short battle links are not configured yet.",
+          code: "BATTLE_STORAGE_NOT_CONFIGURED"
+        });
       }
 
-      const shortUrl = await shortenBattleUrl(longUrl, req);
-      return json(res, 200, { shortUrl });
+      const body = await readBody(req, 180_000);
+      const payload = body?.battle;
+
+      if (!validStoredBattle(payload)) {
+        return json(res, 400, { error: "Invalid battle payload." });
+      }
+
+      const id = await saveBattle(payload);
+      return json(res, 200, {
+        id,
+        url: `${publicOrigin(req)}/b/${id}`
+      });
     } catch (err) {
-      console.error("Short-link error:", err);
+      console.error("Battle-save error:", err);
       return json(res, 502, {
-        error: "Could not create a short battle link right now."
+        error: "Could not save this battle right now."
+      });
+    }
+  }
+
+  if (req.method === "GET" && url.pathname.startsWith("/api/battles/")) {
+    try {
+      if (!battleStorageConfigured()) {
+        return json(res, 503, {
+          error: "Short battle links are not configured yet.",
+          code: "BATTLE_STORAGE_NOT_CONFIGURED"
+        });
+      }
+
+      const id = url.pathname.slice("/api/battles/".length);
+      const payload = await loadBattle(id);
+
+      if (!payload) {
+        return json(res, 404, { error: "Battle not found." });
+      }
+
+      return json(res, 200, { battle: payload });
+    } catch (err) {
+      console.error("Battle-load error:", err);
+      return json(res, 502, {
+        error: "Could not load this battle right now."
       });
     }
   }
