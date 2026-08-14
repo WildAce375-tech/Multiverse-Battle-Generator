@@ -574,3 +574,121 @@ header{
     gap:6px;
   }
 }
+
+
+/* v3.7 — video-game HUD character quick cards */
+.quickProfile{
+  margin-top:12px;
+  padding-top:11px;
+  border-top:1px solid rgba(255,255,255,.09);
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+.quickProfileLabel{
+  margin-bottom:7px;
+  font-size:.66rem;
+  font-weight:1000;
+  letter-spacing:.14em;
+  color:#7f8da4;
+}
+
+.powerChips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.powerChip{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 8px;
+  border:1px solid rgba(139,156,190,.22);
+  border-radius:999px;
+  background:rgba(64,78,105,.22);
+  color:#e6edf8;
+  font-size:.66rem;
+  font-weight:750;
+  line-height:1.1;
+}
+
+.attributeGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px 14px;
+}
+
+.attributeRow{
+  min-width:0;
+  padding:7px 8px;
+  border:1px solid rgba(255,255,255,.065);
+  border-radius:9px;
+  background:rgba(5,10,18,.28);
+}
+
+.attributeTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:6px;
+}
+
+.attributeName{
+  font-size:.69rem;
+  font-weight:900;
+  color:#e8eef8;
+}
+
+.attributeScore{
+  font-size:.75rem;
+  color:#fff;
+}
+
+.attributeScore small{
+  font-size:.58rem;
+  color:#8795aa;
+  font-weight:800;
+}
+
+.attributeSegments{
+  display:grid;
+  grid-template-columns:repeat(10,1fr);
+  gap:3px;
+  height:10px;
+}
+
+.attributeSegment{
+  display:block;
+  border-radius:2px;
+  background:rgba(255,255,255,.075);
+  border:1px solid rgba(255,255,255,.035);
+  box-shadow:inset 0 1px 1px rgba(0,0,0,.25);
+}
+
+.attributeSegment.isOn{
+  background:linear-gradient(180deg,#75edff,#677dff);
+  border-color:rgba(133,223,255,.45);
+  box-shadow:0 0 6px rgba(102,145,255,.28);
+}
+
+.magicStat .attributeSegment.isOn{
+  background:linear-gradient(180deg,#ee88ff,#9a66ff);
+  border-color:rgba(225,131,255,.5);
+  box-shadow:0 0 6px rgba(196,102,255,.3);
+}
+
+.cosmicStat .attributeSegment.isOn{
+  background:linear-gradient(180deg,#ffe477,#ff8d58);
+  border-color:rgba(255,213,112,.5);
+  box-shadow:0 0 6px rgba(255,165,84,.3);
+}
+
+.fighterCard.b .attributeRow:not(.magicStat):not(.cosmicStat) .attributeSegment.isOn{
+  background:linear-gradient(180deg,#79f3d5,#5c9dff);
+}
+
+@media(max-width:760px){
+  .attributeGrid{grid-template-columns:1fr}
+}

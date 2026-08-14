@@ -411,3 +411,21 @@ Each score includes a visual power bar.
 
 The profile scores are display-only and are derived consistently from the fighter's
 existing version-specific tier and traits. They do not change or override the AI battle judge.
+
+
+## v3.7 — Video Game HUD Quick Cards
+
+Character quick cards now use a proper game-style presentation:
+
+- Powers are rendered as separated pill tags
+- All seven attributes use a 10-segment HUD bar
+- Filled segments visually represent the 1–10 rating
+- Numeric score remains visible beside each attribute
+- Magic uses a purple bar treatment
+- Cosmic uses a gold/orange bar treatment
+- Other combat attributes use blue/cyan bars
+- Two-column desktop layout, one-column mobile layout
+- Quick-card styles are injected by the app as a fallback in addition to styles.css
+  so browser/static CSS caching cannot strip the visual HUD formatting
+
+The ratings remain display-only and do not alter the battle judge.
