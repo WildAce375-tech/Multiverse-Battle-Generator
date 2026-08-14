@@ -1,4 +1,4 @@
-import { CHARACTERS } from "./characters.js?v=game-hud-cards-3.7";
+import { CHARACTERS } from "./characters.js?v=hud-all-modes-3.8";
 
 const $ = (id) => document.getElementById(id);
 const TIER_NAMES = {1:"Human",2:"Enhanced",3:"Superhuman",4:"Heavyweight",5:"Planetary+",6:"Cosmic",7:"Reality Warper"};
@@ -90,6 +90,44 @@ function ensureQuickProfileStyles() {
     }
     @media(max-width:760px){
       .attributeGrid{grid-template-columns:1fr}
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function ensureAllModeProfileStyles() {
+  if (document.getElementById("all-mode-profile-runtime-styles")) return;
+  const style = document.createElement("style");
+  style.id = "all-mode-profile-runtime-styles";
+  style.textContent = `
+    .miniProfileDetails{margin:5px 0;border:1px solid rgba(255,255,255,.075);border-radius:10px;background:rgba(4,9,16,.24);overflow:hidden}
+    .miniProfileDetails>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:7px;padding:2px 6px 2px 2px}
+    .miniProfileDetails>summary::-webkit-details-marker{display:none}
+    .miniProfileDetails .miniFighter{border:0!important;background:transparent!important;margin:0!important}
+    .miniProfileToggle{display:flex;align-items:center;gap:5px;color:#8291a9;font-size:.55rem;font-weight:950;letter-spacing:.07em;white-space:nowrap}
+    .miniProfileToggle b{font-size:.85rem;transition:transform .18s ease}
+    .miniProfileDetails[open] .miniProfileToggle b{transform:rotate(180deg)}
+    .miniProfileBody{padding:0 9px 9px}
+    .miniProfileBody .quickProfile{margin-top:5px;padding-top:8px}
+    .miniProfileBody .powerChip{font-size:.6rem;padding:4px 6px}
+    .miniProfileBody .attributeGrid{gap:7px 10px}
+    .miniProfileBody .attributeRow{padding:5px 6px}
+    .miniProfileBody .attributeSegments{height:8px;gap:2px}
+    .modeSelectionPreview{margin:8px 0 10px}
+    .selectionPreviewLabel{margin-bottom:5px;color:#7f8da4;font-size:.59rem;font-weight:1000;letter-spacing:.12em}
+    .setupTeamProfiles,.modeTeamProfiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .teamProfilesGroup{min-width:0;padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:11px;background:rgba(5,10,18,.28)}
+    .teamProfilesGroup.winningProfiles{border-color:rgba(100,240,209,.35);box-shadow:inset 0 0 0 1px rgba(100,240,209,.06)}
+    .teamProfilesTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;font-size:.65rem;font-weight:1000;letter-spacing:.09em;color:#dfe7f3}
+    .teamProfilesTitle span{padding:3px 6px;border-radius:999px;background:rgba(100,240,209,.12);color:#6af0d5;font-size:.53rem}
+    .multiTeamProfileGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+    .survivalCharacterHud{margin:10px 0}
+    .ladderRow .miniProfileDetails{min-width:0;margin:0}
+    .bracketMatch .miniProfileDetails{margin:0}
+    @media(max-width:760px){
+      .setupTeamProfiles,.modeTeamProfiles,.multiTeamProfileGrid{grid-template-columns:1fr}
+      .miniProfileDetails>summary{grid-template-columns:minmax(0,1fr)}
+      .miniProfileToggle{padding:0 8px 6px;justify-content:flex-end}
     }
   `;
   document.head.appendChild(style);
@@ -409,6 +447,7 @@ function populateSelectors() {
 
   if (!base.length) {
     updateRosterFilterSummary();
+  refreshModeSelectionPreviews();
     return;
   }
 
@@ -771,6 +810,63 @@ function miniFighter(c, {cost=false,image=true}={}) {
   </div>`;
 }
 
+
+function miniFighterProfile(c, {cost=false,image=true,open=false,accent=""}={}) {
+  if (!c) return "";
+  return `<details class="miniProfileDetails ${accent}" ${open ? "open" : ""}>
+    <summary>
+      <div class="miniProfileSummaryFighter">${miniFighter(c,{cost,image})}</div>
+      <span class="miniProfileToggle"><span>POWERS &amp; STATS</span><b>⌄</b></span>
+    </summary>
+    <div class="miniProfileBody">${renderQuickCard(c)}</div>
+  </details>`;
+}
+
+function teamProfilesHtml(label, team, winner=false) {
+  return `<div class="teamProfilesGroup ${winner ? "winningProfiles" : ""}">
+    <div class="teamProfilesTitle">${esc(label)}${winner ? `<span>WINNER</span>` : ""}</div>
+    <div class="teamProfilesList">${team.map(c=>miniFighterProfile(c)).join("")}</div>
+  </div>`;
+}
+
+function refreshModeSelectionPreviews() {
+  const gauntletPreview = $("gauntletPreview");
+  if (gauntletPreview) {
+    const c = fighterById($("gauntletChampion")?.value);
+    gauntletPreview.innerHTML = c
+      ? `<div class="selectionPreviewLabel">CHAMPION PROFILE</div>${miniFighterProfile(c,{open:false})}`
+      : "";
+  }
+
+  const teamPreview = $("teamPreview");
+  if (teamPreview) {
+    const size = Number($("teamSize")?.value || 2);
+    const a = Array.from({length:size},(_,i)=>fighterById($(`teamA${i+1}`)?.value)).filter(Boolean);
+    const b = Array.from({length:size},(_,i)=>fighterById($(`teamB${i+1}`)?.value)).filter(Boolean);
+    teamPreview.innerHTML = `<div class="selectionPreviewLabel">TEAM PROFILES</div>
+      <div class="setupTeamProfiles">
+        ${teamProfilesHtml("TEAM A",a)}
+        ${teamProfilesHtml("TEAM B",b)}
+      </div>`;
+  }
+
+  const draftPreview = $("draftPickPreview");
+  if (draftPreview) {
+    const c = fighterById($("draftPick")?.value);
+    draftPreview.innerHTML = c
+      ? `<div class="selectionPreviewLabel">AVAILABLE FIGHTER</div>${miniFighterProfile(c,{cost:true})}`
+      : "";
+  }
+
+  const survivalPreview = $("survivalPreview");
+  if (survivalPreview) {
+    const c = fighterById($("survivalFighter")?.value);
+    survivalPreview.innerHTML = c
+      ? `<div class="selectionPreviewLabel">CHARACTER PROFILE</div>${miniFighterProfile(c,{open:true})}`
+      : "";
+  }
+}
+
 function sourceHtml(sources=[]) {
   if (!sources.length) return "";
   return `<div class="sourcesWrap"><h3>Research sources</h3><div class="sources">${sources.map((s,i)=>
@@ -854,12 +950,12 @@ function renderGauntlet() {
     const result = s.results[i];
     const winner = result ? fighterById(result.verdict.winnerId) : null;
     const state = result ? (winner?.id === s.champion.id ? "cleared" : "lost") : i === s.index && !s.ended ? "current" : "pending";
-    return `<div class="ladderRow ${state}"><div class="roundNum">${i+1}</div>${miniFighter(opp)}<div class="ladderOutcome">${result ? `${esc(winner?.name || 'Winner')} • ${result.verdict.winnerProbability}%` : state === 'current' ? 'NEXT' : '—'}</div></div>`;
+    return `<div class="ladderRow ${state}"><div class="roundNum">${i+1}</div>${miniFighterProfile(opp)}<div class="ladderOutcome">${result ? `${esc(winner?.name || 'Winner')} • ${result.verdict.winnerProbability}%` : state === 'current' ? 'NEXT' : '—'}</div></div>`;
   }).join("");
   const completed = s.index >= s.opponents.length && !s.ended;
   const finalText = completed ? `${s.champion.name} CLEARS THE GAUNTLET` : s.ended ? `${s.champion.name} FALLS IN ROUND ${s.index+1}` : "";
   $("modeWorkspace").innerHTML = `<div class="modeResultCard">
-    <div class="modeResultHeader"><div><div class="eyebrow">GAUNTLET CHAMPION</div>${miniFighter(s.champion)}</div><div class="modeScore">${s.results.filter(r=>r.verdict.winnerId===s.champion.id).length}/${s.opponents.length}</div></div>
+    <div class="modeResultHeader"><div><div class="eyebrow">GAUNTLET CHAMPION</div>${miniFighterProfile(s.champion,{open:true})}</div><div class="modeScore">${s.results.filter(r=>r.verdict.winnerId===s.champion.id).length}/${s.opponents.length}</div></div>
     <div class="ladder">${rows}</div>
     ${finalText ? `<div class="modeFinal">${esc(finalText)}</div>` : `<button class="primary big" data-action="gauntlet-next">⚔ FIGHT NEXT OPPONENT</button>`}
     <p class="modeNote">Each gauntlet matchup uses the same AI battle judge. Fighters start each round fresh in this baseline version.</p>
@@ -913,7 +1009,7 @@ function currentTournamentMatch() {
 
 function renderTournament() {
   const s=tournamentState;if(!s)return;
-  const rounds=s.rounds.map((round,ri)=>`<div class="bracketRound"><h3>${roundLabel(s.size,ri,round.matches.length)}</h3>${round.matches.map(m=>`<div class="bracketMatch ${m.result?'resolved':''}"><div>${miniFighter(m.a)}</div><div class="bracketVs">VS</div><div>${miniFighter(m.b)}</div>${m.result?`<div class="matchWinner">✓ ${esc(m.winner.name)} • ${m.result.verdict.winnerProbability}%</div>`:""}</div>`).join("")}</div>`).join("");
+  const rounds=s.rounds.map((round,ri)=>`<div class="bracketRound"><h3>${roundLabel(s.size,ri,round.matches.length)}</h3>${round.matches.map(m=>`<div class="bracketMatch ${m.result?'resolved':''}"><div>${miniFighterProfile(m.a)}</div><div class="bracketVs">VS</div><div>${miniFighterProfile(m.b)}</div>${m.result?`<div class="matchWinner">✓ ${esc(m.winner.name)} • ${m.result.verdict.winnerProbability}%</div>`:""}</div>`).join("")}</div>`).join("");
   $("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="modeResultHeader"><div><div class="eyebrow">TOURNAMENT</div><h2>${s.champion?`${esc(s.champion.name)} IS CHAMPION`:`${s.size}-FIGHTER BRACKET`}</h2></div>${s.champion?`<div class="championBadge">🏆</div>`:""}</div><div class="bracket">${rounds}</div>${!s.champion?`<button class="primary big" data-action="tournament-next">⚔ RESOLVE NEXT MATCH</button>`:""}<p class="modeNote">Baseline tournament resolves one matchup at a time so you can watch the bracket develop and avoid a long all-at-once wait.</p></div>`;
 }
 
@@ -950,7 +1046,10 @@ async function callTeamJudge(teamA,teamB) {
 
 function teamResultCardHtml(result,teamA,teamB,title="TEAM BATTLE") {
   const v=result.verdict; const win=v.winnerTeam==="A"?teamA:teamB;
-  return `<div class="modeResultCard"><div class="verdictTop"><div><div class="eyebrow">${esc(title)}</div><h2>TEAM ${v.winnerTeam} WINS</h2><div class="pill">${esc(v.difficulty)}</div></div><div class="oddsBox"><div class="pct">${v.winnerProbability}%</div><div class="oddsLabel">estimated win rate</div></div></div><div class="oddsTrack"><div style="width:${v.winnerProbability}%"></div></div><p class="headline">${esc(v.headline)}</p><div class="winningTeam">${win.map(c=>miniFighter(c)).join("")}</div>${genericDetails("Full Team Analysis",v.analysis,[{title:"Case for Team A",items:v.caseForA},{title:"Case for Team B",items:v.caseForB},{title:"Deciding factors",items:v.decidingFactors}],`<div class="factorBox"><p><strong>Swing factor:</strong> ${esc(v.swingFactor)}</p><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}</div>`;
+  return `<div class="modeResultCard"><div class="verdictTop"><div><div class="eyebrow">${esc(title)}</div><h2>TEAM ${v.winnerTeam} WINS</h2><div class="pill">${esc(v.difficulty)}</div></div><div class="oddsBox"><div class="pct">${v.winnerProbability}%</div><div class="oddsLabel">estimated win rate</div></div></div><div class="oddsTrack"><div style="width:${v.winnerProbability}%"></div></div><p class="headline">${esc(v.headline)}</p><div class="modeTeamProfiles">
+      ${teamProfilesHtml("TEAM A",teamA,v.winnerTeam==="A")}
+      ${teamProfilesHtml("TEAM B",teamB,v.winnerTeam==="B")}
+    </div>${genericDetails("Full Team Analysis",v.analysis,[{title:"Case for Team A",items:v.caseForA},{title:"Case for Team B",items:v.caseForB},{title:"Deciding factors",items:v.decidingFactors}],`<div class="factorBox"><p><strong>Swing factor:</strong> ${esc(v.swingFactor)}</p><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}</div>`;
 }
 
 function renderTeamResult(result,teamA,teamB,title="TEAM BATTLE") {
@@ -972,7 +1071,7 @@ function draftAvailable(side,c){return draftState[side].length<3 && draftSpent(s
 function addDraft(side){const c=fighterById($("draftPick").value);if(!c)return;if(!draftAvailable(side,c)){alert("That pick is unavailable, over budget, already drafted, or the team already has 3 fighters.");return;}draftState[side].push(c);renderDraft();}
 function resetDraft(){draftState={A:[],B:[],budget:12};renderDraft();}
 function renderDraft(){
-  const block=side=>`<div class="draftTeam"><h3>Team ${side} <span>${draftState.budget-draftSpent(side)} pts left</span></h3>${draftState[side].length?draftState[side].map(c=>miniFighter(c,{cost:true})).join(""):`<div class="draftEmpty">No picks yet</div>`}</div>`;
+  const block=side=>`<div class="draftTeam"><h3>Team ${side} <span>${draftState.budget-draftSpent(side)} pts left</span></h3>${draftState[side].length?draftState[side].map(c=>miniFighterProfile(c,{cost:true})).join(""):`<div class="draftEmpty">No picks yet</div>`}</div>`;
   const canFight=draftState.A.length&&draftState.B.length;
   $("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="draftBoard">${block('A')}${block('B')}</div>${canFight?`<button class="primary big" data-action="draft-fight">👥 FIGHT DRAFTED TEAMS</button>`:""}<p class="modeNote">Cost = power tier. Budget 12 each. Maximum 3 fighters per side. One character cannot be drafted twice.</p></div>`;
 }
@@ -1084,7 +1183,7 @@ function liveDraftTeamHtml(room,side){
       <span class="budgetLeft">${left} pts left</span>
     </h3>
     ${!joined?`<div class="playerWaiting">Waiting for Player ${liveSides(room).indexOf(side)+1}…</div>`:
-      team.length?team.map(c=>miniFighter(c,{cost:true})).join(""):`<div class="draftEmpty">No picks yet</div>`}
+      team.length?team.map(c=>miniFighterProfile(c,{cost:true})).join(""):`<div class="draftEmpty">No picks yet</div>`}
   </div>`;
 }
 
@@ -1128,7 +1227,9 @@ function multiplayerResultCardHtml(result,room,title="MULTIPLAYER SHOWDOWN"){
       <div class="oddsBox"><div class="pct">${v.winnerProbability}%</div><div class="oddsLabel">winner chance</div></div>
     </div>
     <p class="headline">${esc(v.headline)}</p>
-    <div class="winningTeam">${winningTeam.map(c=>miniFighter(c)).join("")}</div>
+    <div class="multiTeamProfileGrid">
+      ${sides.map(side=>teamProfilesHtml(`TEAM ${side}`,teams[side]||[],side===v.winnerTeam)).join("")}
+    </div>
     <div class="multiOdds">${probHtml}</div>
     ${genericDetails("Full Multiplayer Analysis",v.analysis,[...cases,{title:"Deciding factors",items:v.decidingFactors||[]}],`<div class="factorBox"><p><strong>Swing factor:</strong> ${esc(v.swingFactor)}</p><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}
   </div>`;
@@ -1348,7 +1449,7 @@ const SCENARIOS={
 };
 function scenarioText(){const p=$("scenarioPreset").value;return p==="custom"?$("customScenario").value.trim():SCENARIOS[p];}
 async function runSurvival(){const fighter=fighterById($("survivalFighter").value),scenario=scenarioText();if(!fighter||!scenario){alert("Choose a fighter and describe the scenario.");return;}setLoading(true,"Researching survival scenario…","Checking the character's exact version and the threats they would face.");try{const r=await fetch("/api/scenario-judge",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({fighter,scenario,settings:settings()})});const result=await r.json().catch(()=>({}));if(!r.ok)throw new Error(result.error||`Scenario judge failed (${r.status})`);renderSurvivalResult(result,fighter,scenario);}catch(err){console.error(err);alert(`Survival scenario failed: ${err.message}`);}finally{setLoading(false);}}
-function renderSurvivalResult(result,fighter,scenario){const v=result.verdict;$("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="modeResultHeader"><div><div class="eyebrow">CAN THEY SURVIVE?</div><h2>${esc(fighter.name)} ${v.survives?'SURVIVES':'DOES NOT SURVIVE'}</h2><div class="pill">${esc(v.difficulty)}</div></div><div class="oddsBox"><div class="pct">${v.survivalProbability}%</div><div class="oddsLabel">survival chance</div></div></div><p class="scenarioQuote">${esc(scenario)}</p><div class="oddsTrack"><div style="width:${v.survivalProbability}%"></div></div><p class="headline">${esc(v.headline)}</p>${genericDetails("Full Survival Analysis",v.analysis,[{title:"Advantages",items:v.keyAdvantages},{title:"Major threats",items:v.keyThreats},{title:"How they survive",items:v.winConditions},{title:"How they fail",items:v.failureConditions}],`<div class="factorBox"><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}</div>`;}
+function renderSurvivalResult(result,fighter,scenario){const v=result.verdict;$("modeWorkspace").innerHTML=`<div class="modeResultCard"><div class="modeResultHeader"><div><div class="eyebrow">CAN THEY SURVIVE?</div><h2>${esc(fighter.name)} ${v.survives?'SURVIVES':'DOES NOT SURVIVE'}</h2><div class="pill">${esc(v.difficulty)}</div></div><div class="oddsBox"><div class="pct">${v.survivalProbability}%</div><div class="oddsLabel">survival chance</div></div></div><div class="survivalCharacterHud">${miniFighterProfile(fighter,{open:true})}</div><p class="scenarioQuote">${esc(scenario)}</p><div class="oddsTrack"><div style="width:${v.survivalProbability}%"></div></div><p class="headline">${esc(v.headline)}</p>${genericDetails("Full Survival Analysis",v.analysis,[{title:"Advantages",items:v.keyAdvantages},{title:"Major threats",items:v.keyThreats},{title:"How they survive",items:v.winConditions},{title:"How they fail",items:v.failureConditions}],`<div class="factorBox"><p class="small"><strong>Assumptions:</strong> ${esc(v.assumptions)}</p></div>`,result.sources||[])}</div>`;}
 
 async function checkHealth() {
   try {
@@ -1441,7 +1542,17 @@ $("shareBtn").onclick=async()=>{const btn=$("shareBtn"),old=btn.textContent;btn.
 $("startGauntletBtn").onclick=startGauntlet;
 $("startTournamentBtn").onclick=startTournament;
 $("teamFightBtn").onclick=()=>runTeamBattle();
-$("teamSize").onchange=()=>document.querySelectorAll(".teamThird").forEach(el=>el.classList.toggle("hidden",$("teamSize").value==="2"));
+$("teamSize").onchange=()=>{
+  document.querySelectorAll(".teamThird").forEach(el=>el.classList.toggle("hidden",$("teamSize").value==="2"));
+  refreshModeSelectionPreviews();
+};
+
+["gauntletChampion","teamA1","teamA2","teamA3","teamB1","teamB2","teamB3","draftPick","survivalFighter"]
+  .forEach(id=>{
+    const el=$(id);
+    if(el) el.addEventListener("change",refreshModeSelectionPreviews);
+  });
+
 $("draftToA").onclick=()=>addDraft("A");
 $("draftToB").onclick=()=>addDraft("B");
 $("draftReset").onclick=resetDraft;
@@ -1470,6 +1581,7 @@ $("liveDraftActive").oninput=e=>{
 
 ensureAvatarStyles();
 ensureQuickProfileStyles();
+ensureAllModeProfileStyles();
 $("rosterScope").value = rosterScope;
 populateFranchiseFilter();
 $("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters • 164 comics • 146 movie/TV • 40 games`;

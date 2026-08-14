@@ -692,3 +692,171 @@ header{
 @media(max-width:760px){
   .attributeGrid{grid-template-columns:1fr}
 }
+
+
+/* v3.8 — powers + HUD attributes across every game mode */
+.miniProfileDetails{
+  margin:5px 0;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:10px;
+  background:rgba(4,9,16,.24);
+  overflow:hidden;
+}
+
+.miniProfileDetails>summary{
+  list-style:none;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  padding:2px 6px 2px 2px;
+}
+
+.miniProfileDetails>summary::-webkit-details-marker{display:none}
+
+.miniProfileDetails .miniFighter{
+  border:0!important;
+  background:transparent!important;
+  margin:0!important;
+}
+
+.miniProfileToggle{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  color:#8291a9;
+  font-size:.55rem;
+  font-weight:950;
+  letter-spacing:.07em;
+  white-space:nowrap;
+}
+
+.miniProfileToggle b{
+  font-size:.85rem;
+  transition:transform .18s ease;
+}
+
+.miniProfileDetails[open] .miniProfileToggle b{
+  transform:rotate(180deg);
+}
+
+.miniProfileBody{
+  padding:0 9px 9px;
+}
+
+.miniProfileBody .quickProfile{
+  margin-top:5px;
+  padding-top:8px;
+}
+
+.miniProfileBody .powerChip{
+  font-size:.6rem;
+  padding:4px 6px;
+}
+
+.miniProfileBody .attributeGrid{
+  gap:7px 10px;
+}
+
+.miniProfileBody .attributeRow{
+  padding:5px 6px;
+}
+
+.miniProfileBody .attributeSegments{
+  height:8px;
+  gap:2px;
+}
+
+.modeSelectionPreview{
+  margin:8px 0 10px;
+}
+
+.compactSelectionPreview{
+  max-width:680px;
+}
+
+.selectionPreviewLabel{
+  margin-bottom:5px;
+  color:#7f8da4;
+  font-size:.59rem;
+  font-weight:1000;
+  letter-spacing:.12em;
+}
+
+.setupTeamProfiles,
+.modeTeamProfiles{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.teamProfilesGroup{
+  min-width:0;
+  padding:8px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:11px;
+  background:rgba(5,10,18,.28);
+}
+
+.teamProfilesGroup.winningProfiles{
+  border-color:rgba(100,240,209,.35);
+  box-shadow:inset 0 0 0 1px rgba(100,240,209,.06);
+}
+
+.teamProfilesTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:5px;
+  font-size:.65rem;
+  font-weight:1000;
+  letter-spacing:.09em;
+  color:#dfe7f3;
+}
+
+.teamProfilesTitle span{
+  padding:3px 6px;
+  border-radius:999px;
+  background:rgba(100,240,209,.12);
+  color:#6af0d5;
+  font-size:.53rem;
+}
+
+.multiTeamProfileGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:10px 0;
+}
+
+.survivalCharacterHud{
+  margin:10px 0;
+}
+
+.ladderRow .miniProfileDetails{
+  min-width:0;
+  margin:0;
+}
+
+.bracketMatch .miniProfileDetails{
+  margin:0;
+}
+
+@media(max-width:760px){
+  .setupTeamProfiles,
+  .modeTeamProfiles,
+  .multiTeamProfileGrid{
+    grid-template-columns:1fr;
+  }
+
+  .miniProfileDetails>summary{
+    grid-template-columns:minmax(0,1fr);
+  }
+
+  .miniProfileToggle{
+    padding:0 8px 6px;
+    justify-content:flex-end;
+  }
+}

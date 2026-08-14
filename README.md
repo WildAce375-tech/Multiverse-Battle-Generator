@@ -429,3 +429,24 @@ Character quick cards now use a proper game-style presentation:
   so browser/static CSS caching cannot strip the visual HUD formatting
 
 The ratings remain display-only and do not alter the battle judge.
+
+
+## v3.8 — HUD profiles in every game mode
+
+The Powers + 10-segment attribute HUD is now available throughout the site.
+
+- Versus: remains fully visible on both fighter cards
+- Gauntlet: champion and every opponent have Powers & Stats expanders
+- Tournament: every bracket fighter has a Powers & Stats expander
+- Team Battle: setup previews and post-battle profiles for both teams
+- Local Draft: available-fighter preview and profiles for every drafted fighter
+- Live Draft: every drafted team member has an expandable profile
+- Multiplayer result: all teams can be inspected, not only the winning team
+- Survival: selected character profile is visible during setup and open in the result
+
+To keep large brackets and drafts readable, multi-fighter modes use collapsed
+`POWERS & STATS` panels. Opening one reveals the same powers and seven HUD bars
+used in Versus.
+
+The 350-row Live Draft *available roster* intentionally remains lightweight for
+performance; once a fighter is drafted, their full expandable HUD is available.
