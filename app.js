@@ -159,7 +159,7 @@ function populateFranchiseFilter({preferred=rosterFranchise}={}) {
   rosterFranchise = validPreferred;
 
   select.innerHTML =
-    `<option value="all">All franchises — ${list.length}</option>` +
+    `<option value="all">All franchises</option>` +
     franchises.map(f => `<option value="${esc(f)}">${esc(f)} — ${counts.get(f)}</option>`).join("");
   select.value = rosterFranchise;
 }
@@ -171,9 +171,9 @@ function updateRosterFilterSummary() {
   if (!summary) return;
 
   if (rosterSearch.trim()) {
-    summary.textContent = `${matches.length} matching • ${base.length} in ${rosterFranchiseLabel()}`;
+    summary.textContent = `${matches.length} matching`;
   } else {
-    summary.textContent = `${base.length} fighters • ${rosterScopeLabel()} • ${rosterFranchiseLabel()}`;
+    summary.textContent = `${base.length} fighters available`;
   }
 }
 

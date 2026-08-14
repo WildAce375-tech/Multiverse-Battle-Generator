@@ -381,3 +381,14 @@ Important behavior:
 - Reduced vertical padding and spacing around the filter controls
 - Shortened helper text
 - All three-stage filtering behavior remains unchanged
+
+
+## v3.5 — One-line filter bar
+
+- Source → Franchise → Search are on one horizontal row on desktop
+- Filter labels are larger and easier to read
+- Match count moved directly beneath Search
+- Search result text shortened to `X matching`
+- Removed the redundant count from `All franchises`
+- MULTIVERSE now uses a cyan / blue / purple / teal gradient
+- BATTLE remains clean white

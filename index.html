@@ -12,7 +12,7 @@
   <main class="shell">
     <header class="hero">
       <div class="eyebrow">FAN-MADE VERSUS ENGINE</div>
-      <h1>MULTIVERSE BATTLE</h1>
+      <h1 class="mainTitle"><span class="multiverseWord">MULTIVERSE</span> <span class="battleWord">BATTLE</span></h1>
       <p>Exact versions. AI-researched rulings. Classic fights plus gauntlets, tournaments, teams, drafts and survival scenarios.</p>
       <div class="statusRow">
         <span id="aiStatus" class="status">Checking AI judge…</span>
@@ -31,17 +31,9 @@
       </nav>
 
       <div class="rosterFilterBar">
-        <div class="rosterFilterTop">
-          <div>
-            <span class="eyebrow">ROSTER</span>
-            <span class="rosterFilterHint">Filter the roster, then pick your fighters.</span>
-          </div>
-          <span id="rosterFilterSummary" class="rosterFilterSummary">350 fighters available</span>
-        </div>
-
-        <div class="rosterFilterGrid">
-          <label>
-            Source
+        <div class="rosterFilterGrid rosterFilterGridOneLine">
+          <label class="filterField">
+            <span class="filterLabel">Source</span>
             <select id="rosterScope" aria-label="Roster source">
               <option value="all">Everything — 350</option>
               <option value="comics">Comics — 164</option>
@@ -50,19 +42,24 @@
             </select>
           </label>
 
-          <label>
-            Franchise
+          <div class="filterArrow" aria-hidden="true">›</div>
+
+          <label class="filterField">
+            <span class="filterLabel">Franchise</span>
             <select id="rosterFranchise" aria-label="Universe or franchise">
               <option value="all">All franchises</option>
             </select>
           </label>
 
-          <label>
-            Search
+          <div class="filterArrow" aria-hidden="true">›</div>
+
+          <label class="filterField searchField">
+            <span class="filterLabel">Search</span>
             <div class="rosterSearchWrap">
               <input id="rosterSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Batman, Venom, Atom Eve…">
               <button id="clearRosterSearch" class="clearSearchBtn" type="button" aria-label="Clear character search">×</button>
             </div>
+            <span id="rosterFilterSummary" class="rosterFilterSummary rosterFilterSummaryUnderSearch">350 fighters available</span>
           </label>
         </div>
       </div>
@@ -215,6 +212,6 @@
 
     <footer>Fan-made, noncommercial discussion tool. Not affiliated with Marvel, DC, Disney, Warner Bros., or other rights holders. Character names, images and trademarks remain the property of their respective owners. Fictional-versus outcomes are subjective estimates, not canon.</footer>
   </main>
-  <script type="module" src="/app.js?v=compact-ui-3.4"></script>
+  <script type="module" src="/app.js?v=one-line-filter-3.5"></script>
 </body>
 </html>

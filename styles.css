@@ -363,3 +363,113 @@ header h1{
 header{
   padding-top:min(12px,2vw);
 }
+
+
+/* v3.5 — compact one-line Source → Franchise → Search */
+.rosterFilterBar{
+  margin:5px 0 10px;
+  padding:8px 10px;
+}
+
+.rosterFilterGridOneLine{
+  display:grid !important;
+  grid-template-columns:minmax(170px,.9fr) 20px minmax(185px,1fr) 20px minmax(260px,1.35fr) !important;
+  gap:7px !important;
+  align-items:start;
+}
+
+.filterField{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+
+.filterLabel{
+  font-size:.82rem;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.025em;
+  color:#f0f4fb;
+}
+
+.filterArrow{
+  align-self:center;
+  padding-top:24px;
+  color:var(--muted);
+  font-size:1.45rem;
+  font-weight:900;
+  line-height:1;
+}
+
+.rosterFilterGridOneLine select,
+.rosterFilterGridOneLine #rosterSearch{
+  min-height:38px;
+  font-size:.83rem;
+}
+
+.rosterFilterGridOneLine .rosterSearchWrap{
+  grid-template-columns:1fr 38px;
+  gap:5px;
+}
+
+.rosterFilterSummaryUnderSearch{
+  display:block;
+  width:auto;
+  margin:1px 0 0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--cyan);
+  font-size:.72rem;
+  font-weight:850;
+  line-height:1.1;
+  white-space:normal;
+}
+
+/* One-line masthead with a cool-color MULTIVERSE gradient. */
+.mainTitle{
+  white-space:nowrap;
+  font-size:clamp(1.25rem,3vw,2rem);
+  line-height:1;
+  margin-bottom:3px;
+  letter-spacing:.045em;
+}
+
+.multiverseWord{
+  display:inline-block;
+  background:linear-gradient(90deg,#62e8ff 0%,#699cff 25%,#8b7cff 48%,#c46cff 70%,#64f0d0 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:none;
+  filter:drop-shadow(0 0 8px rgba(111,156,255,.28));
+}
+
+.battleWord{
+  color:#f5f7fb;
+}
+
+@media(max-width:820px){
+  .rosterFilterGridOneLine{
+    grid-template-columns:1fr 16px 1fr !important;
+  }
+  .rosterFilterGridOneLine .searchField{
+    grid-column:1/-1;
+  }
+  .rosterFilterGridOneLine .filterArrow:nth-of-type(2){
+    display:none;
+  }
+}
+
+@media(max-width:560px){
+  .rosterFilterGridOneLine{
+    grid-template-columns:1fr !important;
+  }
+  .rosterFilterGridOneLine .filterArrow{
+    display:none;
+  }
+  .mainTitle{
+    font-size:clamp(1rem,5.4vw,1.35rem);
+  }
+}
