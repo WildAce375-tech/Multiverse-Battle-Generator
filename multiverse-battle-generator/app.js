@@ -116,7 +116,9 @@ function optionLabel(c) {
 
 function sortedCharacters(scope=rosterScope) {
   return [...eligibleCharacters(scope)].sort((a,b) =>
-    a.franchise.localeCompare(b.franchise) || a.name.localeCompare(b.name) || a.version.localeCompare(b.version)
+    a.name.localeCompare(b.name) ||
+    a.version.localeCompare(b.version) ||
+    a.franchise.localeCompare(b.franchise)
   );
 }
 

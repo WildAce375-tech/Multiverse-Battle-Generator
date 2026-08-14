@@ -173,3 +173,11 @@ The global Roster Source filter now includes **Video Games only** in addition to
 Live Draft freezes and server-enforces all four roster-source choices.
 
 Portrait lookup was also generalized: any fighter without a hand-curated portrait source now automatically searches Wikipedia using the fighter name + franchise, while preserving initials as the safe fallback if no suitable image is found.
+
+
+## v2.5 — Alphabetical character selectors
+
+All character lists now sort globally by character name A–Z.
+If multiple versions of the same character exist, they are sorted by version after the name.
+
+Applies to Versus, Team Battle, Gauntlet, Survival, Local Draft, and Live Draft.
