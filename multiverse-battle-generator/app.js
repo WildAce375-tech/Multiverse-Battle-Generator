@@ -1155,7 +1155,7 @@ $("liveDraftActive").oninput=e=>{
 
 ensureAvatarStyles();
 $("rosterScope").value = rosterScope;
-$("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters • 34 comics • 55 movie/TV`;
+$("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters • 123 comics • 106 movie/TV • 40 games`;
 renderArena();
 populateSelectors();
 resetDraft();

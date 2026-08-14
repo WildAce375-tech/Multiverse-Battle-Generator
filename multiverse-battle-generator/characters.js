@@ -1740,406 +1740,6 @@ export const CHARACTERS = [
     "traits": "dual lightsabers, Force abilities, assassination, agility"
   },
   {
-    "id": "db_goku",
-    "name": "Goku",
-    "version": "Dragon Ball Super anime — standard late-series combat portrayal",
-    "franchise": "Dragon Ball",
-    "medium": "Movie/TV",
-    "tier": 7,
-    "tierName": "Reality Warper",
-    "traits": "Saiyan power, ki blasts, Ultra Instinct access, flight, extreme speed"
-  },
-  {
-    "id": "db_vegeta",
-    "name": "Vegeta",
-    "version": "Dragon Ball Super anime — standard late-series combat portrayal",
-    "franchise": "Dragon Ball",
-    "medium": "Movie/TV",
-    "tier": 7,
-    "tierName": "Reality Warper",
-    "traits": "Saiyan power, ki blasts, Ultra Ego-era abilities, flight, extreme speed"
-  },
-  {
-    "id": "db_frieza",
-    "name": "Frieza",
-    "version": "Dragon Ball Super anime — standard modern combat portrayal",
-    "franchise": "Dragon Ball",
-    "medium": "Movie/TV",
-    "tier": 7,
-    "tierName": "Reality Warper",
-    "traits": "ki attacks, transformations, flight, extreme durability, speed"
-  },
-  {
-    "id": "db_piccolo",
-    "name": "Piccolo",
-    "version": "Dragon Ball Super/Super Hero anime-film continuity — Orange Piccolo available",
-    "franchise": "Dragon Ball",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "ki attacks, regeneration, giant form, flight, tactical skill"
-  },
-  {
-    "id": "db_gohan",
-    "name": "Gohan",
-    "version": "Dragon Ball Super: Super Hero — Beast Gohan available",
-    "franchise": "Dragon Ball",
-    "medium": "Movie/TV",
-    "tier": 7,
-    "tierName": "Reality Warper",
-    "traits": "ki attacks, Beast transformation, flight, extreme speed and power"
-  },
-  {
-    "id": "db_broly",
-    "name": "Broly",
-    "version": "Dragon Ball Super: Broly film — standard peak shown portrayal",
-    "franchise": "Dragon Ball",
-    "medium": "Movie/TV",
-    "tier": 7,
-    "tierName": "Reality Warper",
-    "traits": "rapid power growth, Saiyan transformations, ki attacks, extreme durability"
-  },
-  {
-    "id": "naruto_naruto",
-    "name": "Naruto Uzumaki",
-    "version": "Naruto Shippuden anime — end-of-series standard peak",
-    "franchise": "Naruto",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "chakra, shadow clones, Rasengan, Sage abilities, Kurama power"
-  },
-  {
-    "id": "naruto_sasuke",
-    "name": "Sasuke Uchiha",
-    "version": "Naruto Shippuden anime — end-of-series standard peak",
-    "franchise": "Naruto",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "Sharingan/Rinnegan, lightning, fire, Susanoo, space-time techniques"
-  },
-  {
-    "id": "naruto_kakashi",
-    "name": "Kakashi Hatake",
-    "version": "Naruto Shippuden anime — standard war-era portrayal, no temporary DMS amp",
-    "franchise": "Naruto",
-    "medium": "Movie/TV",
-    "tier": 4,
-    "tierName": "Heavyweight",
-    "traits": "Sharingan, ninjutsu, lightning blade, tactics, clones"
-  },
-  {
-    "id": "naruto_madara",
-    "name": "Madara Uchiha",
-    "version": "Naruto Shippuden anime — Ten-Tails jinchuriki combat portrayal",
-    "franchise": "Naruto",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "Rinnegan, Susanoo, Limbo, regeneration, massive ninjutsu"
-  },
-  {
-    "id": "naruto_itachi",
-    "name": "Itachi Uchiha",
-    "version": "Naruto Shippuden anime — healthy hypothetical standard toolkit",
-    "franchise": "Naruto",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "Mangekyo Sharingan, genjutsu, Amaterasu, Susanoo, tactics"
-  },
-  {
-    "id": "op_luffy",
-    "name": "Monkey D. Luffy",
-    "version": "One Piece anime — Gear 5 era",
-    "franchise": "One Piece",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "Gear 5, Haki, rubber physiology, extreme endurance, combat creativity"
-  },
-  {
-    "id": "op_zoro",
-    "name": "Roronoa Zoro",
-    "version": "One Piece anime — current standard three-sword style",
-    "franchise": "One Piece",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "swordsmanship, Haki, extreme strength, endurance"
-  },
-  {
-    "id": "op_sanji",
-    "name": "Sanji",
-    "version": "One Piece anime — current standard awakened modifications",
-    "franchise": "One Piece",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "extreme speed, kicks, Ifrit Jambe, durability, observation Haki"
-  },
-  {
-    "id": "op_kaido",
-    "name": "Kaido",
-    "version": "One Piece anime — Wano peak",
-    "franchise": "One Piece",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "dragon transformation, Haki, elemental breath, extreme durability"
-  },
-  {
-    "id": "op_shanks",
-    "name": "Shanks",
-    "version": "One Piece anime — standard current portrayal",
-    "franchise": "One Piece",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "elite Haki, swordsmanship, intimidation, extreme speed"
-  },
-  {
-    "id": "bleach_ichigo",
-    "name": "Ichigo Kurosaki",
-    "version": "Bleach: Thousand-Year Blood War anime — peak standard form",
-    "franchise": "Bleach",
-    "medium": "Movie/TV",
-    "tier": 7,
-    "tierName": "Reality Warper",
-    "traits": "spiritual power, Bankai, Getsuga attacks, extreme speed"
-  },
-  {
-    "id": "bleach_aizen",
-    "name": "Sosuke Aizen",
-    "version": "Bleach anime — evolved post-Hogyoku standard",
-    "franchise": "Bleach",
-    "medium": "Movie/TV",
-    "tier": 7,
-    "tierName": "Reality Warper",
-    "traits": "perfect hypnosis, regeneration, spiritual pressure, kido, intelligence"
-  },
-  {
-    "id": "bleach_rukia",
-    "name": "Rukia Kuchiki",
-    "version": "Bleach: Thousand-Year Blood War anime — Bankai available",
-    "franchise": "Bleach",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "ice Zanpakuto, Bankai, flash step, kido"
-  },
-  {
-    "id": "jjk_gojo",
-    "name": "Satoru Gojo",
-    "version": "Jujutsu Kaisen anime — standard peak, Domain Expansion available",
-    "franchise": "Jujutsu Kaisen",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "Infinity, Six Eyes, Limitless, Hollow Purple, Domain Expansion"
-  },
-  {
-    "id": "jjk_sukuna",
-    "name": "Ryomen Sukuna",
-    "version": "Jujutsu Kaisen anime — peak animated standard portrayal",
-    "franchise": "Jujutsu Kaisen",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "slashing techniques, Domain Expansion, regeneration, cursed energy"
-  },
-  {
-    "id": "jjk_yuji",
-    "name": "Yuji Itadori",
-    "version": "Jujutsu Kaisen anime — current animated standard",
-    "franchise": "Jujutsu Kaisen",
-    "medium": "Movie/TV",
-    "tier": 4,
-    "tierName": "Heavyweight",
-    "traits": "superhuman physicals, cursed energy, Black Flash, martial arts"
-  },
-  {
-    "id": "jjk_toji",
-    "name": "Toji Fushiguro",
-    "version": "Jujutsu Kaisen anime — standard full arsenal",
-    "franchise": "Jujutsu Kaisen",
-    "medium": "Movie/TV",
-    "tier": 3,
-    "tierName": "Superhuman",
-    "traits": "Heavenly Restriction, extreme speed, cursed tools, stealth, tactics"
-  },
-  {
-    "id": "ds_tanjiro",
-    "name": "Tanjiro Kamado",
-    "version": "Demon Slayer anime — standard late-series animated portrayal",
-    "franchise": "Demon Slayer",
-    "medium": "Movie/TV",
-    "tier": 3,
-    "tierName": "Superhuman",
-    "traits": "Sun/Water Breathing, swordsmanship, heightened senses, endurance"
-  },
-  {
-    "id": "ds_nezuko",
-    "name": "Nezuko Kamado",
-    "version": "Demon Slayer anime — standard demon combat portrayal",
-    "franchise": "Demon Slayer",
-    "medium": "Movie/TV",
-    "tier": 3,
-    "tierName": "Superhuman",
-    "traits": "regeneration, demon strength, blood flames, size change"
-  },
-  {
-    "id": "ds_rengoku",
-    "name": "Kyojuro Rengoku",
-    "version": "Demon Slayer anime — Mugen Train peak",
-    "franchise": "Demon Slayer",
-    "medium": "Movie/TV",
-    "tier": 3,
-    "tierName": "Superhuman",
-    "traits": "Flame Breathing, swordsmanship, speed, endurance"
-  },
-  {
-    "id": "ds_muzan",
-    "name": "Muzan Kibutsuji",
-    "version": "Demon Slayer anime — standard peak demon portrayal",
-    "franchise": "Demon Slayer",
-    "medium": "Movie/TV",
-    "tier": 4,
-    "tierName": "Heavyweight",
-    "traits": "extreme regeneration, shapeshifting, toxic attacks, multi-limb strikes"
-  },
-  {
-    "id": "mha_deku",
-    "name": "Izuku Midoriya",
-    "version": "My Hero Academia anime — late-series One For All toolkit",
-    "franchise": "My Hero Academia",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "One For All, enhanced speed/strength, Blackwhip, Danger Sense, mobility"
-  },
-  {
-    "id": "mha_bakugo",
-    "name": "Katsuki Bakugo",
-    "version": "My Hero Academia anime — late-series standard",
-    "franchise": "My Hero Academia",
-    "medium": "Movie/TV",
-    "tier": 4,
-    "tierName": "Heavyweight",
-    "traits": "explosions, flight-like mobility, speed, combat instincts"
-  },
-  {
-    "id": "mha_all_might",
-    "name": "All Might",
-    "version": "My Hero Academia anime — prime hypothetical portrayal",
-    "franchise": "My Hero Academia",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "One For All strength, speed, shockwaves, durability"
-  },
-  {
-    "id": "mha_shigaraki",
-    "name": "Tomura Shigaraki",
-    "version": "My Hero Academia anime — enhanced late-series portrayal",
-    "franchise": "My Hero Academia",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "Decay, enhanced physicals, regeneration, multiple quirks"
-  },
-  {
-    "id": "aot_eren",
-    "name": "Eren Yeager",
-    "version": "Attack on Titan anime — Founding Titan endgame portrayal",
-    "franchise": "Attack on Titan",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "Founding Titan, Titan transformation, regeneration, War Hammer abilities"
-  },
-  {
-    "id": "aot_levi",
-    "name": "Levi Ackerman",
-    "version": "Attack on Titan anime — prime standard ODM loadout",
-    "franchise": "Attack on Titan",
-    "medium": "Movie/TV",
-    "tier": 2,
-    "tierName": "Enhanced",
-    "traits": "Ackerman physicals, ODM mobility, blades, precision, experience"
-  },
-  {
-    "id": "aot_mikasa",
-    "name": "Mikasa Ackerman",
-    "version": "Attack on Titan anime — prime standard ODM loadout",
-    "franchise": "Attack on Titan",
-    "medium": "Movie/TV",
-    "tier": 2,
-    "tierName": "Enhanced",
-    "traits": "Ackerman physicals, ODM mobility, blades, combat skill"
-  },
-  {
-    "id": "opm_saitama",
-    "name": "Saitama",
-    "version": "One-Punch Man anime — standard serious-combat portrayal",
-    "franchise": "One-Punch Man",
-    "medium": "Movie/TV",
-    "tier": 7,
-    "tierName": "Reality Warper",
-    "traits": "overwhelming strength, speed, durability, shockwaves"
-  },
-  {
-    "id": "opm_genos",
-    "name": "Genos",
-    "version": "One-Punch Man anime — upgraded standard combat body",
-    "franchise": "One-Punch Man",
-    "medium": "Movie/TV",
-    "tier": 5,
-    "tierName": "Planetary+",
-    "traits": "cyborg strength, incineration cannons, flight bursts, sensors"
-  },
-  {
-    "id": "opm_garou",
-    "name": "Garou",
-    "version": "One-Punch Man anime — peak animated monster portrayal",
-    "franchise": "One-Punch Man",
-    "medium": "Movie/TV",
-    "tier": 6,
-    "tierName": "Cosmic",
-    "traits": "martial arts adaptation, extreme speed, strength, evolution"
-  },
-  {
-    "id": "hxh_gon",
-    "name": "Gon Freecss",
-    "version": "Hunter x Hunter anime — standard Nen combat portrayal",
-    "franchise": "Hunter x Hunter",
-    "medium": "Movie/TV",
-    "tier": 3,
-    "tierName": "Superhuman",
-    "traits": "Nen enhancement, Jajanken, strength, instincts"
-  },
-  {
-    "id": "hxh_killua",
-    "name": "Killua Zoldyck",
-    "version": "Hunter x Hunter anime — Godspeed available",
-    "franchise": "Hunter x Hunter",
-    "medium": "Movie/TV",
-    "tier": 3,
-    "tierName": "Superhuman",
-    "traits": "Godspeed, electricity, assassination, speed, claws"
-  },
-  {
-    "id": "hxh_hisoka",
-    "name": "Hisoka Morow",
-    "version": "Hunter x Hunter anime — standard",
-    "franchise": "Hunter x Hunter",
-    "medium": "Movie/TV",
-    "tier": 3,
-    "tierName": "Superhuman",
-    "traits": "Bungee Gum, Texture Surprise, cards, agility, battle IQ"
-  },
-  {
     "id": "game_mario",
     "name": "Mario",
     "version": "Super Mario games — mainline standard power-up access, no one-off cosmic artifacts",
@@ -2888,5 +2488,225 @@ export const CHARACTERS = [
     "tier": 1,
     "tierName": "Human",
     "traits": "pulse rifle familiarity, flamethrower, survival, improvisation"
+  },
+  {
+    "id": "marvel_black_panther",
+    "name": "Black Panther",
+    "version": "Marvel Comics — Earth-616 T'Challa, standard suit and gear",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "superhuman strength, enhanced senses, vibranium habit, claws, agility, tactical genius",
+    "portraitSearch": "Black Panther Marvel Comics T'Challa"
+  },
+  {
+    "id": "marvel_captain_marvel",
+    "name": "Captain Marvel",
+    "version": "Marvel Comics — Earth-616 Carol Danvers, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "cosmic energy projection, flight, super strength, durability, absorption",
+    "portraitSearch": "Captain Marvel Marvel Comics Carol Danvers"
+  },
+  {
+    "id": "marvel_deadpool",
+    "name": "Deadpool",
+    "version": "Marvel Comics — Earth-616 Wade Wilson, standard weapons",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "healing factor, swords, firearms, explosives, unpredictability",
+    "portraitSearch": "Deadpool Marvel Comics Wade Wilson"
+  },
+  {
+    "id": "marvel_hela",
+    "name": "Hela",
+    "version": "Marvel Comics — Earth-616 Goddess of Death, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Asgardian power, necromancy, blades, death magic, durability",
+    "portraitSearch": "Hela Marvel Comics goddess of death"
+  },
+  {
+    "id": "marvel_loki",
+    "name": "Loki",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Asgardian magic, illusions, shapeshifting, energy projection, cunning",
+    "portraitSearch": "Loki Marvel Comics Earth-616"
+  },
+  {
+    "id": "marvel_professor_x",
+    "name": "Professor X",
+    "version": "Marvel Comics — Earth-616 Charles Xavier, standard telepathic portrayal",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "omega-class telepathy, mind control, psychic defense, strategy",
+    "portraitSearch": "Professor X Marvel Comics Charles Xavier"
+  },
+  {
+    "id": "marvel_quicksilver",
+    "name": "Quicksilver",
+    "version": "Marvel Comics — Earth-616 Pietro Maximoff, standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "super speed, reflexes, blitz attacks, rapid movement",
+    "portraitSearch": "Quicksilver Marvel Comics Pietro Maximoff"
+  },
+  {
+    "id": "marvel_venom",
+    "name": "Venom",
+    "version": "Marvel Comics — Earth-616 Eddie Brock, standard symbiote",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "symbiote strength, regeneration, webbing, shapeshifting, tendrils",
+    "portraitSearch": "Venom Marvel Comics Eddie Brock"
+  },
+  {
+    "id": "marvel_vision",
+    "name": "Vision",
+    "version": "Marvel Comics — Earth-616 standard",
+    "franchise": "Marvel",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "density control, phasing, energy beams, flight, super strength",
+    "portraitSearch": "Vision Marvel Comics Earth-616"
+  },
+  {
+    "id": "dc_black_adam",
+    "name": "Black Adam",
+    "version": "DC Comics — mainline Teth-Adam, standard",
+    "franchise": "DC",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "magic lightning, super strength, speed, flight, durability",
+    "portraitSearch": "Black Adam DC Comics Teth-Adam"
+  },
+  {
+    "id": "invincible_comic_mark",
+    "name": "Invincible",
+    "version": "Invincible comics — Mark Grayson, standard late-series portrayal",
+    "franchise": "Invincible",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Viltrumite strength, flight, durability, healing, combat growth",
+    "portraitSearch": "Invincible comics Mark Grayson"
+  },
+  {
+    "id": "invincible_comic_nolan",
+    "name": "Omni-Man",
+    "version": "Invincible comics — Nolan Grayson, standard",
+    "franchise": "Invincible",
+    "medium": "Comics",
+    "tier": 5,
+    "tierName": "Planetary+",
+    "traits": "Viltrumite strength, flight, durability, speed, ruthless combat",
+    "portraitSearch": "Omni-Man comics Nolan Grayson"
+  },
+  {
+    "id": "boys_homelander_comic",
+    "name": "Homelander",
+    "version": "The Boys comics — standard",
+    "franchise": "The Boys",
+    "medium": "Comics",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "flight, heat vision, super strength, durability, intimidation",
+    "portraitSearch": "Homelander The Boys comics"
+  },
+  {
+    "id": "boys_soldier_boy_comic",
+    "name": "Soldier Boy",
+    "version": "The Boys comics — standard",
+    "franchise": "The Boys",
+    "medium": "Comics",
+    "tier": 3,
+    "tierName": "Superhuman",
+    "traits": "enhanced strength, durability, shield combat, military image",
+    "portraitSearch": "Soldier Boy The Boys comics"
+  },
+  {
+    "id": "tmnt_leonardo_comic",
+    "name": "Leonardo",
+    "version": "TMNT comics — Mirage/mainstream representative standard",
+    "franchise": "TMNT",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "dual katana, ninjutsu, leadership, agility, stealth",
+    "portraitSearch": "Leonardo TMNT comics"
+  },
+  {
+    "id": "tmnt_donatello_comic",
+    "name": "Donatello",
+    "version": "TMNT comics — Mirage/mainstream representative standard",
+    "franchise": "TMNT",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "bo staff, ninjutsu, gadgets, intelligence, agility",
+    "portraitSearch": "Donatello TMNT comics"
+  },
+  {
+    "id": "tmnt_michelangelo_comic",
+    "name": "Michelangelo",
+    "version": "TMNT comics — Mirage/mainstream representative standard",
+    "franchise": "TMNT",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "nunchaku, ninjutsu, agility, improvisation, stealth",
+    "portraitSearch": "Michelangelo TMNT comics"
+  },
+  {
+    "id": "tmnt_raphael_comic",
+    "name": "Raphael",
+    "version": "TMNT comics — Mirage/mainstream representative standard",
+    "franchise": "TMNT",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "sai, ninjutsu, aggression, strength, close combat",
+    "portraitSearch": "Raphael TMNT comics"
+  },
+  {
+    "id": "tmnt_shredder_comic",
+    "name": "Shredder",
+    "version": "TMNT comics — Mirage/mainstream representative standard",
+    "franchise": "TMNT",
+    "medium": "Comics",
+    "tier": 2,
+    "tierName": "Enhanced",
+    "traits": "elite ninjutsu, bladed armor, sword skill, tactics",
+    "portraitSearch": "Shredder TMNT comics"
+  },
+  {
+    "id": "dceu_shazam",
+    "name": "Shazam",
+    "version": "DCEU — Shazam! films, Billy Batson in standard champion form",
+    "franchise": "DC",
+    "medium": "Movie/TV",
+    "tier": 4,
+    "tierName": "Heavyweight",
+    "traits": "magical super strength, flight, super speed, durability, lightning projection, magical transformation",
+    "portraitSearch": "Shazam DCEU Billy Batson movie character"
   }
 ];

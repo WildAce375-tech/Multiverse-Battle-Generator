@@ -181,3 +181,59 @@ All character lists now sort globally by character name A–Z.
 If multiple versions of the same character exist, they are sorted by version after the name.
 
 Applies to Versus, Team Battle, Gauntlet, Survival, Local Draft, and Live Draft.
+
+
+## v2.6 — Comic counterparts for screen-only comic properties
+
+Added 19 comic versions for characters that previously existed only as movie/TV entries in comic-derived franchises.
+
+New comic counterparts added for:
+- Marvel: Black Panther, Captain Marvel, Deadpool, Hela, Loki, Professor X, Quicksilver, Venom, Vision
+- DC: Black Adam
+- Invincible: Invincible, Omni-Man
+- The Boys: Homelander, Soldier Boy
+- TMNT: Leonardo, Donatello, Michelangelo, Raphael, Shredder
+
+New totals:
+- Everything: 308
+- Comics: 123
+- Movies / TV: 145
+- Video Games: 40
+
+
+## v2.7 — Anime removed
+
+Removed all 40 Japanese-anime fighters from:
+- Dragon Ball
+- Naruto
+- One Piece
+- Bleach
+- Jujutsu Kaisen
+- Demon Slayer
+- My Hero Academia
+- Attack on Titan
+- One-Punch Man
+- Hunter x Hunter
+
+Western animation remains in the roster, including properties such as Invincible and TMNT.
+
+Current totals:
+- Everything: 268
+- Comics: 123
+- Movies / TV: 105
+- Video Games: 40
+
+
+## v2.8 — Movie Shazam
+
+Added:
+- **Shazam — DCEU / Shazam! films**
+- Billy Batson in standard adult champion form
+- Movie/TV roster
+- Tier 4 / Heavyweight
+
+Current totals:
+- Everything: 269
+- Comics: 123
+- Movies / TV: 106
+- Video Games: 40
