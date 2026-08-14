@@ -295,3 +295,71 @@ input[type="text"]:focus,#liveDraftCode:focus,#liveRosterSearch:focus{border-col
   .rosterFilterGrid{grid-template-columns:1fr}
   .rosterFilterGrid label:last-child{grid-column:auto}
 }
+
+
+/* v3.4 — compact masthead + roster filtering */
+.filterStage{display:none!important}
+
+.rosterFilterBar{
+  margin:5px 0 10px;
+  padding:8px 10px;
+}
+
+.rosterFilterTop{
+  margin-bottom:6px;
+}
+
+.rosterFilterHint{
+  font-size:.63rem;
+  margin-top:1px;
+  line-height:1.2;
+}
+
+.rosterFilterSummary{
+  padding:3px 7px;
+  font-size:.62rem;
+}
+
+.rosterFilterGrid{
+  gap:6px;
+}
+
+.rosterFilterGrid label{
+  gap:2px;
+  line-height:1.1;
+}
+
+.rosterFilterGrid select,
+#rosterSearch{
+  padding-top:7px;
+  padding-bottom:7px;
+}
+
+.rosterSearchWrap{
+  gap:5px;
+}
+
+.clearSearchBtn{
+  min-height:34px;
+}
+
+/* Main masthead — intentionally one line and smaller. */
+h1{
+  white-space:nowrap;
+}
+
+.hero h1,
+.masthead h1,
+header h1{
+  font-size:clamp(1.25rem,3vw,2rem);
+  line-height:1;
+  margin-bottom:3px;
+  letter-spacing:.045em;
+}
+
+/* Reduce excess top-copy spacing where present. */
+.hero,
+.masthead,
+header{
+  padding-top:min(12px,2vw);
+}

@@ -370,3 +370,14 @@ Important behavior:
 - Random Battle, Gauntlet, and Tournament now use the global Source + Franchise filters instead of separate duplicate pool menus.
 - Live Draft freezes both Source and Franchise when the room is created and enforces them server-side.
 - Live Draft still has its own local fighter-search field so each remote player can search independently.
+
+
+## v3.4 — Compact UI
+
+- Main masthead is now **MULTIVERSE BATTLE** on one line
+- Removed **GENERATOR**
+- Removed the numbered 1 / 2 / 3 filter badges
+- Shortened filter labels to Source / Franchise / Search
+- Reduced vertical padding and spacing around the filter controls
+- Shortened helper text
+- All three-stage filtering behavior remains unchanged
