@@ -392,3 +392,22 @@ Important behavior:
 - Removed the redundant count from `All franchises`
 - MULTIVERSE now uses a cyan / blue / purple / teal gradient
 - BATTLE remains clean white
+
+
+## v3.6 — Character Quick Cards
+
+Selected fighters now display a compact quick profile containing:
+
+- Powers / abilities
+- Strength — 1 to 10
+- Speed — 1 to 10
+- Durability — 1 to 10
+- Combat Skill — 1 to 10
+- Versatility — 1 to 10
+- Magic — 1 to 10
+- Cosmic — 1 to 10
+
+Each score includes a visual power bar.
+
+The profile scores are display-only and are derived consistently from the fighter's
+existing version-specific tier and traits. They do not change or override the AI battle judge.

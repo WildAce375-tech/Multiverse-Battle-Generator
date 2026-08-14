@@ -1,4 +1,4 @@
-import { CHARACTERS } from "./characters.js?v=roster-350-v3.2";
+import { CHARACTERS } from "./characters.js?v=quick-cards-3.6";
 
 const $ = (id) => document.getElementById(id);
 const TIER_NAMES = {1:"Human",2:"Enhanced",3:"Superhuman",4:"Heavyweight",5:"Planetary+",6:"Cosmic",7:"Reality Warper"};
@@ -57,6 +57,138 @@ function ensureAvatarStyles() {
   document.head.appendChild(style);
 }
 
+
+function clampRating(n) {
+  return Math.max(1, Math.min(10, Math.round(n)));
+}
+
+function traitText(c) {
+  return String(c?.traits || "").toLowerCase();
+}
+
+function hasAny(text, words=[]) {
+  return words.some(w => text.includes(w));
+}
+
+// Display-only profile ratings derived from each version's existing tier + traits.
+// These ratings do not alter the AI battle judge.
+function fighterQuickStats(c) {
+  const t = traitText(c);
+  const tier = Number(c?.tier || 1);
+
+  let strength = 1 + tier * 1.15;
+  let speed = 1 + tier * .75;
+  let durability = 1 + tier * 1.05;
+  let skill = 2.8 + tier * .35;
+  let versatility = 1.8 + tier * .55;
+  let magic = 1;
+  let cosmic = 1;
+
+  // Strength
+  if (hasAny(t, ["planetary strength","extreme strength","massive strength","viltrumite strength","kryptonian strength","atlantean strength"])) strength += 2.3;
+  else if (hasAny(t, ["super strength","enhanced strength"])) strength += 1.4;
+  else if (t.includes("strength")) strength += .8;
+
+  // Speed
+  if (hasAny(t, ["speedster","super speed","extreme speed","time manipulation"])) speed += 3;
+  else if (hasAny(t, ["enhanced speed","speed"])) speed += 1.5;
+  if (hasAny(t, ["teleportation","portals"])) speed += 1;
+  else if (t.includes("flight")) speed += .5;
+
+  // Durability
+  if (hasAny(t, ["invulnerability","extreme durability","massive durability"])) durability += 2.2;
+  else if (t.includes("durability")) durability += 1.25;
+  if (hasAny(t, ["regeneration","healing","resurrection","self-repair"])) durability += 1;
+
+  // Combat skill
+  if (hasAny(t, [
+    "elite martial arts","master martial","martial arts","assassin",
+    "swordsmanship","combat skill","hand-to-hand","marksmanship"
+  ])) skill += 2.2;
+  if (hasAny(t, [
+    "centuries of combat","warrior experience","tactical genius",
+    "strategic genius","tactics","battlefield leadership","planning"
+  ])) skill += 1.1;
+  if (tier <= 2 && hasAny(t, ["elite","master","assassin","martial arts","marksmanship","tactics"])) {
+    skill = Math.max(skill, 7);
+  }
+
+  // Versatility
+  const versatilityTerms = [
+    "magic","telepathy","telekinesis","reality","matter","energy","technology",
+    "gadgets","shapeshifting","size manipulation","portals","time","force fields",
+    "constructs","illusions","possession","elemental","hacking","drones","weapons",
+    "flight","regeneration","intangibility","invisibility"
+  ];
+  const versatilityHits = versatilityTerms.filter(w => t.includes(w)).length;
+  versatility += Math.min(4, versatilityHits * .5);
+
+  // Magic — 1 means effectively none, 10 is top-end magical capability.
+  if (hasAny(t, ["reality warping","reality manipulation"])) magic = Math.max(magic, 8 + tier * .25);
+  if (hasAny(t, ["powerful magic","sorcery","sorcerer","witchcraft","magic"])) magic = Math.max(magic, 4 + tier * .8);
+  if (hasAny(t, ["magical transformation","magical enhancement","magical super strength","enchanted","mystic"])) magic = Math.max(magic, 3 + tier * .65);
+  if (hasAny(t, ["spell","spells","teleportation","illusions","possession"])) magic = Math.max(magic, 3.5 + tier * .6);
+  if (hasAny(t, ["doctor strange","scarlet witch"])) magic = Math.max(magic, 9);
+
+  // Cosmic — measures cosmic-scale power/energy rather than just raw physical strength.
+  if (hasAny(t, ["cosmic entity","cosmic power","cosmic energy","power cosmic"])) cosmic = Math.max(cosmic, 5 + tier * .85);
+  if (hasAny(t, ["reality warping","reality manipulation"])) cosmic = Math.max(cosmic, 6 + tier * .55);
+  if (hasAny(t, ["planetary","galactic","universal","multiversal"])) cosmic = Math.max(cosmic, 5 + tier * .7);
+  if (tier >= 6) cosmic = Math.max(cosmic, 4 + tier * .7);
+  else if (tier == 5 && hasAny(t, ["cosmic","energy projection","matter","reality"])) cosmic = Math.max(cosmic, 5.5);
+
+  return [
+    ["Strength", clampRating(strength)],
+    ["Speed", clampRating(speed)],
+    ["Durability", clampRating(durability)],
+    ["Combat Skill", clampRating(skill)],
+    ["Versatility", clampRating(versatility)],
+    ["Magic", clampRating(magic)],
+    ["Cosmic", clampRating(cosmic)]
+  ];
+}
+
+function fighterPowers(c) {
+  return String(c?.traits || "")
+    .split(",")
+    .map(x => x.trim())
+    .filter(Boolean)
+    .slice(0, 8);
+}
+
+function renderQuickCard(c) {
+  if (!c) return "";
+  const powers = fighterPowers(c);
+  const stats = fighterQuickStats(c);
+
+  return `
+    <div class="quickProfile">
+      <div class="quickProfileSection powersSection">
+        <div class="quickProfileLabel">POWERS</div>
+        <div class="powerChips">
+          ${powers.map(p => `<span class="powerChip">${esc(p)}</span>`).join("")}
+        </div>
+      </div>
+
+      <div class="quickProfileSection statsSection">
+        <div class="quickProfileLabel">ATTRIBUTES</div>
+        <div class="attributeGrid">
+          ${stats.map(([label,value]) => `
+            <div class="attributeRow">
+              <div class="attributeTop">
+                <span>${esc(label)}</span>
+                <strong>${value}/10</strong>
+              </div>
+              <div class="attributeTrack" aria-label="${esc(label)} ${value} out of 10">
+                <span class="attributeFill" style="width:${value * 10}%"></span>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>`;
+}
+
 function renderFighter(cardId, c, side) {
   const el = $(cardId);
   el.className = `fighterCard ${side === "B" ? "b" : ""}`;
@@ -79,7 +211,8 @@ function renderFighter(cardId, c, side) {
           <span class="tag">Tier ${c.tier}: ${esc(c.tierName)}</span>
         </div>
       </div>
-    </div>`;
+    </div>
+    ${renderQuickCard(c)}`;
   const avatar = el.querySelector('.fighterAvatar');
   const img = el.querySelector('img');
   if (img) {
