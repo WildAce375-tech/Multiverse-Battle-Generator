@@ -1033,7 +1033,7 @@ function serveFile(res, filePath) {
     res.writeHead(200, {
       "content-type": MIME[ext] || "application/octet-stream",
       "content-length": stat.size,
-      "cache-control": ext === ".html" ? "no-cache" : "public, max-age=3600"
+      "cache-control": [".html", ".js"].includes(ext) ? "no-cache" : "public, max-age=3600"
     });
     fs.createReadStream(filePath).pipe(res);
     return true;

@@ -1,4 +1,4 @@
-import { CHARACTERS } from "./characters.js";
+import { CHARACTERS } from "./characters.js?v=roster-269-shazam";
 
 const $ = (id) => document.getElementById(id);
 const TIER_NAMES = {1:"Human",2:"Enhanced",3:"Superhuman",4:"Heavyweight",5:"Planetary+",6:"Cosmic",7:"Reality Warper"};
