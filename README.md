@@ -282,3 +282,68 @@ Changes:
 - Failed lookups are temporarily cached so the site does not repeatedly hammer Wikipedia.
 
 Battle judging is unchanged.
+
+
+## v3.2 — 350-fighter roster
+
+Added exactly **81 fighters**, bringing the roster from 269 to **350**.
+
+### Invincible — 21 additions
+Comic + animated versions of:
+- Atom Eve
+- Allen the Alien
+- Battle Beast
+- Robot
+- Monster Girl
+- Rex Splode
+- Dupli-Kate
+- The Immortal
+- Angstrom Levy
+- Conquest
+
+Plus:
+- Thragg — Comics
+
+### Marvel — 30 additions
+Comic + MCU versions of:
+- Ultron
+- Red Skull
+- Nick Fury
+- Star-Lord
+- Gamora
+- Drax
+- Rocket Raccoon
+- Groot
+- Nebula
+- Shang-Chi
+- Ms. Marvel
+- Namor
+- Adam Warlock
+- Killmonger
+- Kang the Conqueror
+
+### DC — 30 additions
+Comic + movie/TV versions of:
+- Peacemaker
+- King Shark
+- Hawkman
+- Doctor Sivana
+- Enchantress
+- Amanda Waller
+- Rick Flag
+- Vigilante
+- The Atom
+- Firestorm
+- Hawkgirl
+- Black Lightning
+- Superboy
+- Metamorpho
+- Captain Cold
+
+### New totals
+- Everything: 350
+- Comics: 164
+- Movies / TV: 146
+- Video Games: 40
+
+All existing modes, alphabetical selectors, source filters, live drafts, short links, and portrait rate-limit protections are preserved.

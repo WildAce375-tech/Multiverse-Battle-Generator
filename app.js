@@ -1,4 +1,4 @@
-import { CHARACTERS } from "./characters.js?v=roster-269-shazam";
+import { CHARACTERS } from "./characters.js?v=roster-350-v3.2";
 
 const $ = (id) => document.getElementById(id);
 const TIER_NAMES = {1:"Human",2:"Enhanced",3:"Superhuman",4:"Heavyweight",5:"Planetary+",6:"Cosmic",7:"Reality Warper"};
@@ -1155,7 +1155,7 @@ $("liveDraftActive").oninput=e=>{
 
 ensureAvatarStyles();
 $("rosterScope").value = rosterScope;
-$("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters • 123 comics • 106 movie/TV • 40 games`;
+$("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters • 164 comics • 146 movie/TV • 40 games`;
 renderArena();
 populateSelectors();
 resetDraft();
