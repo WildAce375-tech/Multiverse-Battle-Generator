@@ -1257,7 +1257,25 @@ function cleanLiveDraftConfig(config = {}) {
   const budget = Number.isInteger(rawBudget) && rawBudget >= teamSize && rawBudget <= 30 ? rawBudget : 12;
   const order = ["alternating","snake"].includes(config.order) ? config.order : "snake";
   const mediumScope = ["all","comics","screen","games"].includes(config.mediumScope) ? config.mediumScope : "all";
-  return { playerCount, teamSize, budget, order, mediumScope };
+
+  const requestedFranchise =
+    typeof config.franchiseScope === "string" && config.franchiseScope.length <= 80
+      ? config.franchiseScope
+      : "all";
+
+  const franchiseAllowed = [...DRAFT_ROSTER.values()].some(fighter => {
+    const mediumAllowed =
+      mediumScope === "all" ||
+      (mediumScope === "comics" && fighter.medium === "Comics") ||
+      (mediumScope === "screen" && fighter.medium === "Movie/TV") ||
+      (mediumScope === "games" && fighter.medium === "Games");
+    return mediumAllowed && fighter.franchise === requestedFranchise;
+  });
+
+  const franchiseScope =
+    requestedFranchise === "all" || franchiseAllowed ? requestedFranchise : "all";
+
+  return { playerCount, teamSize, budget, order, mediumScope, franchiseScope };
 }
 
 function liveDraftSides(roomOrConfig) {
@@ -1396,6 +1414,9 @@ function validateLiveDraftPick(room, side, fighterId) {
   if (room.config.mediumScope === "comics" && fighter.medium !== "Comics") return "This room is Comics only.";
   if (room.config.mediumScope === "screen" && fighter.medium !== "Movie/TV") return "This room is Movies / TV only.";
   if (room.config.mediumScope === "games" && fighter.medium !== "Games") return "This room is Video Games only.";
+  if (room.config.franchiseScope && room.config.franchiseScope !== "all" && fighter.franchise !== room.config.franchiseScope) {
+    return `This room is limited to ${room.config.franchiseScope}.`;
+  }
 
   const allDrafted = liveDraftSides(room).flatMap(s => room.teams?.[s] || []);
   if (allDrafted.includes(fighterId)) return "That fighter has already been drafted.";

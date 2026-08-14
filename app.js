@@ -13,6 +13,8 @@ let draftState = { A: [], B: [], budget: 12 };
 let draftFlavor = "local";
 let liveDraftSession = { code:null, token:"", side:null, room:null, pollTimer:null, lastRenderedAt:"" };
 let rosterScope = "all";
+let rosterFranchise = "all";
+let rosterSearch = "";
 
 function esc(s="") {
   return String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -99,65 +101,139 @@ function matchesRosterScope(c, scope=rosterScope) {
   return true;
 }
 
-function eligibleCharacters(scope=rosterScope) {
+function sourceCharacters(scope=rosterScope) {
   return CHARACTERS.filter(c => matchesRosterScope(c, scope));
 }
 
+function matchesRosterFranchise(c, franchise=rosterFranchise) {
+  return franchise === "all" || c.franchise === franchise;
+}
+
+// Source + Franchise define the actual eligible battle pool.
+// Search deliberately does NOT affect random draws, brackets, or gauntlet opponents.
+function eligibleCharacters(scope=rosterScope, franchise=rosterFranchise) {
+  return sourceCharacters(scope).filter(c => matchesRosterFranchise(c, franchise));
+}
+
+function matchesRosterSearch(c, search=rosterSearch) {
+  const q = String(search || "").trim().toLowerCase();
+  if (!q) return true;
+  return `${c.name} ${c.version} ${c.franchise} ${c.medium}`.toLowerCase().includes(q);
+}
+
 function rosterScopeLabel(scope=rosterScope) {
-  if (scope === "comics") return "Comics only";
-  if (scope === "screen") return "Movies / TV only";
-  if (scope === "games") return "Video Games only";
+  if (scope === "comics") return "Comics";
+  if (scope === "screen") return "Movies / TV";
+  if (scope === "games") return "Video Games";
   return "Everything";
+}
+
+function rosterFranchiseLabel(franchise=rosterFranchise) {
+  return franchise === "all" ? "All franchises" : franchise;
 }
 
 function optionLabel(c) {
   return `${c.name} — ${c.version}`;
 }
 
-function sortedCharacters(scope=rosterScope) {
-  return [...eligibleCharacters(scope)].sort((a,b) =>
-    a.name.localeCompare(b.name) ||
-    a.version.localeCompare(b.version) ||
-    a.franchise.localeCompare(b.franchise)
-  );
+function sortedCharacters(scope=rosterScope, franchise=rosterFranchise, search=rosterSearch) {
+  return eligibleCharacters(scope, franchise)
+    .filter(c => matchesRosterSearch(c, search))
+    .sort((a,b) =>
+      a.name.localeCompare(b.name) ||
+      a.version.localeCompare(b.version) ||
+      a.franchise.localeCompare(b.franchise)
+    );
+}
+
+function populateFranchiseFilter({preferred=rosterFranchise}={}) {
+  const select = $("rosterFranchise");
+  if (!select) return;
+
+  const list = sourceCharacters(rosterScope);
+  const counts = new Map();
+  for (const c of list) counts.set(c.franchise, (counts.get(c.franchise) || 0) + 1);
+
+  const franchises = [...counts.keys()].sort((a,b) => a.localeCompare(b));
+  const validPreferred = preferred === "all" || counts.has(preferred) ? preferred : "all";
+  rosterFranchise = validPreferred;
+
+  select.innerHTML =
+    `<option value="all">All franchises — ${list.length}</option>` +
+    franchises.map(f => `<option value="${esc(f)}">${esc(f)} — ${counts.get(f)}</option>`).join("");
+  select.value = rosterFranchise;
+}
+
+function updateRosterFilterSummary() {
+  const base = eligibleCharacters();
+  const matches = sortedCharacters();
+  const summary = $("rosterFilterSummary");
+  if (!summary) return;
+
+  if (rosterSearch.trim()) {
+    summary.textContent = `${matches.length} matching • ${base.length} in ${rosterFranchiseLabel()}`;
+  } else {
+    summary.textContent = `${base.length} fighters • ${rosterScopeLabel()} • ${rosterFranchiseLabel()}`;
+  }
 }
 
 function populateSelectors() {
-  const sorted = sortedCharacters();
-  if (!sorted.length) return;
-
-  const opts = sorted.map(c => `<option value="${c.id}">${esc(optionLabel(c))}</option>`).join("");
+  const filtered = sortedCharacters();
+  const base = eligibleCharacters();
   const ids = [
     "fighterA","fighterB","gauntletChampion","teamA1","teamA2","teamA3","teamB1","teamB2","teamB3",
     "draftPick","survivalFighter"
   ];
 
   const previous = Object.fromEntries(ids.filter(id => $(id)).map(id => [id, $(id).value]));
+  const baseIds = new Set(base.map(c => c.id));
+
+  // Search is a finder, not a destructive filter. A selection already made remains
+  // in its specific dropdown while the user searches for the next character.
   for (const id of ids) {
-    if (!$(id)) continue;
-    $(id).innerHTML = opts;
-    if (previous[id] && sorted.some(c => c.id === previous[id])) $(id).value = previous[id];
+    const select = $(id);
+    if (!select) continue;
+
+    let list = [...filtered];
+    const prevId = previous[id];
+    if (prevId && baseIds.has(prevId) && !list.some(c => c.id === prevId)) {
+      const prev = fighterById(prevId);
+      if (prev) list = [prev, ...list];
+    }
+
+    if (!list.length) {
+      select.innerHTML = `<option value="">No matching fighters</option>`;
+      select.value = "";
+      continue;
+    }
+
+    select.innerHTML = list.map(c => `<option value="${c.id}">${esc(optionLabel(c))}</option>`).join("");
+    if (prevId && list.some(c => c.id === prevId)) select.value = prevId;
   }
 
-  const eligibleIds = new Set(sorted.map(c => c.id));
-  const safeValue = (preferred, fallbackIndex=0) =>
-    preferred && eligibleIds.has(preferred) ? preferred : sorted[Math.min(fallbackIndex, sorted.length-1)].id;
+  if (!base.length) {
+    updateRosterFilterSummary();
+    return;
+  }
 
-  $("fighterA").value = safeValue(previous.fighterA || currentA?.id, 0);
-  $("fighterB").value = safeValue(previous.fighterB || currentB?.id, sorted.length > 1 ? 1 : 0);
-  $("gauntletChampion").value = safeValue(previous.gauntletChampion || currentA?.id, 0);
-  $("survivalFighter").value = safeValue(previous.survivalFighter || currentA?.id, 0);
+  const safeFromBase = (preferred, fallbackIndex=0) =>
+    preferred && baseIds.has(preferred)
+      ? preferred
+      : base[Math.min(fallbackIndex, base.length-1)].id;
+
+  // Only choose automatic defaults if the select currently has no valid value.
+  if ($("fighterA") && !$("fighterA").value) $("fighterA").value = safeFromBase(currentA?.id, 0);
+  if ($("fighterB") && !$("fighterB").value) $("fighterB").value = safeFromBase(currentB?.id, base.length > 1 ? 1 : 0);
+  if ($("gauntletChampion") && !$("gauntletChampion").value) $("gauntletChampion").value = safeFromBase(currentA?.id, 0);
+  if ($("survivalFighter") && !$("survivalFighter").value) $("survivalFighter").value = safeFromBase(currentA?.id, 0);
 
   const defaults = ["mcu_captain_america","mcu_iron_man","mcu_thor","dceu_superman","dceu_batman","dceu_wonder_woman"];
   ["teamA1","teamA2","teamA3","teamB1","teamB2","teamB3"].forEach((id,i) => {
-    if (!$(id)) return;
-    if (previous[id] && eligibleIds.has(previous[id])) $(id).value = previous[id];
-    else $(id).value = safeValue(defaults[i], i % sorted.length);
+    if (!$(id) || $(id).value) return;
+    $(id).value = safeFromBase(defaults[i], i % base.length);
   });
 
-  if ($("draftPick") && previous.draftPick && eligibleIds.has(previous.draftPick)) {
-    $("draftPick").value = previous.draftPick;
-  }
+  updateRosterFilterSummary();
 }
 
 function settings() {
@@ -166,7 +242,8 @@ function settings() {
     prep: $("prep").value,
     battlefield: $("battlefield").value,
     distance: $("distance").value,
-    rosterScope
+    rosterScope,
+    rosterFranchise
   };
 }
 
@@ -174,25 +251,20 @@ function applySettings(s={}) {
   for (const k of ["mode","prep","battlefield","distance"]) {
     if (s[k] && $(`${k}`)) $(`${k}`).value = s[k];
   }
+
   if (["all","comics","screen","games"].includes(s.rosterScope)) {
     rosterScope = s.rosterScope;
     if ($("rosterScope")) $("rosterScope").value = rosterScope;
-    populateSelectors();
   }
-}
 
-function poolByValue(pool="all", scope=rosterScope) {
-  return eligibleCharacters(scope).filter(c => {
-    if (pool === "all") return true;
-    if (pool === "marvel") return c.franchise === "Marvel";
-    if (pool === "dc") return c.franchise === "DC";
-    if (pool === "other") return !["Marvel","DC"].includes(c.franchise);
-    return true;
-  });
+  populateFranchiseFilter({preferred: typeof s.rosterFranchise === "string" ? s.rosterFranchise : "all"});
+  rosterSearch = "";
+  if ($("rosterSearch")) $("rosterSearch").value = "";
+  populateSelectors();
 }
 
 function poolList() {
-  return poolByValue($("randomPool").value);
+  return eligibleCharacters();
 }
 
 function pickRandom(arr) {
@@ -201,10 +273,7 @@ function pickRandom(arr) {
 
 function randomPair() {
   const list = poolList();
-  if (list.length < 2) {
-    const fallback = eligibleCharacters();
-    return [fallback[0], fallback[Math.min(1, fallback.length-1)]];
-  }
+  if (list.length < 2) return null;
   const chaos = $("chaosMode").checked;
   const a = pickRandom(list);
   let candidates = list.filter(c => c.id !== a.id);
@@ -549,9 +618,9 @@ function pickUnique(list, count) {
   return copy.slice(0,count);
 }
 
-function buildGauntletOpponents(champion, length, pool) {
-  let available = poolByValue(pool).filter(c => c.id !== champion.id);
-  if (available.length < length) available = eligibleCharacters().filter(c => c.id !== champion.id);
+function buildGauntletOpponents(champion, length) {
+  let available = eligibleCharacters().filter(c => c.id !== champion.id);
+  if (available.length < length) return [];
   const offsets = length === 3 ? [-1,0,1] : [-1,0,0,1,2];
   const chosen = [];
   for (const off of offsets) {
@@ -569,8 +638,16 @@ function buildGauntletOpponents(champion, length, pool) {
 function startGauntlet() {
   const champion = fighterById($("gauntletChampion").value);
   const length = Number($("gauntletLength").value);
-  if (!champion) return;
-  gauntletState = { champion, opponents: buildGauntletOpponents(champion,length,$("gauntletPool").value), results:[], index:0, ended:false };
+  if (!champion) {
+    alert("Choose a champion from the current roster filter.");
+    return;
+  }
+  const opponents = buildGauntletOpponents(champion,length);
+  if (opponents.length < length) {
+    alert(`The current Source + Franchise filter needs at least ${length + 1} fighters for this gauntlet.`);
+    return;
+  }
+  gauntletState = { champion, opponents, results:[], index:0, ended:false };
   renderGauntlet();
 }
 
@@ -615,8 +692,11 @@ function roundLabel(totalEntrants, roundIndex, matches) {
 
 function startTournament() {
   const size = Number($("tournamentSize").value);
-  let list = poolByValue($("tournamentPool").value);
-  if (list.length < size) list = eligibleCharacters();
+  const list = eligibleCharacters();
+  if (list.length < size) {
+    alert(`The current Source + Franchise filter has only ${list.length} fighters. Choose a broader filter or a smaller bracket.`);
+    return;
+  }
   const entrants = pickUnique(list,size);
   tournamentState = { size, rounds:[{participants:entrants, matches:[], cursor:0}], currentRound:0, champion:null };
   tournamentState.rounds[0].matches = pairParticipants(entrants);
@@ -815,7 +895,7 @@ function liveDraftTeamHtml(room,side){
 function liveDraftRosterHtml(room){
   if(room.status!=="drafting") return "";
   const drafted=new Set(liveSides(room).flatMap(s=>room.teams?.[s]||[]));
-  const rows=sortedCharacters(room.config.mediumScope || "all").map(c=>{
+  const rows=sortedCharacters(room.config.mediumScope || "all", room.config.franchiseScope || "all", "").map(c=>{
     const picked=drafted.has(c.id);
     const allowed=liveDraftPickAllowed(room,c);
     let label="PICK";
@@ -873,7 +953,7 @@ function renderLiveDraftRoom(room){
       <div>
         <div class="eyebrow">LIVE MULTIPLAYER DRAFT</div>
         <div class="liveRoomCode">${esc(room.code)}</div>
-        <div class="liveRoomMeta">${room.config.playerCount} players • ${room.config.teamSize} fighter${room.config.teamSize===1?"":"s"} each • ${room.config.budget} points each • ${esc(room.config.mediumScope==="comics"?"Comics only":room.config.mediumScope==="screen"?"Movies / TV only":room.config.mediumScope==="games"?"Video Games only":"All media")} • ${esc(liveDraftOrderLabel(room.config.order))}</div>
+        <div class="liveRoomMeta">${room.config.playerCount} players • ${room.config.teamSize} fighter${room.config.teamSize===1?"":"s"} each • ${room.config.budget} points each • ${esc(room.config.mediumScope==="comics"?"Comics":room.config.mediumScope==="screen"?"Movies / TV":room.config.mediumScope==="games"?"Video Games":"All media")} • ${esc(room.config.franchiseScope==="all"?"All franchises":room.config.franchiseScope)} • ${esc(liveDraftOrderLabel(room.config.order))}</div>
       </div>
       <div class="liveRoomActions">
         <button class="secondary" data-action="live-copy-invite">🔗 COPY INVITE</button>
@@ -914,7 +994,8 @@ async function createLiveDraft(){
           teamSize:Number($("liveDraftTeamSize").value),
           budget:Number($("liveDraftBudget").value),
           order:$("liveDraftOrder").value,
-          mediumScope:rosterScope
+          mediumScope:rosterScope,
+          franchiseScope:rosterFranchise
         },
         settings:settings()
       })
@@ -962,6 +1043,9 @@ async function joinLiveDraft(code,{fromUrl=false}={}){
   if (["all","comics","screen","games"].includes(data.room.config?.mediumScope)) {
     rosterScope = data.room.config.mediumScope;
     $("rosterScope").value = rosterScope;
+    populateFranchiseFilter({preferred:data.room.config?.franchiseScope || "all"});
+    rosterSearch = "";
+    $("rosterSearch").value = "";
     populateSelectors();
   }
   if(token) saveLiveDraftToken(code,token);
@@ -1096,31 +1180,66 @@ document.querySelectorAll(".modeTab").forEach(btn=>btn.onclick=()=>{
   if(btn.dataset.mode!=="draft")stopLiveDraftPolling();
   setGameMode(btn.dataset.mode);
 });
-$("rosterScope").onchange=()=>{
-  rosterScope=$("rosterScope").value;
-  populateSelectors();
-
-  // New local mode runs should obey the new source immediately.
+function resetModesForRosterFilterChange(label) {
   gauntletState=null;
   tournamentState=null;
   resetDraft();
 
   if(gameMode==="gauntlet" || gameMode==="tournament"){
-    $("modeWorkspace").innerHTML=`<div class="emptyState">Roster source changed to <strong>${esc(rosterScopeLabel())}</strong>. Start a new ${gameMode}.</div>`;
+    $("modeWorkspace").innerHTML=`<div class="emptyState">${esc(label)} changed. Start a new ${gameMode} with the filtered roster.</div>`;
   }else if(gameMode==="team" || gameMode==="survival"){
-    $("modeWorkspace").innerHTML=`<div class="emptyState">Roster source: <strong>${esc(rosterScopeLabel())}</strong>. Choose fighters and start the mode.</div>`;
+    $("modeWorkspace").innerHTML=`<div class="emptyState">${esc(label)} changed. Choose fighters from the filtered roster.</div>`;
   }else if(gameMode==="draft" && draftFlavor==="local"){
     renderDraft();
   }
+}
+
+$("rosterScope").onchange=()=>{
+  rosterScope=$("rosterScope").value;
+  rosterSearch="";
+  $("rosterSearch").value="";
+  populateFranchiseFilter({preferred:"all"});
+  populateSelectors();
+  resetModesForRosterFilterChange("Roster source");
 };
+
+$("rosterFranchise").onchange=()=>{
+  rosterFranchise=$("rosterFranchise").value;
+  rosterSearch="";
+  $("rosterSearch").value="";
+  populateSelectors();
+  resetModesForRosterFilterChange("Franchise");
+};
+
+$("rosterSearch").oninput=()=>{
+  rosterSearch=$("rosterSearch").value;
+  populateSelectors();
+};
+
+$("clearRosterSearch").onclick=()=>{
+  rosterSearch="";
+  $("rosterSearch").value="";
+  populateSelectors();
+  $("rosterSearch").focus();
+};
+
 $("randomTab").onclick=()=>setTab("random");
 $("manualTab").onclick=()=>setTab("manual");
-$("randomizeBtn").onclick=async()=>{[currentA,currentB]=randomPair();renderArena();populateSelectors();await judge(currentA,currentB);};
+$("randomizeBtn").onclick=async()=>{
+  const pair=randomPair();
+  if(!pair){alert("The current Source + Franchise filter needs at least two fighters.");return;}
+  [currentA,currentB]=pair;renderArena();populateSelectors();await judge(currentA,currentB);
+};
 $("manualFightBtn").onclick=async()=>{const a=fighterById($("fighterA").value),b=fighterById($("fighterB").value);if(!a||!b||a.id===b.id){alert("Pick two different fighters.");return;}currentA=a;currentB=b;renderArena();await judge(currentA,currentB);};
 $("fighterA").onchange=()=>{const c=fighterById($("fighterA").value);if(c){currentA=c;renderArena();}};
 $("fighterB").onchange=()=>{const c=fighterById($("fighterB").value);if(c){currentB=c;renderArena();}};
 $("rematchBtn").onclick=()=>judge(currentA,currentB);
-$("newBattleBtn").onclick=async()=>{setTab("random");[currentA,currentB]=randomPair();renderArena();populateSelectors();await judge(currentA,currentB);};
+$("newBattleBtn").onclick=async()=>{
+  setTab("random");
+  const pair=randomPair();
+  if(!pair){alert("The current Source + Franchise filter needs at least two fighters.");return;}
+  [currentA,currentB]=pair;renderArena();populateSelectors();await judge(currentA,currentB);
+};
 $("shareBtn").onclick=async()=>{const btn=$("shareBtn"),old=btn.textContent;btn.disabled=true;btn.textContent="SAVING BATTLE…";try{const shareUrl=await getShortBattleUrl();try{await navigator.clipboard.writeText(shareUrl);btn.textContent="✓ SHORT LINK COPIED";}catch{prompt("Copy this short battle link:",shareUrl);btn.textContent="✓ SHORT LINK READY";}}catch(err){console.error("Short battle link error:",err);alert("Could not create a short battle link. Check the battle-storage setup in Render.");btn.textContent="SHORT LINK FAILED";}finally{setTimeout(()=>{btn.textContent=old;btn.disabled=false;},2200);}};
 
 $("startGauntletBtn").onclick=startGauntlet;
@@ -1155,6 +1274,7 @@ $("liveDraftActive").oninput=e=>{
 
 ensureAvatarStyles();
 $("rosterScope").value = rosterScope;
+populateFranchiseFilter();
 $("rosterCount").textContent = `${CHARACTERS.length} version-specific fighters • 164 comics • 146 movie/TV • 40 games`;
 renderArena();
 populateSelectors();

@@ -347,3 +347,26 @@ Comic + movie/TV versions of:
 - Video Games: 40
 
 All existing modes, alphabetical selectors, source filters, live drafts, short links, and portrait rate-limit protections are preserved.
+
+
+## v3.3 — Three-stage roster filtering
+
+The old single Source filter is now:
+
+1. **Source** — Everything / Comics / Movies & TV / Video Games
+2. **Universe / Franchise** — generated dynamically from the selected source
+3. **Search Characters** — instant text filter for character pick lists
+
+Examples:
+- `Comics → Marvel → Venom`
+- `Movies / TV → DC → Shazam`
+- `Everything → Invincible → Atom Eve`
+- `Video Games → Mortal Kombat → Scorpion`
+
+Important behavior:
+- Source + Franchise define the actual eligible battle pool.
+- Search is only a finder for character selectors; it does not accidentally turn a random tournament into a one-character pool.
+- Existing selections are preserved while searching, which makes Team Battle easier to build.
+- Random Battle, Gauntlet, and Tournament now use the global Source + Franchise filters instead of separate duplicate pool menus.
+- Live Draft freezes both Source and Franchise when the room is created and enforces them server-side.
+- Live Draft still has its own local fighter-search field so each remote player can search independently.
